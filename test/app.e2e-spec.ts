@@ -11,6 +11,7 @@ describe('App e2e', () => {
   let app: INestApplication
   let prisma: PrismaService
   let url: string
+
   beforeAll(async () => {
     const ModuleRef = await Test.createTestingModule({
       imports: [AppModule],

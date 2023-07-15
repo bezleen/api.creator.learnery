@@ -7,13 +7,11 @@ import { Request as RequestType } from 'express'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  private jwtConstants: any
-
   constructor(private config: ConfigService, private prisma: PrismaService) {
-    const mode = config.get('MODE') || 'development'
+    const mode = config.get('MODE') || 'dev'
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([JwtStrategy.extractJWTFromCookie, ExtractJwt.fromAuthHeaderAsBearerToken()]),
-      ignoreExpiration: mode == 'development' || mode == 'testing',
+      ignoreExpiration: mode == 'dev' || mode == 'test',
       secretOrKey: config.get('JWT_SECRET'),
     })
   }
