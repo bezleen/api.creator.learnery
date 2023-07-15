@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common'
+import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 
@@ -17,6 +17,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   //   await this.$disconnect()
   //   console.info(new Date(), 'disconnected database')
   // }
+
+  async enableShutdownHooks(app: INestApplication) {
+    this.$on('beforeExit', async () => {
+      await app.close()
+    })
+  }
   constructor(config: ConfigService) {
     const sslcert = '?sslcert=root.crt'
     //https://www.prisma.io/docs/concepts/database-connectors/postgresql#configuring-an-ssl-connection

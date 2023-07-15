@@ -9,7 +9,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
 
   const config = app.get<ConfigService>(ConfigService)
-  // app.enableShutdownHooks()
+  app.enableShutdownHooks()
 
   const port = config.get('PORT') || 1606
   console.log(`App is running on ${port}`)
