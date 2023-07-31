@@ -7,10 +7,15 @@ import { Request as RequestType } from 'express'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+  private jwtConstants: any
+
   constructor(private config: ConfigService, private prisma: PrismaService) {
     const mode = config.get('MODE') || 'dev'
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([JwtStrategy.extractJWTFromCookie, ExtractJwt.fromAuthHeaderAsBearerToken()]),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        JwtStrategy.extractJWTFromCookie,
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ]),
       ignoreExpiration: mode == 'dev' || mode == 'test',
       secretOrKey: config.get('JWT_SECRET'),
     })
@@ -28,8 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     // whatever is returned is appended to req.user
   }
   private static extractJWTFromCookie(req: RequestType): string | null {
-    const tokenField: string = 'token'
-    console.log('cookie: extract')
+    const tokenField = 'token'
     console.debug(req.cookies)
     if (req.cookies && tokenField in req.cookies && req.cookies[tokenField].length > 0) {
       console.log('extracted cookie')
@@ -38,4 +42,3 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     return null
   }
 }
-

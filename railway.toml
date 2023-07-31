@@ -1,14 +1,17 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npx install -g pnpm && pnpm install"
+buildCommand = "npx install -g pnpm && pnpm install && npm run build"
+#dockerfilePath = "Dockerfile.backend"
+
+
 
 [deploy]
-startCommand = "npx pnpm start:prod"
+#FIXME: remove
+startCommand = "npm run start:prod:railway"
 healthcheckPath = "/health"
-healthcheckTimeout = 100
+healthcheckTimeout = 200
 restartPolicyType = "on_failure"
 numReplicas = 1
-healthcheckTimeout = 996
 restartPolicyMaxRetries = 1
 
 

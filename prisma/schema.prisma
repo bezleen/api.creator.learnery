@@ -13,18 +13,20 @@ datasource db {
 
 // https://www.prisma.io/docs/concepts/components/prisma-schema/data-sources#securing-database-connections
 model User {
-  id        Int      @id @default(sequence(minValue: 1)) @db.Int2
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id Int @id @default(sequence(minValue: 1)) @db.Int4
 
   email String @unique
   hash  String
 
+  point Int? @default(100)
+
   firstName String?
   lastName  String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
   Course    Course[]
 
-  // @@id(fields: [])
   @@map("users")
 }
 

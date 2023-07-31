@@ -1,34 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from './prisma/prisma.service'
-import * as process from 'process'
 
 class ServiceStatus {
-  constructor(public ok:boolean=true, public status: string="OK", public debug:any=undefined) {
-  }
+  constructor(public ok: boolean = true, public status: string = 'OK', public debug: any = undefined) {}
 }
 
 @Injectable()
 export class AppService {
-
-  constructor(private prisma:PrismaService) {
-  }
+  constructor(private readonly prisma: PrismaService) {}
   getHello() {
-    return {message: "app is up and running"};
+    return { message: 'app is up and running' }
   }
 
-  async getHealth(){
+  async getHealth() {
     let dbStatus = new ServiceStatus()
 
-    await this.prisma.$connect().
-    then(()=>{
-      console.count("db connected successfully")
-    }).
-    catch((err)=>{
-      console.error({prisma:`connection failed due to ${err}`})
-      dbStatus.ok = false
-      dbStatus.status = "connection failed"
-      dbStatus.debug = err
-    })
+    await this.prisma
+      .$connect()
+      .then(() => {
+        console.count('db connected successfully')
+      })
+      .catch((err) => {
+        console.error({ prisma: `connection failed due to ${err}` })
+        dbStatus.ok = false
+        dbStatus.status = 'connection failed'
+        dbStatus.debug = err
+      })
     return {
       db: dbStatus,
       app: new ServiceStatus(),

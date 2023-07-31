@@ -1,8 +1,32 @@
-# curl --location --request OPTIONS 'localhost:1606'
-OPTIONS {{u}}
-
 ### Enable Cors
 
+OPTIONS {{u}}
+
+### Home
+GET {{u}}
+
+### Health
+GET {{u}}/health
+Accept: application/json
+
+###  Signup
+POST {{u}}/auth/signup
+Content-Type: application/x-www-form-urlencoded
+
+email = hiro11@gmail.com &
+password = Hiro*2412412###@##P
+
+### Signin
+POST {{u}}/auth/signin
+Content-Type: application/x-www-form-urlencoded
+
+email = hiro11@gmail.com &
+password = Hiro*2412412###@##P
+
+### Me
+GET {{u}}/users/me
+
+###  update my profile
 PATCH {{u}}/users
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiaGlyb0BnbWFpbC5jb20iLCJpYXQiOjE2ODg5Njk3NzQsImV4cCI6MTY4ODk3MzM3NH0.wiYwslhhjB9hZBeTnmArTXybNmVhr4IEtaPp7Bs2A5Q
@@ -12,30 +36,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsI
   "lastName": "Hamada"
 }
 
-###
-GET {{u}}/users/me
-Accept: application/json
-
-###
-POST {{u}}/auth/signin
-Content-Type: application/x-www-form-urlencoded
-
-email=hiro@gmail.com&password=Hiro*2412412###@##P
-
-###
-POST {{u}}/auth/signup
-Content-Type: application/x-www-form-urlencoded
-
-email=hiro@gmail.com&password=Hiro*2412412###@##P
-
-###
-
-GET {{u}}/health
-Accept: application/json
-
-###
-GET {{u}}
-Accept: application/json
-
-###
-
+### Users: Delete
+DELETE {{u}}/users

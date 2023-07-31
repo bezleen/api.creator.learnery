@@ -2,25 +2,37 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
 import { ValidationPipe, VersioningType } from '@nestjs/common'
-import * as cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
+import compression from 'compression'
+import { PrismaClientExceptionFilter } from './prisma-client-exception/prisma-client-exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
+  app.useGlobalPipes(new ValidationPipe({ whitelist: false })) //whitelist: true FAILS cuz graphql generated classes has no class validator decorators hence returns a empty {}
 
   const config = app.get<ConfigService>(ConfigService)
   app.enableShutdownHooks()
 
-  const port = config.get('PORT') || 1606
-  console.log(`App is running on ${port}`)
   app.use(cookieParser(config.get('JWT_SECRET')))
-  app.enableCors()
+  app.enableCors({
+    origin: ['https://studio.apollographql.com', 'surge.sh', 'github.io', 'vercel.app', 'localhost', '*'],
+    credentials: true,
+  })
+  app.useGlobalFilters(new PrismaClientExceptionFilter())
   app.enableVersioning({
     type: VersioningType.HEADER,
     header: 'Accept-Version',
   })
 
+  app.use(
+    compression({
+      threshold: 512, // only responses exceeding 512 bytes will be compressed
+    }),
+  )
+
+  const port = config.get('PORT')
+  console.log(`App is running on ${port}`)
+
   await app.listen(port)
 }
-bootstrap();
-
+bootstrap()

@@ -1,0 +1,22 @@
+scalar DateTime
+
+type AuthPayload {
+  access_token: String!
+}
+
+input AuthInput {
+  email: String!
+  password: String!
+}
+
+type SignUpPayload {
+  id: Int!
+  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  signUp(data: AuthInput!): SignUpPayload!
+  signIn(data: AuthInput!): AuthPayload!
+}

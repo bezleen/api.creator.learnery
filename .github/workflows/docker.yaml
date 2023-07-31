@@ -4,25 +4,23 @@ on:
   push:
     branches:
       - main
-#      - "*"
-#      - "**"
+    #      - "*"
+    #      - "**"
     tags:
-      - "*"
-      - "**"
+      - '*'
+      - '**'
 
   pull_request:
     branches:
       - main
   merge_group:
-    types: [ checks_requested ]
+    types: [checks_requested]
 
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
-
 
 jobs:
   build-docker:
@@ -32,4 +30,4 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build Docker
-        run: docker build -t learnery .
+        run: docker build .

@@ -28,6 +28,15 @@ which facilitates db migrations, Typescript model generation out of the box.
 3. To deploy:  
    `pnpm prisma:local:deploy`
 
+### How to doc graphql?
+
+1. Go to studio.app
+2. Copy request into curl
+3. Paste the curl in `graphqlql.http`
+4. Ensure your rest client is configured to auto convert curl url to HTTP Request
+5. Copy and fix query in https://lingojam.com/TexttoOneLine
+6. Replace query in graphql
+
 ### Pnpm vs npm
 
 - npm: Executes pre/post scripts
