@@ -18,8 +18,6 @@ model User {
   email String @unique
   hash  String
 
-  point Int? @default(100)
-
   firstName String?
   lastName  String?
 
@@ -31,57 +29,42 @@ model User {
 }
 
 model Course {
-  id        Int      @id @default(sequence(minValue: 1))
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id Int @id @default(sequence(minValue: 1))
 
-  user_id Int
+  title       String
+  objective   String
+  description String
 
-  category_id Int
-  audience_id Int
+  userId     Int
+  audienceId Int
 
-  topic_ids Int[]
+  language  String? @default("English")
+  category  String
+  tone      String? @default("Friendly")
+  modality  String? @default("Hybrid")
+  classSize String
 
-  duration_in_hours          Int
-  duration_lesson_in_minutes Int
+  topics String[]
 
-  description                  String
-  accepted_lesson_template_ids Int[]
-  lesson_card_template_id      Int
-  title                        String
-  objective                    String
+  duration       Int // Course Length In hours
+  durationLesson Int // Lesson Duration In minutes
 
-  LessonCardTemplate LessonCardTemplate @relation(fields: [lesson_card_template_id], references: [id], onDelete: Cascade)
-  user               User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Topic Topic[]
-  // language_id Int
-  // language Language @relation(fields: [language_id], references: [id], onDelete: Cascade)
+  Audience Audience @relation(fields: [audienceId], references: [id])
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
   @@map("courses")
 }
 
 model Audience {
-  id Int @id @default(sequence(minValue: 1))
-}
+  id       Int      @id @default(sequence(minValue: 1))
+  ageStart Int
+  ageEnd   Int
+  level    String
+  Course   Course[]
 
-model Tone {
-  id Int @id @default(sequence(minValue: 1))
-}
-
-model Topic {
-  id   Int    @id @default(sequence(minValue: 1))
-  name String
-}
-
-model LessonTemplate {
-  id Int @id @default(sequence(minValue: 1))
-}
-
-model LessonCardTemplate {
-  id     Int      @id @default(sequence(minValue: 1))
-  Course Course[]
-}
-
-model Language {
-  id Int @id @default(sequence(minValue: 1))
+  @@map("audiences")
 }

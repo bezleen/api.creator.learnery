@@ -5,9 +5,16 @@ import { ValidationPipe, VersioningType } from '@nestjs/common'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
 import { PrismaClientExceptionFilter } from './prisma-client-exception/prisma-client-exception.filter'
+import { SwaggerModule } from '@nestjs/swagger'
+import metadata from './metadata'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+
+  await SwaggerModule.loadPluginMetadata(metadata)
+  const document = AppModule.createDocument(app)
+  SwaggerModule.setup('api', app, document)
+
   app.useGlobalPipes(new ValidationPipe({ whitelist: false })) //whitelist: true FAILS cuz graphql generated classes has no class validator decorators hence returns a empty {}
 
   const config = app.get<ConfigService>(ConfigService)
@@ -15,7 +22,14 @@ async function bootstrap() {
 
   app.use(cookieParser(config.get('JWT_SECRET')))
   app.enableCors({
-    origin: ['https://studio.apollographql.com', 'surge.sh', 'github.io', 'vercel.app', 'localhost', '*'],
+    origin: [
+      'https://studio.apollographql.com',
+      'surge.sh',
+      'github.io',
+      'vercel.app',
+      'localhost',
+      '*',
+    ],
     credentials: true,
   })
   app.useGlobalFilters(new PrismaClientExceptionFilter())
