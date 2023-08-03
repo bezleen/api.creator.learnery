@@ -43,7 +43,6 @@ async function bootstrap() {
       threshold: 512, // only responses exceeding 512 bytes will be compressed
     }),
   )
-
   const port = config.get('PORT')
   console.log(`App is running on ${port}`)
 

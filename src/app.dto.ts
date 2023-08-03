@@ -4,10 +4,10 @@ export interface User {
   walletId: number
 }
 
-class RequestWithUser extends Request {
+interface RequestWithUser extends Request {
   user: User
 }
-export class GraphqlContext {
+export interface GraphqlContext {
   req: RequestWithUser
   res: Response
 }

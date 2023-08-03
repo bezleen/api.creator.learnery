@@ -17,11 +17,12 @@
     "gen-typings": "ts-node src/generate-typings",
     "gen-typings:watch": "ts-node src/generate-typings --watch",
     "start": "nest start",
-    "start:dev": "MODE=dev nest start --watch",
-    "start:debug": "mode=dev nest start --debug --watch",
-    "start:prod": "mode=prod pm2 start --name prod-app dist/src/main.js",
+    "start:dev": "MODE=dev nest start --watch -b swc --type-check",
+    "start:debug": "MODE=dev nest start --debug --watch -b swc --type-check",
+    "start:prod": "MODE=prod pm2 start --name app --no-daemon --cron '0 0 * * *' dist/src/main.js",
+    "poststart:prod": "pm2 delete app",
     "prestart:prod:railway": "prisma migrate deploy",
-    "start:prod:railway": "mode=prod node dist/src/main",
+    "start:prod:railway": "npm run start:prod",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "prisma:seed": "prisma db seed",
     "prisma:generate": "prisma generate",
@@ -37,9 +38,7 @@
     "test:e2e": "MODE=test jest --config ./test/jest-e2e.json",
     "test:e2e:watch": "MODE=test jest --watch --no-cache --config ./test/jest-e2e.json",
     "doc": "npx compodoc -p tsconfig.doc.json -d compodoc",
-    "prestart:dev": "npm run swagger",
-    "swagger": "nest start -b swc --type-check",
-    "postswagger": "npx ts-node src/generate-metadata.ts"
+    "clean": "npm cache clean --force"
   },
   "dependencies": {
     "@apollo/server": "^4.7.5",

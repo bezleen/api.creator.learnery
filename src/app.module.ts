@@ -24,7 +24,7 @@ import { AuthService } from './auth/auth.service'
 import { JwtService } from '@nestjs/jwt'
 
 let mode = process.env.MODE
-let envFile = '.env'
+let envFile:string
 
 switch (mode) {
   case 'test':
@@ -35,10 +35,11 @@ switch (mode) {
     process.env.NODE_ENV = 'production'
     envFile = '.env.prod'
     break
-  default:
+  case 'dev':
     mode = 'dev'
     process.env.NODE_ENV = 'development'
     envFile = '.env.local'
+    break
 }
 
 console.debug({ mode, envFile })
@@ -46,7 +47,7 @@ console.debug({ mode, envFile })
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [envFile, '.env.local', '.env.test', '.env.prod', '.env'],
+      envFilePath: [envFile,'.env'],
       isGlobal: true,
       cache: true,
       validationSchema: Joi.object({
