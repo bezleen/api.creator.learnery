@@ -13,6 +13,14 @@ export class AuthInput {
     password: string;
 }
 
+export class CreateCourseInput {
+    exampleField?: Nullable<number>;
+}
+
+export class UpdateCourseInput {
+    id: number;
+}
+
 export class AuthPayload {
     access_token: string;
 }
@@ -28,6 +36,24 @@ export abstract class IMutation {
     abstract signUp(data: AuthInput): SignUpPayload | Promise<SignUpPayload>;
 
     abstract signIn(data: AuthInput): AuthPayload | Promise<AuthPayload>;
+
+    abstract createCourse(createCourseInput: CreateCourseInput): Course | Promise<Course>;
+
+    abstract updateCourse(updateCourseInput: UpdateCourseInput): Course | Promise<Course>;
+
+    abstract removeCourse(id: number): Nullable<Course> | Promise<Nullable<Course>>;
+}
+
+export class Course {
+    exampleField?: Nullable<number>;
+}
+
+export abstract class IQuery {
+    abstract courses(): Nullable<Course>[] | Promise<Nullable<Course>[]>;
+
+    abstract course(id: number): Nullable<Course> | Promise<Nullable<Course>>;
+
+    abstract me(): User | Promise<User>;
 }
 
 export class User {
@@ -37,10 +63,6 @@ export class User {
     lastName?: Nullable<string>;
     createdAt: DateTime;
     updatedAt: DateTime;
-}
-
-export abstract class IQuery {
-    abstract me(): User | Promise<User>;
 }
 
 export type DateTime = any;
