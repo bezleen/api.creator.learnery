@@ -10,7 +10,7 @@ export class UserResolver {
   constructor(private readonly userController: UserController) {}
 
   @Query('me')
-  me(@GetUserGraphql('userId') userId: number) {
+  me(@GetUserGraphql('userId') userId: string) {
     return this.userController.getMe(userId)
   }
 }

@@ -1,22 +1,16 @@
 scalar DateTime
 
 type AuthPayload {
-  access_token: String!
+  accessToken: String!
 }
 
 input AuthInput {
-  email: String!
-  password: String!
+  clientToken: String!
+  sessionId: String!
 }
 
-type SignUpPayload {
-  id: Int!
-  email: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
+
 
 type Mutation {
-  signUp(data: AuthInput!): SignUpPayload!
   signIn(data: AuthInput!): AuthPayload!
 }

@@ -1,4 +1,4 @@
-import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common'
+import { Injectable, OnModuleInit } from '@nestjs/common'
 import { Prisma, PrismaClient } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import kleur from 'kleur'
@@ -73,12 +73,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
     console.info(new Date(), 'connecting to the database')
     await this.$connect()
-    await this.$executeRawUnsafe("SET timezone = 'Asia/Kolkata'")
 
     DB_CONNECTED = true
   }
 
-  async enableShutdownHooks(app: INestApplication) {
+/*  async enableShutdownHooks(app: INestApplication) {
     // @ts-ignore
     this.$on('beforeExit', async () => {
       await app.close()
@@ -90,5 +89,5 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       //tear down logic
       this.user.deleteMany(),
     ])
-  }
+  }*/
 }

@@ -1,70 +1,17 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
 
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "cockroachdb"
-  url      = env("DATABASE_URL")
-  // extensions = [uuidOssp(map: "uuid-ossp")]
-}
-
-// https://www.prisma.io/docs/concepts/components/prisma-schema/data-sources#securing-database-connections
 model User {
-  id Int @id @default(sequence(minValue: 1)) @db.Int4
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  email String @unique
-  hash  String
+  clerkId String @unique
 
-  firstName String?
-  lastName  String?
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
-  Course    Course[]
-
-  @@map("users")
-}
-
-model Course {
-  id Int @id @default(sequence(minValue: 1))
-
-  title       String
-  objective   String
-  description String
-
-  userId     Int
-  audienceId Int
-
-  language  String? @default("English")
-  category  String
-  tone      String? @default("Friendly")
-  modality  String? @default("Hybrid")
-  classSize String
-
-  topics String[]
-
-  duration       Int // Course Length In hours
-  durationLesson Int // Lesson Duration In minutes
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  Audience Audience @relation(fields: [audienceId], references: [id])
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt @db.Timestamptz()
-
-  @@map("courses")
-}
-
-model Audience {
-  id       Int      @id @default(sequence(minValue: 1))
-  ageStart Int
-  ageEnd   Int
-  level    String
-  Course   Course[]
-
-  @@map("audiences")
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 }

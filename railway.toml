@@ -7,7 +7,7 @@ buildCommand = "npx install -g pnpm && pnpm install && npm run build"
 
 [deploy]
 #FIXME: remove
-startCommand = "npm run start:prod:railway"
+startCommand = "npm run start:prod"
 healthcheckPath = "/health"
 healthcheckTimeout = 200
 restartPolicyType = "on_failure"

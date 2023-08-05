@@ -12,7 +12,6 @@ import { AppController } from './app.controller'
 import { GraphqlContext } from './app.dto'
 import { UserModule } from './user/user.module'
 import { PrismaModule } from './prisma/prisma.module'
-import { CourseModule } from './course/course.module'
 import { CategoryController } from './category/category.controller'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { CategoryModule } from './category/category.module'
@@ -22,6 +21,8 @@ import { CategoryService } from './category/category.service'
 import { UserService } from './user/user.service'
 import { AuthService } from './auth/auth.service'
 import { JwtService } from '@nestjs/jwt'
+import { ClerkModule } from './clerk/clerk.module'
+import { ClerkService } from './clerk/clerk.service'
 
 let mode = process.env.MODE
 let envFile:string
@@ -56,6 +57,7 @@ console.debug({ mode, envFile })
         DATABASE_URL: Joi.string(),
         JWT_SECRET: Joi.string().default('Hiro@JWT#TOKEN$'),
         JWT_MAX_AGE: Joi.number().default(2 * 60 * 60 * 1000),
+        CLERK_SECRET_KEY: Joi.string().required(),
       }),
     }),
     CacheModule.register({ isGlobal: true }),
@@ -78,11 +80,11 @@ console.debug({ mode, envFile })
     PrismaModule,
     AuthModule,
     UserModule,
-    CourseModule,
     CategoryModule,
+    ClerkModule,
   ],
   controllers: [AppController, CategoryController, UserController, AuthController],
-  providers: [AppService, CategoryService, UserService, AuthService, JwtService],
+  providers: [AppService, CategoryService, UserService, AuthService, JwtService, ClerkService],
 })
 export class AppModule {
   static createDocument(app:INestApplication ) {

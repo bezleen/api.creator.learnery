@@ -2,14 +2,17 @@ import { Test } from '@nestjs/testing'
 import { AppModule } from '../src/app.module'
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common'
 import * as pactum from 'pactum'
+import { expect } from 'pactum'
 import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '../src/prisma/prisma.service'
 import { AuthDto } from '../src/auth/dto'
-import { EditUserDto } from '../src/user/dto'
+import { ClerkService } from '../src/clerk/clerk.service'
+import { ClerkClient } from '@clerk/clerk-sdk-node/dist/types/types'
 
-describe('App e2e', () => {
+describe('e2e', () => {
   let app: INestApplication
   let prisma: PrismaService
+  let clerk: ClerkClient
   let url: string
 
   beforeAll(async () => {
@@ -20,6 +23,7 @@ describe('App e2e', () => {
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
     await app.init()
     prisma = app.get<PrismaService>(PrismaService)
+    clerk = app.get<ClerkService>(ClerkService).clerk
     const config = app.get<ConfigService>(ConfigService)
     const port = config.get('PORT')
     url = `http://localhost:${port}`
@@ -29,7 +33,7 @@ describe('App e2e', () => {
 
   afterAll(async () => {
     await app.close()
-    await prisma.cleanDb()
+    // await prisma.cleanDb()
   })
 
   describe('App', () => {
@@ -67,146 +71,99 @@ describe('App e2e', () => {
   })
 
   describe('Auth', function () {
-    const dto: AuthDto = {
-      email: 'hiro_tests@gmail.com',
-      password: 'testing@rQfAPjfVsreWGz2',
+    const user = {
+      email: 'test@learnery.com',
+      password: 'test@123',
     }
-    describe('Sign up', () => {
-      it('should signup', () => {
-        return pactum
-          .spec()
-          .post(`${url}/auth/signup`)
-          .withBody(dto)
-          .withRequestTimeout(2 * 1000) //cold start
-          .expectStatus(HttpStatus.CREATED)
-          .inspect()
-      })
 
-      it('should throw if email empty', () => {
-        return pactum
-          .spec()
-          .post('/auth/signup')
-          .withBody({
-            password: dto.password,
-          })
-          .expectStatus(400)
-          .inspect()
-      })
+    describe('clerk', () => {
+      it('sigin in via clerk', async () => {
+        const users = await clerk.users.getUserList()
 
-      it('should throw if password empty', () => {
-        return pactum
-          .spec()
-          .post('/auth/signup')
-          .withBody({
-            email: dto.email,
-          })
-          .expectStatus(400)
-          .inspect()
-      })
-
-      it('should throw if not strang  password', () => {
-        return pactum
-          .spec()
-          .post('/auth/signup')
-          .withBody({
-            email: dto.email,
-            password: '123',
-          })
-          .expectStatus(400)
-          .inspect()
-      })
-    })
-    describe('Sign in', () => {
-      it('should throw if password empty', () => {
-        return pactum
-          .spec()
-          .post('/auth/signin')
-          .withBody({
-            email: dto.email,
-          })
-          .expectStatus(400)
-          .inspect()
-      })
-      it('should throw if email empty', () => {
-        return pactum
-          .spec()
-          .post('/auth/signin')
-          .withBody({
-            password: dto.password,
-          })
-          .expectStatus(400)
-          .inspect()
-      })
-      it('should signin', () => {
-        return pactum
-          .spec()
-          .post('/auth/signin')
-          .withBody(dto)
-          .expectStatus(200)
-          .stores('userToken', 'access_token')
-          .expectCookiesLike('token')
-      })
-    })
-  })
-
-  describe('User', () => {
-    describe('Get me', () => {
-      it('should fail without header or cookies', () => {
-        return pactum.spec().get('/users/me').expectStatus(401)
-      })
-
-      it('should get current user with Bearer Token', () => {
-        return pactum
-          .spec()
-          .withHeaders({
-            Authorization: `Bearer $S{userToken}`,
-          })
-          .get('/users/me')
-          .expectStatus(200)
-      })
-
-      it('should get current user with cookies', () => {
-        return (
-          pactum
-            .spec()
-            .get('/users/me')
-            // .withCookies("token",`$S{userToken}`) //FIXME
-            // .expectStatus(HttpStatus.OK)
-            .inspect()
+        const clerkUser = users.find(
+          (u) => u.emailAddresses[0].emailAddress === user.email,
         )
+        if (!clerkUser) {
+          throw new Error('unable to sigin in clerk')
+        }
+        const session = await clerk.users.verifyPassword({
+          ...user,
+          userId: clerkUser.id,
+        })
+        expect(session.verified, true)
       })
-    })
-    describe('Edit User', () => {
-      const dto: EditUserDto = {
-        firstName: 'Hiro',
-        lastName: 'Hamada',
+
+      const dto: AuthDto = {
+        clientToken:
+          'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJkdmJfMlRaRHdzbUtzVUJvNmU2Vk8wMDVIZEY0d2htIn0.E5sLkHJsvg9XgadZgOablfZrEBHsAxnAwCr8R0UfImWp1Y4LkBelxx01zRfSxkgg3pTnOUJjFlzIb2_BYvXOsOeNHmmmqwOnu3LJcs_F2EpZgmyt1eh7p7tluo8taGjlG6r0z8gJ9rIOABVEe74XnGcCzfEnGMojosj-1YUDQe4n4XwMDm7eN40WAqJkDldfsrbCdMq3XyYs-sjxZby5PYCgT1RyDjnmmyjRTkjJ42U-lNQ95ufTHNajmUxtIHEzbSl71Jxj0zSMLveK4PnAlXD5skJisrGhOisO59M-IhdUbNuP6WeipmPaBeGZdW0MLksThesQ6A_V3M7XS89-Mg',
+        sessionId: 'sess_2TZEKKoQGOtq7X0mndg7rlyl2cQ',
       }
-      it('should edit user', () => {
-        return pactum
-          .spec()
-          .withBearerToken(`$S{userToken}`)
-          .patch('/users')
-          .withBody(dto)
-          .expectStatus(200)
-          .expectBodyContains(dto.firstName)
-          .expectBodyContains(dto.lastName)
+
+      describe('Sign in', () => {
+        it('should throw if clientToken empty', () => {
+          return pactum
+            .spec()
+            .post('/auth/signin')
+            .withBody({
+              ...dto,
+              clientToken: '',
+            })
+            .expectStatus(400)
+            .inspect()
+        })
+        it('should throw if sessionId empty', () => {
+          return pactum
+            .spec()
+            .post('/auth/signin')
+            .withBody({
+              ...dto,
+              sessionId: '',
+            })
+            .expectStatus(400)
+            .inspect()
+        })
+        it('should signin', () => {
+          return pactum
+            .spec()
+            .post('/auth/signin')
+            .withBody(dto)
+            .expectStatus(200)
+            .stores('userToken', 'access_token')
+            .expectCookiesLike('token')
+        })
       })
     })
 
-    describe('Delete User', () => {
-      it('should delete current user', () => {
-        return pactum
-          .spec()
-          .withHeaders({
-            Authorization: `Bearer $S{userToken}`,
-          })
-          .delete('/users')
-          .expectStatus(HttpStatus.OK)
+    describe('User', () => {
+      describe('Get me', () => {
+        it('should fail without header or cookies', () => {
+          return pactum.spec().get('/users/me').expectStatus(401)
+        })
+
+        it('should get current user with Bearer Token', () => {
+          return pactum
+            .spec()
+            .withHeaders({
+              Authorization: `Bearer $S{userToken}`,
+            })
+            .get('/users/me')
+            .expectStatus(200)
+        })
+
+        /* it('should get current user with cookies', () => {
+            return (
+              pactum
+                .spec()
+                .get('/users/me')
+                .withCookies({
+                  token: `$S{userId}`, //does'nt support store is passing as it is
+                })
+                .withCompression()
+                .expectStatus(HttpStatus.OK)
+                .inspect()
+            )
+          })*/
       })
     })
-  })
-
-  describe('Course', () => {
-    it.todo('CRUD Courses') //TODO:
   })
 })

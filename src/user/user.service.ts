@@ -1,42 +1,28 @@
 import { Injectable } from '@nestjs/common'
-import { PrismaService } from '../prisma/prisma.service'
+import { ClerkService } from '../clerk/clerk.service'
 import { EditUserDto } from './dto'
+import { ClerkClient } from '@clerk/clerk-sdk-node/dist/types/types'
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
-
-  findOne(userId: number) {
-    return this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    })
+  private clerk: ClerkClient
+  constructor(private clerkService: ClerkService) {
+    this.clerk = clerkService.clerk
   }
 
-  async editUser(userId: number, dto: EditUserDto) {
-    console.log({ userId, dto })
-    const user = await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        ...dto,
-      },
-    })
-
-    delete user.hash
+  async findOne(userId: string) {
+    console.debug({ userId })
+    const user = await this.clerk.users.getUser(userId)
     return user
   }
 
-  async deleteUser(userId: number) {
-    const user = await this.prisma.user.delete({
-      where: {
-        id: userId,
-      },
-    })
+  async editUser(userId: string, dto: EditUserDto) {
+    const user = await this.clerk.users.updateUser(userId, dto)
+    return user
+  }
 
-    delete user.hash
+  async deleteUser(userId: string) {
+    const user = await this.clerk.users.deleteUser(userId)
     return user
   }
 }

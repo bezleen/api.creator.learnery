@@ -1,78 +1,56 @@
 import { ForbiddenException, Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { AuthDto } from './dto'
-
-import argon from 'argon2'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
-import {
-  PrismaClientKnownRequestError,
-  PrismaClientUnknownRequestError,
-} from '@prisma/client/runtime/library'
+import { ClerkService } from '../clerk/clerk.service'
 
 @Injectable()
 export class AuthService {
+  private clerk
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
-  ) {}
+    private clerkService: ClerkService, // private userService: UserService,
+  ) {
+    this.clerk = clerkService.clerk
+  }
 
-  async signup(dto: AuthDto) {
-    const hash = await argon.hash(dto.password)
+  async validateUser(accessToken: string): Promise<any> {
+    // Implement user validation logic using Clerk.com SDK or fetch user data from the backend database based on the access token.
+    // Return the user object or null if the user is not authenticated.
+    // Example: Fetch user data using Clerk.com SDK based on the provided access token.
 
-    try {
-      const user = await this.prisma.user.create({
-        data: {
-          email: dto.email,
-          hash: hash,
-        },
-        select: {
-          //FIXME: use transformers
-          id: true,
-          email: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      })
+    // For example:
+    const user = await this.clerkService.verifyClient(accessToken)
+    if (user) {
+      // User is authenticated, return the user object
       return user
-    } catch (error) {
-      console.error({
-        code: error.code,
-        error,
-      })
-      if (
-        error instanceof PrismaClientKnownRequestError ||
-        PrismaClientUnknownRequestError
-      ) {
-        if (error.code == 'P2002') {
-          throw new ForbiddenException('credentials taken')
-        }
-      }
-      throw error
     }
+    // User is not authenticated, return null
+    return null
   }
 
   async signin(dto: AuthDto) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email: dto.email,
-      },
+    const client = await this.clerkService.verifyClient(dto.clientToken)
+
+    if (!client) throw new ForbiddenException('invalid user')
+
+    let session = client.sessions.find(({ id }) => {
+      return id === dto.sessionId
     })
 
-    if (!user) throw new ForbiddenException('incorrect credentials')
+    if (!session) throw new ForbiddenException('invalid session')
 
-    const pwMatches = await argon.verify(user.hash, dto.password)
-
-    if (!pwMatches) throw new ForbiddenException('invalid credentials')
-
-    return this.signToken(user.id, user.email)
+    return this.signToken(session.userId, session.id, client.id)
   }
 
-  async signToken(userId: number, email: string) {
+  private async signToken(userId, sessionId, clientId: string) {
     const payload = {
       sub: userId,
-      email,
+      sessionId,
+      clientId,
     }
     const secret = this.config.get('JWT_SECRET')
 

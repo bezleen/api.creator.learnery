@@ -12,13 +12,6 @@ export class AuthResolver {
     private readonly authController: AuthController,
   ) {}
 
-  @Mutation('signUp')
-  signUp(@Args('data') dto: AuthDto) {
-    console.debug({ dto })
-
-    return this.authController.signup(dto as AuthInput)
-  }
-
   @Mutation('signIn')
   signIn(@Args('data') dto: AuthDto, @Context() ctx: GraphqlContext) {
     console.debug({ dto })

@@ -1,22 +1,15 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
-import { AuthDto } from './dto'
-import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
+import { AuthDto } from './dto'
+
+import { Response } from 'express'
 
 @Controller('auth')
 @ApiTags('Authentication') // Add a tag to categorize the APIs
 export class AuthController {
   constructor(private authService: AuthService, private config: ConfigService) {}
-
-  @Post('signup')
-  @ApiOperation({ summary: 'Sign up a new user' }) // Add an operation description
-  @ApiResponse({ status: HttpStatus.CREATED, description: 'User signed up successfully' }) // Add a response description
-  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Email already exists' }) // Add another response description
-  signup(@Body() dto: AuthDto) {
-    return this.authService.signup(dto)
-  }
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')

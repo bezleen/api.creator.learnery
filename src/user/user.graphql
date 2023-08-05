@@ -1,8 +1,8 @@
 scalar DateTime
 
 type User {
-  id: Int!
-  email: String!
+  id: String!
+  email: String
   firstName: String
   lastName: String
 
