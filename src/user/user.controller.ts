@@ -13,11 +13,11 @@ import { EditUserDto } from './dto'
 import { UserService } from './user.service'
 
 @Injectable()
+@UseGuards(JwtGuard)
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(JwtGuard)
   @Get('me')
   getMe(@GetUser('userId') userId: string) {
     return this.userService.findOne(userId)

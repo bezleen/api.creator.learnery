@@ -23,9 +23,11 @@ import { AuthService } from './auth/auth.service'
 import { JwtService } from '@nestjs/jwt'
 import { ClerkModule } from './clerk/clerk.module'
 import { ClerkService } from './clerk/clerk.service'
+import { AudienceModule } from './audience/audience.module'
+import { CourseModule } from './course/course.module'
 
 let mode = process.env.MODE
-let envFile:string
+let envFile: string
 
 switch (mode) {
   case 'test':
@@ -48,7 +50,7 @@ console.debug({ mode, envFile })
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [envFile,'.env'],
+      envFilePath: [envFile, '.env.local'], //by default looks for .env file in root directory
       isGlobal: true,
       cache: true,
       validationSchema: Joi.object({
@@ -82,18 +84,29 @@ console.debug({ mode, envFile })
     UserModule,
     CategoryModule,
     ClerkModule,
+    AudienceModule,
+    CourseModule,
   ],
   controllers: [AppController, CategoryController, UserController, AuthController],
-  providers: [AppService, CategoryService, UserService, AuthService, JwtService, ClerkService],
+  providers: [
+    AppService,
+    CategoryService,
+    UserService,
+    AuthService,
+    JwtService,
+    ClerkService,
+  ],
 })
 export class AppModule {
-  static createDocument(app:INestApplication ) {
+  static createDocument(app: INestApplication) {
     const options = new DocumentBuilder()
       .setTitle('Learnery Creator APIs')
       .setDescription('apis to crud courses')
       .setVersion('1.0')
       .addTag('learnery-creator')
-      .build();
-    return SwaggerModule.createDocument(app, options);
+      .addBearerAuth()
+      .addCookieAuth('token')
+      .build()
+    return SwaggerModule.createDocument(app, options)
   }
 }

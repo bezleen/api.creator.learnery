@@ -2,7 +2,6 @@ import { Injectable, OnModuleInit } from '@nestjs/common'
 import { Prisma, PrismaClient } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import kleur from 'kleur'
-import { format } from 'sql-formatter'
 
 const logEvents: Prisma.LogDefinition[] = [
   {
@@ -55,17 +54,22 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       // console.log(chalk.yellow('Params: ') + chalk.cyan(JSON.stringify(e.params)))
       // console.log(chalk.yellow('Duration: ') + chalk.magenta(`${e.duration}ms`))
       const query = e.query
+      // const formattedQuery = prettier.format(JSON.stringify(query), {
+      //   parser: 'json',
+      // });
+      // console.info(formattedQuery)
 
-      const formattedQuery = format(query, {
+      console.log(kleur.yellow('Query: ') + kleur.magenta(query))
+
+      /* const formattedQuery = format(query, {
         language: 'postgresql',
         tabWidth: 2,
         keywordCase: 'upper',
         linesBetweenQueries: 2,
         params: e.params || [],
       })
-      console.log(kleur.yellow('Query: ') + kleur.green(formattedQuery))
       console.log(kleur.yellow('Params: ') + kleur.cyan(JSON.stringify(e.params)))
-      console.log(kleur.yellow('Duration: ') + kleur.magenta(`${e.duration}ms`))
+      console.log(kleur.yellow('Duration: ') + kleur.magenta(`${e.duration}ms`))*/
     })
   }
   async onModuleInit() {
@@ -77,7 +81,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     DB_CONNECTED = true
   }
 
-/*  async enableShutdownHooks(app: INestApplication) {
+  /*  async enableShutdownHooks(app: INestApplication) {
     // @ts-ignore
     this.$on('beforeExit', async () => {
       await app.close()

@@ -1,6 +1,3 @@
-import { CreateCourseInput } from './create-course.input'
-import { PartialType } from '@nestjs/mapped-types'
+import { UpdateCourse } from '../../graphql'
 
-export class UpdateCourseInput extends PartialType(CreateCourseInput) {
-  id: number
-}
+export class UpdateCourseInput extends UpdateCourse {}

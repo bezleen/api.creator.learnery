@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from './prisma/prisma.service'
 
 class ServiceStatus {
-  constructor(public ok: boolean = true, public status: string = 'OK', public debug: any = undefined) {}
+  constructor(
+    public ok: boolean = true,
+    public status: string = 'OK',
+    public debug: any = undefined,
+  ) {}
 }
 
 @Injectable()

@@ -1,0 +1,29 @@
+type Audience {
+  id: String!
+  ageStart: Int!
+  ageEnd: Int!
+  level: String!
+}
+
+type Query {
+  audience(id: String!): Audience
+  audiences: [Audience!]!
+}
+
+input CreateAudienceInput {
+  ageStart: Int!
+  ageEnd: Int!
+  level: String!
+}
+
+input UpdateAudienceInput {
+  ageStart: Int
+  ageEnd: Int
+  level: String
+}
+
+type Mutation {
+  createAudience(data: CreateAudienceInput!): Audience!
+  updateAudience(id: String!, data: UpdateAudienceInput!): Audience!
+  removeAudience(id: String!): Audience
+}

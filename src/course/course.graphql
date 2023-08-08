@@ -1,24 +1,61 @@
 type Course {
-  # Example field (placeholder)
-  exampleField: Int
+  id: String!
+  title: String!
+  objective: String!
+  description: String!
+  language: String
+  category: String!
+  tone: String!
+  modality: String!
+  classSize: String!
+  topics: [String!]
+  duration: Int!
+  durationLesson: Int!
+  creatorId: String!
+
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
-input CreateCourseInput {
-  # Example field (placeholder)
-  exampleField: Int
+input CreateCourse {
+  title: String!
+  objective: String!
+  description: String!
+  language: String
+  category: String!
+  tone: String!
+  modality: String!
+  classSize: String!
+  topics: [String!]
+  duration: Int!
+  durationLesson: Int!
+  audienceId: String!
 }
 
-input UpdateCourseInput {
-  id: Int!
+input UpdateCourse {
+  title: String
+  objective: String
+  description: String
+  language: String
+  category: String
+  tone: String
+  modality: String
+  classSize: String
+  topics: [String!]
+  duration: Int
+  durationLesson: Int
 }
+
 
 type Query {
   courses: [Course]!
-  course(id: Int!): Course
+  course(id: String!): Course!
 }
 
 type Mutation {
-  createCourse(createCourseInput: CreateCourseInput!): Course!
-  updateCourse(updateCourseInput: UpdateCourseInput!): Course!
-  removeCourse(id: Int!): Course
+  createCourse(data: CreateCourse!): Course
+
+  updateCourse(id: String!, data: UpdateCourse!): Course!
+
+  deleteCourse(id: String!): Course
 }

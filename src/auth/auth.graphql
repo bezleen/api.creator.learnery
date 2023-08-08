@@ -9,8 +9,6 @@ input AuthInput {
   sessionId: String!
 }
 
-
-
 type Mutation {
   signIn(data: AuthInput!): AuthPayload!
 }

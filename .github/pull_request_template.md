@@ -1,12 +1,14 @@
 ## Related Issue(s)
 
-[//]: # ([Cite any related issue&#40;s&#41; or feature request&#40;s&#41; from the repository's issue tracker.])
-Fixes #
-For #
+[//]:
+  #
+  "[Cite any related issue(s) or feature request(s) from the repository's issue tracker.]"
+
+Fixes # For #
 
 ## Proposed Changes
 
-[//]: # ([List down the specific changes you have made in this pull request.])
+[//]: # '[List down the specific changes you have made in this pull request.]'
 
 - [x]
 
@@ -20,13 +22,13 @@ For #
 
 ## API Changes documentation
 
-<!-- 
+<!--
 Leave the curl urls of old and new urls. Describe the change if its a bug fix.
 -->
+
 ```shell
 
 ```
-
 
 ```shell
 

@@ -14,4 +14,46 @@ model User {
 
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
+  Course    Course[]
+
+  @@map("users")
+}
+
+model Course {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  objective      String
+  description    String?
+  language       String?  @default("English")
+  category       String
+  tone           String   @default("Friendly")
+  modality       String   @default("Hybrid")
+  classSize      String
+  topics         String[]
+  duration       Int // Course Length In hours
+  durationLesson Int // Lesson Duration In minutes
+
+  creatorId  String
+  audienceId String    @db.ObjectId
+  Creator    User?     @relation(fields: [creatorId], references: [clerkId])
+  Audience   Audience? @relation(fields: [audienceId], references: [id])
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  @@map("courses")
+}
+
+model Audience {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  ageStart Int
+  ageEnd   Int
+  level    String   @unique
+  courses  Course[]
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  // @@unique([ageStart, ageEnd, level])
+  @@map("audiences")
 }

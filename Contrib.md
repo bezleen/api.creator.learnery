@@ -9,7 +9,6 @@
 This project utilizes ["Prisma"](https://www.prisma.io), an ORM (Object Relation Mapper)
 which facilitates db migrations, Typescript model generation out of the box.
 
-
 ### Project Dev commands
 
 1. `nest g resource`
@@ -19,7 +18,6 @@ which facilitates db migrations, Typescript model generation out of the box.
 5. `nest g filter`
 6. `cp .env.local .env && prisma migrate dev`
 7. `cp .env.local .env && prisma db seed`
-
 
 ### How to create tables/models?
 

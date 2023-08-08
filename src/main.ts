@@ -24,11 +24,13 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'https://studio.apollographql.com',
-      'surge.sh',
-      'github.io',
-      'vercel.app',
-      'localhost',
-      '*',
+      'http://surge.sh',
+      'https://github.io',
+      'https://vercel.app',
+      'http://localhost', //FIXME: doesn't seem to work
+      'http://localhost:3000',
+      'https://learnery.network',
+      '*', //TODO: check if this is needed
     ],
     credentials: true,
   })

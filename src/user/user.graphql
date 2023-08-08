@@ -5,11 +5,8 @@ type User {
   email: String
   firstName: String
   lastName: String
-
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
-type Query{
+type Query {
   me: User!
 }

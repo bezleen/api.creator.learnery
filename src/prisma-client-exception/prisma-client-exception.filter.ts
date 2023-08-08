@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common'
+import { ArgumentsHost, Catch, ConflictException } from '@nestjs/common'
 import { BaseExceptionFilter } from '@nestjs/core'
 import {
   PrismaClientKnownRequestError,
@@ -22,33 +22,19 @@ export class PrismaClientExceptionFilter
     const response = ctx.getResponse<Response>()
     // const message = exception.message.replace(/\n/g, '')
     const message = exception.message
-    switch (exception.code) {
-      case 'P2002': {
-        // https://www.prisma.io/docs/reference/api-reference/error-reference
-        // unique constraint failed
-        // const status = HttpStatus.CONFLICT
-        const payload = {
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: 'DB_ERROR:Unique input fields required',
-          error: message, // You can customize the error message based on your needs
-        }
+    console.error('DB Error:', exception.code)
+    // response?.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+    //   statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+    //   message: 'Database Error',
+    //   error: message, // You can customize the error message based on your needs
+    // })
 
-        console.error('DB:caught P2002 error')
-        response.status(HttpStatus.CONFLICT).json(payload) //FIXME
-        break
-      }
-      default:
-        // default 500 error code
-        // super.catch(exception, host)
-        console.error('DB Error:', exception.code)
-        response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Database Error',
-          error: message, // You can customize the error message based on your needs
-        })
-        break
-    }
+    throw new ConflictException({
+      message: 'Database Error',
+      error: message, // You can customize the error message based on your needs
+    })
   }
 }
 
 // https://www.prisma.io/blog/nestjs-prisma-error-handling-7D056s1kOop2
+// https://www.prisma.io/docs/reference/api-reference/error-reference

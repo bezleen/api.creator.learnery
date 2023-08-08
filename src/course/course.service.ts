@@ -1,26 +1,43 @@
 import { Injectable } from '@nestjs/common'
-import { CreateCourseInput } from './dto/create-course.input'
-import { UpdateCourseInput } from './dto/update-course.input'
+import { PrismaService } from '../prisma/prisma.service'
+import { Prisma } from '@prisma/client'
 
 @Injectable()
 export class CourseService {
-  create(createCourseInput: CreateCourseInput) {
-    return 'This action adds a new course'
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(data: Prisma.CourseUncheckedCreateInput) {
+    console.log({ createAudienceInput: data })
+    return this.prisma.course.create({
+      data: data,
+    })
   }
 
-  findAll() {
-    return `This action returns all course`
+  findAll(where?: Prisma.CourseWhereInput) {
+    return this.prisma.course.findMany({
+      where,
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`
+  findOne(where: Prisma.CourseWhereUniqueInput) {
+    return this.prisma.course.findUnique({
+      where,
+    })
   }
 
-  update(id: number, updateCourseInput: UpdateCourseInput) {
-    return `This action updates a #${id} course`
+  update(where: Prisma.CourseWhereUniqueInput, data: Prisma.CourseUpdateInput) {
+    return this.prisma.course.update({
+      where,
+      data: data,
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`
+  remove(userId: string, id: string) {
+    return this.prisma.course.delete({
+      where: {
+        id: id,
+        creatorId: userId,
+      },
+    })
   }
 }

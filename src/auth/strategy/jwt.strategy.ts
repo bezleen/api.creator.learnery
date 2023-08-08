@@ -43,9 +43,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
   private static extractJWTFromCookie(req: RequestType): string | null {
     const tokenField = 'token'
-    console.debug(req.cookies)
+    console.debug({ cookies: req.cookies })
     if (req.cookies && tokenField in req.cookies && req.cookies[tokenField].length > 0) {
-      console.log('extracted cookie')
+      console.debug('extract: cookie')
       return req.cookies.token
     }
     return null

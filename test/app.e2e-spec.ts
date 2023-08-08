@@ -9,6 +9,7 @@ import { AuthDto } from '../src/auth/dto'
 import { ClerkService } from '../src/clerk/clerk.service'
 import { ClerkClient } from '@clerk/clerk-sdk-node/dist/types/types'
 
+const graphql = '/graphql'
 describe('e2e', () => {
   let app: INestApplication
   let prisma: PrismaService
@@ -150,20 +151,245 @@ describe('e2e', () => {
             .expectStatus(200)
         })
 
-        /* it('should get current user with cookies', () => {
-            return (
-              pactum
-                .spec()
-                .get('/users/me')
-                .withCookies({
-                  token: `$S{userId}`, //does'nt support store is passing as it is
-                })
-                .withCompression()
-                .expectStatus(HttpStatus.OK)
-                .inspect()
-            )
-          })*/
+        /*it('should get current user with cookies', () => {
+           return (
+             pactum.spec()
+               .withCookies('token', `$S{userToken}`)
+               .get('/users/me')
+               .withCompression()
+               .expectStatus(HttpStatus.OK)
+               .inspect()
+           )
+         })*/
       })
     })
+
+    /*    describe('Edit User', () => {
+      const dto: EditUserDto = {
+        firstName: 'Hiro',
+        lastName: 'Hamada',
+      }
+      it('should edit user', () => {
+        return pactum
+          .spec()
+          .withBearerToken(`$S{userToken}`)
+          .patch('/users')
+          .withBody(dto)
+          .expectStatus(200)
+          .expectBodyContains(dto.firstName)
+          .expectBodyContains(dto.lastName)
+      })
+    })
+
+    describe('Delete User', () => {
+      it('should delete current user', () => {
+        return pactum
+          .spec()
+          .withHeaders({
+            Authorization: `Bearer $S{userToken}`,
+          })
+          .delete('/users')
+          .expectStatus(HttpStatus.OK)
+      })
+    })*/
+  })
+
+  describe('Course', () => {
+    it('Create: unauthorized', () => {
+      return pactum
+        .spec()
+        .post(graphql)
+        .withGraphQLQuery(
+          `
+        mutation Mutation($data: CreateCourse!) {
+          createCourse(data: $data) {
+            id
+            title
+            objective
+            description
+            language
+            category
+            tone
+            modality
+            classSize
+            topics
+            duration
+            durationLesson
+            createdAt
+            updatedAt
+          }
+        }
+  `,
+        )
+        .withGraphQLVariables({
+          data: {
+            title: 'How to ride a Bike?',
+            objective: 'Learn to ride a geared bike',
+            description: 'Learn from scratch to ride a bike',
+            category: 'null',
+            tone: 'Friendly',
+            modality: 'Hybrid class',
+            classSize: 'Standard (16-30)',
+            duration: 10,
+            durationLesson: 60,
+            language: 'English',
+            topics: ['Life Skill'],
+            audienceId: '64d06167187ee6e1bd95ea35',
+          },
+        })
+        .expectStatus(HttpStatus.OK)
+        .inspect()
+    })
+    it('Create: authorized', () => {
+      return pactum
+        .spec()
+        .withBearerToken(`$S{userToken}`)
+        .post(graphql)
+        .withGraphQLQuery(
+          `
+        mutation Mutation($data: CreateCourse!) {
+          createCourse(data: $data) {
+            id
+            title
+            objective
+            description
+            language
+            category
+            tone
+            modality
+            classSize
+            topics
+            duration
+            durationLesson
+            createdAt
+            updatedAt
+          }
+        }
+  `,
+        )
+        .withGraphQLVariables({
+          data: {
+            title: 'How to ride a Bike Always?',
+            objective: 'Learn to ride a geared bike',
+            description: 'Learn from scratch to ride a bike',
+            category: 'null',
+            tone: 'Friendly',
+            modality: 'Hybrid class',
+            classSize: 'Standard (16-30)',
+            duration: 10,
+            durationLesson: 60,
+            language: 'English',
+            topics: ['Life Skill'],
+            audienceId: '64d06167187ee6e1bd95ea35',
+          },
+        })
+        .expectStatus(HttpStatus.OK)
+        .expectBodyContains('id')
+        .expectBodyContains('title')
+        .inspect()
+    })
+    //   it('Course:get all', () => {
+    //     return pactum
+    //       .spec()
+    //       .withBearerToken(`$S{userToken}`)
+    //       .post(graphql)
+    //       .withGraphQLQuery(
+    //         `
+    //       query Query {
+    //         courses {
+    //           id
+    //           title
+    //           objective
+    //           description
+    //           language
+    //           category
+    //           tone
+    //           modality
+    //           classSize
+    //           topics
+    //           duration
+    //           durationLesson
+    //           createdAt
+    //           updatedAt
+    //         }
+    //       }
+    // `,
+    //       )
+    //       .expectStatus(HttpStatus.OK)
+    //       .expectJsonSchema({
+    //         "$schema": "http://json-schema.org/draft-07/schema#",
+    //         "type": "array",
+    //           "items": {
+    //             "type": "object",
+    //             "properties": {
+    //               "id": {
+    //                 "type": "string"
+    //               },
+    //               "title": {
+    //                 "type": "string"
+    //               },
+    //               "objective": {
+    //                 "type": "string"
+    //               },
+    //               "description": {
+    //                 "type": "string"
+    //               },
+    //               "language": {
+    //                 "type": "string"
+    //               },
+    //               "category": {
+    //                 "type": "string"
+    //               },
+    //               "tone": {
+    //                 "type": "string"
+    //               },
+    //               "modality": {
+    //                 "type": "string"
+    //               },
+    //               "classSize": {
+    //                 "type": "string"
+    //               },
+    //               "topics": {
+    //                 "type": "array",
+    //                 "items": {
+    //                   "type": "string"
+    //                 }
+    //               },
+    //               "duration": {
+    //                 "type": "integer"
+    //               },
+    //               "durationLesson": {
+    //                 "type": "integer"
+    //               },
+    //               "createdAt": {
+    //                 "type": "string",
+    //                 "format": "date-time"
+    //               },
+    //               "updatedAt": {
+    //                 "type": "string",
+    //                 "format": "date-time"
+    //               }
+    //             },
+    //             "required": [
+    //               "id",
+    //               "title",
+    //               // "objective",
+    //               // "description",
+    //               // "category",
+    //               // "tone",
+    //               // "modality",
+    //               // "classSize",
+    //               // "topics",
+    //               // "duration",
+    //               // "durationLesson",
+    //               // "createdAt",
+    //               // "updatedAt"
+    //             ]
+    //           }
+    //         }
+    //       )
+    //       .inspect()
+    //
+    //   }) //FIXME:
   })
 })
