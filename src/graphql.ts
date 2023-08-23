@@ -26,18 +26,18 @@ export class AuthInput {
 }
 
 export class CreateCourse {
-  title: string
-  objective: string
-  description: string
-  language?: Nullable<string>
-  category: string
-  tone: string
-  modality: string
-  classSize: string
-  topics?: Nullable<string[]>
-  duration: number
-  durationLesson: number
-  audienceId: string
+    title: string
+    objective: string
+    description: string
+    language?: Nullable<string>
+    category: string
+    tone: string
+    modality: string
+    classSize: string
+    topics?: Nullable<string[]>
+    duration: number
+    durationLesson: number
+    audienceId: string
 }
 
 export class UpdateCourse {
@@ -76,22 +76,22 @@ export abstract class IQuery {
 }
 
 export abstract class IMutation {
-  abstract createAudience(data: CreateAudienceInput): Audience | Promise<Audience>
+    abstract createAudience(data: CreateAudienceInput): Audience | Promise<Audience>
 
-  abstract updateAudience(
-    id: string,
-    data: UpdateAudienceInput,
-  ): Audience | Promise<Audience>
+    abstract updateAudience(
+      id: string,
+      data: UpdateAudienceInput,
+    ): Audience | Promise<Audience>
 
-  abstract removeAudience(id: string): Nullable<Audience> | Promise<Nullable<Audience>>
+    abstract removeAudience(id: string): Nullable<Audience> | Promise<Nullable<Audience>>
 
-  abstract signIn(data: AuthInput): AuthPayload | Promise<AuthPayload>
+    abstract signIn(data: AuthInput): AuthPayload | Promise<AuthPayload>
 
-  abstract createCourse(data: CreateCourse): Nullable<Course> | Promise<Nullable<Course>>
+    abstract createCourse(data: CreateCourse): Nullable<Course> | Promise<Nullable<Course>>
 
-  abstract updateCourse(id: string, data: UpdateCourse): Course | Promise<Course>
+    abstract updateCourse(id: string, data: UpdateCourse): Course | Promise<Course>
 
-  abstract deleteCourse(id: string): Nullable<Course> | Promise<Nullable<Course>>
+    abstract deleteCourse(id: string): Nullable<Course> | Promise<Nullable<Course>>
 }
 
 export class AuthPayload {
@@ -99,21 +99,21 @@ export class AuthPayload {
 }
 
 export class Course {
-  id: string
-  title: string
-  objective: string
-  description: string
-  language?: Nullable<string>
-  category: string
-  tone: string
-  modality: string
-  classSize: string
-  topics?: Nullable<string[]>
-  duration: number
-  durationLesson: number
-  creatorId: string
-  createdAt: DateTime
-  updatedAt: DateTime
+    id: string
+    title: string
+    objective: string
+    description: string
+    language?: Nullable<string>
+    category: string
+    tone: string
+    modality: string
+    classSize: string
+    topics?: Nullable<string[]>
+    duration: number
+    durationLesson: number
+    creatorId: string
+    createdAt: DateTime
+    updatedAt: DateTime
 }
 
 export class User {

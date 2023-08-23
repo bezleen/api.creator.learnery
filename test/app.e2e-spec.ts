@@ -73,16 +73,23 @@ describe('e2e', () => {
 
   describe('Auth', function () {
     const user = {
-      email: 'test@learnery.com',
-      password: 'test@123',
+      email: 'e2e@learnery.network',
+      password: 'e2e@123',
     }
 
     describe('clerk', () => {
       it('sigin in via clerk', async () => {
         const users = await clerk.users.getUserList()
 
+        console.log({users})
+
         const clerkUser = users.find(
-          (u) => u.emailAddresses[0].emailAddress === user.email,
+          (u) => {
+            const emailAddress = u?.emailAddresses?.find(
+              (e) => e?.emailAddress === user?.email
+            )
+            return emailAddress
+          },
         )
         if (!clerkUser) {
           throw new Error('unable to sigin in clerk')

@@ -57,3 +57,25 @@ model Audience {
   // @@unique([ageStart, ageEnd, level])
   @@map("audiences")
 }
+
+model Lesson {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  sections Section[]
+
+  @@map("lessons")
+}
+
+type Section {
+  title  String
+  topics Topic[]
+}
+
+type Topic {
+  title            String
+  onScreenContent  String
+  description      String
+  detailedCoverage String
+  resource         String?
+  timing           String?
+}
