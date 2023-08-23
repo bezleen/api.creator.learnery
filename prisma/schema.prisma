@@ -40,7 +40,10 @@ model Course {
 
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
-  Lesson    Lesson[]
+
+  lessonOrder String[] @default([]) // Array of lesson Object IDs representing the order
+
+  Lesson Lesson[]
 
   @@map("courses")
 }
