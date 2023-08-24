@@ -8,10 +8,9 @@ import { Prisma } from '@prisma/client'
 export class AudienceService {
   constructor(private readonly prisma: PrismaService) {}
   async create(createAudienceInput: CreateAudience) {
-    let aud = await this.findOne({ level: createAudienceInput.level })
-    if (aud) {
-      // return this.update(aud.id, createAudienceInput)
-      throw new ConflictException(`resource found with id-${aud.id}`)
+    const { ageStart, ageEnd } = createAudienceInput
+    if (ageStart > ageEnd || ageStart == ageEnd) {
+      throw new ConflictException('invalid age range')
     }
 
     return this.prisma.audience.create({

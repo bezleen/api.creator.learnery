@@ -9,7 +9,7 @@ export default async () => {
           {
             AuthDto: {
               clientToken: { required: true, type: () => String },
-              sessionId: { required: false, type: () => String },
+              sessionId: { required: true, type: () => String },
             },
           },
         ],
@@ -25,11 +25,16 @@ export default async () => {
         ],
         [import('./category/dto/create-category.dto'), { CreateCategoryDto: {} }],
         [import('./category/dto/update-category.dto'), { UpdateCategoryDto: {} }],
+        [import('./audience/entities/audience.entity'), { Audience: {} }],
         [import('./category/entities/category.entity'), { Category: {} }],
+        [import('./course/entities/course.entity'), { Course: {} }],
       ],
       controllers: [
-        [import('./app.controller'), { AppController: { getHello: {}, getHealth: {} } }],
         [import('./auth/auth.controller'), { AuthController: { signin: {} } }],
+        [
+          import('./app/app.controller'),
+          { AppController: { getHello: {}, getHealth: {} } },
+        ],
         [
           import('./user/user.controller'),
           { UserController: { getMe: {}, editUser: {}, deleteUser: {} } },
@@ -37,13 +42,7 @@ export default async () => {
         [
           import('./category/category.controller'),
           {
-            CategoryController: {
-              create: { type: String },
-              findAll: { type: [String] },
-              findOne: { type: String },
-              update: { type: String },
-              remove: { type: String },
-            },
+            CategoryController: { create: { type: String }, findAll: { type: [String] } },
           },
         ],
       ],

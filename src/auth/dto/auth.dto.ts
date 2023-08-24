@@ -7,5 +7,11 @@ export class AuthDto {
 
   @IsString()
   @IsNotEmpty()
-  sessionId?: string
+  sessionId: string
+}
+
+export interface CookieJWT {
+  sub: string
+  sessionId: string
+  clientId: string
 }

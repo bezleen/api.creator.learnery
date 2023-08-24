@@ -1,6 +1,40 @@
-### Enable Cors
+### Cors-I
+
+OPTIONS /auth/signin
+Origin: https://creator-learnery-git-api-william-laciferin.vercel.app
+Host: {{u}}
+Access-Control-Request-Method: GET
+Access-Control-Request-Headers: content-type
+
+
+### Enable Cors Origin
 
 OPTIONS {{u}}
+
+### Enable Cors
+
+OPTIONS /
+Origin: https://vercel.app
+Host: {{u}}
+Access-Control-Request-Method: GET
+Access-Control-Request-Headers: content-type
+Access-Control-Allow-Credentials: true
+
+### Enable Cors
+
+OPTIONS /
+Origin: http://localhost
+Host: {{u}}
+Access-Control-Request-Method: GET
+Access-Control-Request-Headers: content-type
+
+###  Cors: Fail
+
+OPTIONS /
+Origin: https://www.google.com
+Host: {{u}}
+Access-Control-Request-Method: GET
+Access-Control-Request-Headers: content-type
 
 ### Home
 GET {{u}}
@@ -18,6 +52,8 @@ Content-Type: application/json
 "clientToken":"{{clientToken}}",
   "sessionId": "{{sessionId}}"
 }
+
+
 ### Me
 GET {{u}}/users/me
 

@@ -39,3 +39,9 @@ which facilitates db migrations, Typescript model generation out of the box.
 
 - npm: Executes pre/post scripts
 - pnpm: doesn't execute pre scripts
+
+### Jest
+
+```
+ts-jest config:migrate test/jest-e2e.json
+```

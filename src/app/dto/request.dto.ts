@@ -10,4 +10,5 @@ interface RequestWithUser extends Request {
 export interface GraphqlContext {
   req: RequestWithUser
   res: Response
+  connection?: any
 }

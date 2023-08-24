@@ -3,6 +3,7 @@ type Audience {
   ageStart: Int!
   ageEnd: Int!
   level: String!
+  desc: String
 }
 
 type Query {
@@ -14,12 +15,14 @@ input CreateAudienceInput {
   ageStart: Int!
   ageEnd: Int!
   level: String!
+  desc: String
 }
 
 input UpdateAudienceInput {
   ageStart: Int
   ageEnd: Int
   level: String
+  desc: String
 }
 
 type Mutation {
