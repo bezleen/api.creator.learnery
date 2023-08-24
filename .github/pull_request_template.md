@@ -1,14 +1,12 @@
 ## Related Issue(s)
 
-Fixes # 
-For #
-
+Fixes # For #
 
 ## Proposed Changes
 
 - [x] feat:
-- [x] fix: 
- 
+- [x] fix:
+
 ## Checklist
 
 - [x] I have followed the repository's contribution guidelines.
@@ -17,12 +15,11 @@ For #
 - [x] I have tested my changes and they function as expected.
 - [x] I have added suitable unit tests (if applicable).
 
-
 ## To-Do
 
 <!-- [If there are any pending tasks or follow-ups, list them here.] -->
 
-1. 
+1.
 
 ## Additional Information
 
