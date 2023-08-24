@@ -74,8 +74,8 @@ console.debug({ mode, envFile })
         DATABASE_URL: Joi.string(),
         JWT_SECRET: Joi.string().default('Hiro@JWT#TOKEN$'),
         JWT_MAX_AGE: Joi.number()
-          .default(Number.MAX_SAFE_INTEGER-1)//2 * 60 * 60 * 1000)
-          .max(Number.MAX_SAFE_INTEGER-1)
+          .default(Number.MAX_SAFE_INTEGER - 1) //2 * 60 * 60 * 1000)
+          .max(Number.MAX_SAFE_INTEGER - 1)
           .min(60 * 1000),
         CLERK_SECRET_KEY: Joi.string().required().min(10),
         DOMAIN: Joi.string().optional().default(''),

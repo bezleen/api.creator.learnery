@@ -1,4 +1,9 @@
-import { ConflictException, ForbiddenException, HttpException, Injectable } from '@nestjs/common'
+import {
+  ConflictException,
+  ForbiddenException,
+  HttpException,
+  Injectable,
+} from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { Prisma } from '@prisma/client'
 import {
@@ -13,9 +18,19 @@ import { GenTitlePrompt, InstructionGenTitle } from '@src/course/dto/gen-title.a
 import { AudienceService } from '@src/audience/audience.service'
 import { LLMChain } from 'langchain/chains'
 import { ChatOpenAI } from 'langchain/chat_models'
-import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from 'langchain/prompts'
-import { GenObjectivePrompt, InstructionGenObjective } from '@src/course/dto/gen-course-objectives.ai.prompt'
-import { GenOutlinePrompt, InstructionGenOutline } from '@src/course/dto/gen-course-outline.ai.prompt'
+import {
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  SystemMessagePromptTemplate,
+} from 'langchain/prompts'
+import {
+  GenObjectivePrompt,
+  InstructionGenObjective,
+} from '@src/course/dto/gen-course-objectives.ai.prompt'
+import {
+  GenOutlinePrompt,
+  InstructionGenOutline,
+} from '@src/course/dto/gen-course-outline.ai.prompt'
 import NodeCache from 'node-cache'
 import {
   GenDetailedOutlinePrompt,
@@ -38,10 +53,14 @@ export class CourseService {
     private readonly openai: OpenAIService,
     private readonly audienceService: AudienceService,
   ) {
-    const chat = () => new ChatOpenAI({
-      temperature: 0, verbose:true, n:1,streaming: true,
-      modelName: 'gpt-3.5-turbo-16k'//FIXME: gpt-4
-    }) //or this.openai TODO:
+    const chat = () =>
+      new ChatOpenAI({
+        temperature: 0,
+        verbose: true,
+        n: 1,
+        streaming: true,
+        modelName: 'gpt-3.5-turbo-16k', //FIXME: gpt-4
+      }) //or this.openai TODO:
     const chatTitlePrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(GenTitlePrompt.template),
       HumanMessagePromptTemplate.fromTemplate(InstructionGenTitle),
@@ -124,8 +143,7 @@ export class CourseService {
     })
   }
 
-  async createCourseTitle(userId: string, courseId:string) {
-
+  async createCourseTitle(userId: string, courseId: string) {
     const course = await this.findOne({
       id: courseId,
     })
@@ -169,8 +187,7 @@ export class CourseService {
 
     return getTitles as [GeneratedCourseTitle]
   }
-  async createCourseObjective(userId: string, courseId:string) {
-
+  async createCourseObjective(userId: string, courseId: string) {
     const course = await this.findOne({
       id: courseId,
     })
@@ -202,8 +219,7 @@ export class CourseService {
 
     return getObjectives as [GeneratedCourseObjective]
   }
-  async createCourseOutline(userId: string,courseId:string) {
-
+  async createCourseOutline(userId: string, courseId: string) {
     let course: any = this.cache.get(courseId) //FIXME: remove on release
     if (!course) {
       course = await this.findOne({
@@ -233,7 +249,7 @@ export class CourseService {
     getOutline = JSON.parse(getOutline.text)
 
     setTimeout(async () => {
-      if(!getOutline){
+      if (!getOutline) {
         return
       }
       await this.update({ id: courseId }, { outline: getOutline })

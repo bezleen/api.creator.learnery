@@ -111,7 +111,7 @@ type DetailedOutlineSection {
   topics: [DetailedOutlineTopic]!
 }
 
-type DetailedOutlineTopic{
+type DetailedOutlineTopic {
   title: String!
   onScreenContent: String!
   topicDescription: String!
@@ -121,7 +121,7 @@ type DetailedOutlineTopic{
   timingMins: Int!
 }
 
-input  DetailedOutlineTopicInput{
+input DetailedOutlineTopicInput {
   title: String!
   onScreenContent: String!
   topicDescription: String!
@@ -130,7 +130,6 @@ input  DetailedOutlineTopicInput{
   connection: [String!]!
   timingMins: Int!
 }
-
 
 input UpdateDetailedOutlineSectionInput {
   title: String!

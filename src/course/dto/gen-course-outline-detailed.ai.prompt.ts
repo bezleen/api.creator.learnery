@@ -150,64 +150,63 @@ const getDetailedOutlineSample = {
 }
 
 const genDetailedOutlineSchema = {
-    "type": "object",
-    "properties": {
-      "detailedOutline": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "section": { "type": "string" },
-            "topic": { "type": "string" },
-            "onScreenContent": { "type": "string" },
-            "topicDescription": { "type": "string" },
-            "detailedCoverage": { "type": "string" },
-            "resources": { "type": "string" },
-            "timingMins": { "type": "string" },
-            "connection": {
-              "type": "array",
-              "items": { "type": "string" }
-            }
+  type: 'object',
+  properties: {
+    detailedOutline: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          section: { type: 'string' },
+          topic: { type: 'string' },
+          onScreenContent: { type: 'string' },
+          topicDescription: { type: 'string' },
+          detailedCoverage: { type: 'string' },
+          resources: { type: 'string' },
+          timingMins: { type: 'string' },
+          connection: {
+            type: 'array',
+            items: { type: 'string' },
           },
-          "required": [
-            "topic",
-            "onScreenContent",
-            "topicDescription",
-            "detailedCoverage",
-            "resources",
-            "timingMins",
-            "connection"
-          ]
-        }
-      },
-      "summary": {
-        "type": "object",
-        "properties": {
-          "totalSections": { "type": "number" },
-          "totalTopics": { "type": "number" },
-          "courseHours": { "type": "number" }
         },
-        "required": ["totalSections", "totalTopics", "courseHours"]
+        required: [
+          'topic',
+          'onScreenContent',
+          'topicDescription',
+          'detailedCoverage',
+          'resources',
+          'timingMins',
+          'connection',
+        ],
       },
-      "objectiveTopicConnections": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "objective": { "type": "string" },
-            "topics": {
-              "type": "array",
-              "items": { "type": "string" }
-            }
-          },
-          "required": ["objective", "topics"]
-        }
-      },
-      "rationale": { "type": "string" }
     },
-    "required": ["detailedOutline", "summary", "objectiveTopicConnections", "rationale"]
-  }
-
+    summary: {
+      type: 'object',
+      properties: {
+        totalSections: { type: 'number' },
+        totalTopics: { type: 'number' },
+        courseHours: { type: 'number' },
+      },
+      required: ['totalSections', 'totalTopics', 'courseHours'],
+    },
+    objectiveTopicConnections: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          objective: { type: 'string' },
+          topics: {
+            type: 'array',
+            items: { type: 'string' },
+          },
+        },
+        required: ['objective', 'topics'],
+      },
+    },
+    rationale: { type: 'string' },
+  },
+  required: ['detailedOutline', 'summary', 'objectiveTopicConnections', 'rationale'],
+}
 
 const getCourseDetailedOutlinePromptTemplate: string = ` 
 Your a senior course designer. 
@@ -220,7 +219,7 @@ Your task as a senior course designer is to create a detailed course outline bas
 Strictly adhere to the output format: ${getDetailedOutlineSample}
 `.trim()
 
-export const InstructionGenDetailedOutline =`
+export const InstructionGenDetailedOutline = `
 Create a detailed course outline for the course described above, incorporating the UbD and UDL frameworks. The course should be designed to be flexible, allowing for online or hybrid formats with in-person and online sessions. The class size is expected to be around 16 to 30 students.
 
 Please follow the guidelines below to structure the course outline:
