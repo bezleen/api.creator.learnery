@@ -1,4 +1,3 @@
-
 /*
  * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
@@ -9,249 +8,258 @@
 /* eslint-disable */
 
 export class CreateAudienceInput {
-    ageStart: number;
-    ageEnd: number;
-    level: string;
-    desc?: Nullable<string>;
+  ageStart: number
+  ageEnd: number
+  level: string
+  desc?: Nullable<string>
 }
 
 export class UpdateAudienceInput {
-    ageStart?: Nullable<number>;
-    ageEnd?: Nullable<number>;
-    level?: Nullable<string>;
-    desc?: Nullable<string>;
+  ageStart?: Nullable<number>
+  ageEnd?: Nullable<number>
+  level?: Nullable<string>
+  desc?: Nullable<string>
 }
 
 export class AuthInput {
-    clientToken: string;
-    sessionId: string;
+  clientToken: string
+  sessionId: string
 }
 
 export class CreateCourse {
-    title: string;
-    description: string;
-    language?: Nullable<string>;
-    category: string;
-    tone: string;
-    modality: string;
-    classSize: string;
-    topics?: Nullable<Nullable<string>[]>;
-    duration: number;
-    durationLesson: number;
-    audienceId: string;
+  title: string
+  description: string
+  language?: Nullable<string>
+  category: string
+  tone: string
+  modality: string
+  classSize: string
+  topics?: Nullable<Nullable<string>[]>
+  duration: number
+  durationLesson: number
+  audienceId: string
 }
 
 export class UpdateCourse {
-    title?: Nullable<string>;
-    objective?: Nullable<string[]>;
-    description?: Nullable<string>;
-    language?: Nullable<string>;
-    category?: Nullable<string>;
-    tone?: Nullable<string>;
-    modality?: Nullable<string>;
-    classSize?: Nullable<string>;
-    topics?: Nullable<string[]>;
-    duration?: Nullable<number>;
-    durationLesson?: Nullable<number>;
-    audienceId?: Nullable<string>;
-    outline?: Nullable<UpdateCourseOutline>;
-    detailedOutline?: Nullable<UpdateCourseDetailedOutline>;
+  title?: Nullable<string>
+  objective?: Nullable<string[]>
+  description?: Nullable<string>
+  language?: Nullable<string>
+  category?: Nullable<string>
+  tone?: Nullable<string>
+  modality?: Nullable<string>
+  classSize?: Nullable<string>
+  topics?: Nullable<string[]>
+  duration?: Nullable<number>
+  durationLesson?: Nullable<number>
+  audienceId?: Nullable<string>
+  outline?: Nullable<UpdateCourseOutline>
+  detailedOutline?: Nullable<UpdateCourseDetailedOutline>
 }
 
 export class CreateCourseTitle {
-    courseId: string;
+  courseId: string
 }
 
 export class CreateCourseObjective {
-    courseId: string;
+  courseId: string
 }
 
 export class CreateCourseOutline {
-    courseId: string;
+  courseId: string
 }
 
 export class UpdateCourseOutline {
-    courseDuration: string;
-    inScope: InputTopic[];
-    outOfScope: InputTopic[];
-    explanation?: Nullable<string>;
+  courseDuration: string
+  inScope: InputTopic[]
+  outOfScope: InputTopic[]
+  explanation?: Nullable<string>
 }
 
 export class UpdateCourseDetailedOutline {
-    sections: UpdateDetailedOutlineSectionInput[];
-    objectiveTopicConnections: UpdateDetailedOutlineObjectiveInput[];
-    summary: CourseDetailedSummaryInput;
-    rationale: string;
+  sections: UpdateDetailedOutlineSectionInput[]
+  objectiveTopicConnections: UpdateDetailedOutlineObjectiveInput[]
+  summary: CourseDetailedSummaryInput
+  rationale: string
 }
 
 export class DetailedOutlineTopicInput {
-    title: string;
-    onScreenContent: string;
-    topicDescription: string;
-    detailedCoverage: string;
-    resources: string;
-    connection: string[];
-    timingMins: number;
+  title: string
+  onScreenContent: string
+  topicDescription: string
+  detailedCoverage: string
+  resources: string
+  connection: string[]
+  timingMins: number
 }
 
 export class UpdateDetailedOutlineSectionInput {
-    title: string;
-    topics?: Nullable<DetailedOutlineTopicInput[]>;
+  title: string
+  topics?: Nullable<DetailedOutlineTopicInput[]>
 }
 
 export class UpdateDetailedOutlineObjectiveInput {
-    objective: string;
-    topics?: Nullable<string[]>;
+  objective: string
+  topics?: Nullable<string[]>
 }
 
 export class CourseDetailedSummaryInput {
-    totalSections: number;
-    totalTopics: number;
-    courseHours: number;
+  totalSections: number
+  totalTopics: number
+  courseHours: number
 }
 
 export class InputTopic {
-    topic: string;
-    subtopics: Nullable<string>[];
+  topic: string
+  subtopics: Nullable<string>[]
 }
 
 export class Audience {
-    id: string;
-    ageStart: number;
-    ageEnd: number;
-    level: string;
-    desc?: Nullable<string>;
+  id: string
+  ageStart: number
+  ageEnd: number
+  level: string
+  desc?: Nullable<string>
 }
 
 export abstract class IQuery {
-    abstract audience(id: string): Nullable<Audience> | Promise<Nullable<Audience>>;
+  abstract audience(id: string): Nullable<Audience> | Promise<Nullable<Audience>>
 
-    abstract audiences(): Audience[] | Promise<Audience[]>;
+  abstract audiences(): Audience[] | Promise<Audience[]>
 
-    abstract categories(): string[] | Promise<string[]>;
+  abstract categories(): string[] | Promise<string[]>
 
-    abstract courses(): Nullable<Course>[] | Promise<Nullable<Course>[]>;
+  abstract courses(): Nullable<Course>[] | Promise<Nullable<Course>[]>
 
-    abstract course(id: string): Course | Promise<Course>;
+  abstract course(id: string): Course | Promise<Course>
 
-    abstract me(): User | Promise<User>;
+  abstract me(): User | Promise<User>
 }
 
 export abstract class IMutation {
-    abstract createAudience(data: CreateAudienceInput): Audience | Promise<Audience>;
+  abstract createAudience(data: CreateAudienceInput): Audience | Promise<Audience>
 
-    abstract updateAudience(id: string, data: UpdateAudienceInput): Audience | Promise<Audience>;
+  abstract updateAudience(
+    id: string,
+    data: UpdateAudienceInput,
+  ): Audience | Promise<Audience>
 
-    abstract removeAudience(id: string): Nullable<Audience> | Promise<Nullable<Audience>>;
+  abstract removeAudience(id: string): Nullable<Audience> | Promise<Nullable<Audience>>
 
-    abstract signIn(data: AuthInput): AuthPayload | Promise<AuthPayload>;
+  abstract signIn(data: AuthInput): AuthPayload | Promise<AuthPayload>
 
-    abstract createCourse(data: CreateCourse): Nullable<Course> | Promise<Nullable<Course>>;
+  abstract createCourse(data: CreateCourse): Nullable<Course> | Promise<Nullable<Course>>
 
-    abstract updateCourse(id: string, data: UpdateCourse): Course | Promise<Course>;
+  abstract updateCourse(id: string, data: UpdateCourse): Course | Promise<Course>
 
-    abstract deleteCourse(id: string): Nullable<Course> | Promise<Nullable<Course>>;
+  abstract deleteCourse(id: string): Nullable<Course> | Promise<Nullable<Course>>
 
-    abstract createCourseTitle(courseId: string): Nullable<GeneratedCourseTitle>[] | Promise<Nullable<GeneratedCourseTitle>[]>;
+  abstract createCourseTitle(
+    courseId: string,
+  ): Nullable<GeneratedCourseTitle>[] | Promise<Nullable<GeneratedCourseTitle>[]>
 
-    abstract createCourseObjective(courseId: string): Nullable<GeneratedCourseObjective>[] | Promise<Nullable<GeneratedCourseObjective>[]>;
+  abstract createCourseObjective(
+    courseId: string,
+  ): Nullable<GeneratedCourseObjective>[] | Promise<Nullable<GeneratedCourseObjective>[]>
 
-    abstract createCourseOutline(courseId: string): CourseOutline | Promise<CourseOutline>;
+  abstract createCourseOutline(courseId: string): CourseOutline | Promise<CourseOutline>
 
-    abstract createCourseDetailedOutline(courseId: string): CourseDetailedOutline | Promise<CourseDetailedOutline>;
+  abstract createCourseDetailedOutline(
+    courseId: string,
+  ): CourseDetailedOutline | Promise<CourseDetailedOutline>
 }
 
 export class AuthPayload {
-    accessToken: string;
+  accessToken: string
 }
 
 export class Course {
-    id: string;
-    title: string;
-    objective?: Nullable<string[]>;
-    description: string;
-    language?: Nullable<string>;
-    category: string;
-    tone: string;
-    modality: string;
-    classSize: string;
-    topics?: Nullable<string[]>;
-    duration: number;
-    durationLesson: number;
-    creatorId: string;
-    audienceId: string;
-    outline?: Nullable<CourseOutline>;
-    detailedOutline?: Nullable<CourseDetailedOutline>;
-    createdAt: DateTime;
-    updatedAt: DateTime;
-    audience: Audience;
+  id: string
+  title: string
+  objective?: Nullable<string[]>
+  description: string
+  language?: Nullable<string>
+  category: string
+  tone: string
+  modality: string
+  classSize: string
+  topics?: Nullable<string[]>
+  duration: number
+  durationLesson: number
+  creatorId: string
+  audienceId: string
+  outline?: Nullable<CourseOutline>
+  detailedOutline?: Nullable<CourseDetailedOutline>
+  createdAt: DateTime
+  updatedAt: DateTime
+  audience: Audience
 }
 
 export class GeneratedCourseTitle {
-    title: string;
-    reason?: Nullable<string>;
+  title: string
+  reason?: Nullable<string>
 }
 
 export class GeneratedCourseObjective {
-    objective: string;
-    outcome?: Nullable<string>;
+  objective: string
+  outcome?: Nullable<string>
 }
 
 export class CourseOutline {
-    courseDuration: string;
-    inScope: Topic[];
-    outOfScope: Topic[];
-    explanation?: Nullable<string>;
+  courseDuration: string
+  inScope: Topic[]
+  outOfScope: Topic[]
+  explanation?: Nullable<string>
 }
 
 export class CourseDetailedOutline {
-    sections: DetailedOutlineSection[];
-    objectiveTopicConnections: DetailedOutlineObjective[];
-    summary: CourseDetailedSummary;
-    rationale: string;
+  sections: DetailedOutlineSection[]
+  objectiveTopicConnections: DetailedOutlineObjective[]
+  summary: CourseDetailedSummary
+  rationale: string
 }
 
 export class DetailedOutlineSection {
-    title: string;
-    topics: Nullable<DetailedOutlineTopic>[];
+  title: string
+  topics: Nullable<DetailedOutlineTopic>[]
 }
 
 export class DetailedOutlineTopic {
-    title: string;
-    onScreenContent: string;
-    topicDescription: string;
-    detailedCoverage: string;
-    resources: string;
-    connection: string[];
-    timingMins: number;
+  title: string
+  onScreenContent: string
+  topicDescription: string
+  detailedCoverage: string
+  resources: string
+  connection: string[]
+  timingMins: number
 }
 
 export class DetailedOutlineObjective {
-    objective: string;
-    topics?: Nullable<string[]>;
+  objective: string
+  topics?: Nullable<string[]>
 }
 
 export class CourseDetailedSummary {
-    totalSections: number;
-    totalTopics: number;
-    courseHours: number;
+  totalSections: number
+  totalTopics: number
+  courseHours: number
 }
 
 export class Topic {
-    topic: string;
-    subtopics: string[];
+  topic: string
+  subtopics: string[]
 }
 
 export abstract class ISubscription {
-    abstract courseUpdated(courseId: string): Course | Promise<Course>;
+  abstract courseUpdated(courseId: string): Course | Promise<Course>
 }
 
 export class User {
-    id: string;
-    email?: Nullable<string>;
-    firstName?: Nullable<string>;
-    lastName?: Nullable<string>;
+  id: string
+  email?: Nullable<string>
+  firstName?: Nullable<string>
+  lastName?: Nullable<string>
 }
 
-export type DateTime = any;
-type Nullable<T> = T | null;
+export type DateTime = any
+type Nullable<T> = T | null

@@ -34,7 +34,6 @@
     "test:watch": "MODE=test jest --watch",
     "test:cov": "MODE=test jest --coverage",
     "test:debug": "MODE=test node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    
     "test:e2e": "jest --config ./jest-config.ts",
     "test:e2e:watch": "MODE=test jest --watch --no-cache --config ./test/jest-e2e.ts",
     "doc": "npx compodoc -p tsconfig.doc.json -d compodoc",
