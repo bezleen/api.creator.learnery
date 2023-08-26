@@ -4194,7 +4194,7 @@ packages:
       debug: 4.3.4
       eventemitter2: 6.4.9
       require-in-the-middle: 5.2.0
-      semver: 6.3.0
+      semver: 6.3.1
       shimmer: 1.2.1
       signal-exit: 3.0.7
       tslib: 1.9.3
