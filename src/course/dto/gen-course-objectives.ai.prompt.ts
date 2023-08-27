@@ -1,4 +1,8 @@
-import { PromptTemplate } from 'langchain'
+import {
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  SystemMessagePromptTemplate,
+} from 'langchain/prompts'
 
 const getCourseObjectivePromptTemplate: string = `
 "Let's go with "{title}"
@@ -49,7 +53,7 @@ const genObjectiveSchema = {
   },
 }
 
-export const InstructionGenObjective = `
+ const InstructionGenObjective = `
   Please write at least 4 concise learning objectives and outcomes that learners can expect to achieve after completing your course. 
   
   The expected format is an array of objectives:
@@ -67,6 +71,9 @@ export const InstructionGenObjective = `
 
 `.trim()
 
-export const GenObjectivePrompt = PromptTemplate.fromTemplate(
-  getCourseObjectivePromptTemplate,
-)
+
+
+export const chatObjectivePrompt = ChatPromptTemplate.fromPromptMessages([
+  SystemMessagePromptTemplate.fromTemplate(getCourseObjectivePromptTemplate),
+  HumanMessagePromptTemplate.fromTemplate(InstructionGenObjective),
+])

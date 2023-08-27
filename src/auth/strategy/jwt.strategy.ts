@@ -33,13 +33,12 @@ export class JwtStrategy
       ignoreExpiration: mode == 'dev' || mode == 'test',
       secretOrKey: config.get('JWT_SECRET'),
     })
-    cookieName = config.get('COOKIE_NAME') || 'token'
+    cookieName = config.get('COOKIE_NAME')
   }
 
   onModuleInit() {
     this.clientCache = new NodeCache({ stdTTL: 100, checkperiod: 200 })
     this.sessionCache = new NodeCache({ stdTTL: 20, checkperiod: 40 })
-    cookieName = this.config.get('COOKIE_NAME')
   }
 
   // https://clerk.com/docs/reference/node/getting-started

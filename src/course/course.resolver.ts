@@ -1,4 +1,4 @@
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { CourseService } from './course.service'
 import { CreateCourseInput } from './dto/create-course.input'
 import { UpdateCourseInput } from './dto/update-course.input'
@@ -6,15 +6,23 @@ import { UseGuards } from '@nestjs/common'
 import { GqlAuthGuard } from '@auth/guard'
 import { GetUserGraphql } from '@auth/decorator'
 import { Course } from '@src/graphql'
-import { AudienceService } from '@/audience/audience.service'
+
+function validateCourse(course: Partial<Course>) {
+  console.debug('validating course')
+  const {
+    audience: { ageStart, ageEnd, level, desc },
+  } = course
+
+  if (ageStart >= ageEnd) {
+    throw new Error('ageStart cannot be greater or equal than ageEnd')
+  }
+}
+
 
 @Resolver('Course')
 @UseGuards(GqlAuthGuard)
 export class CourseResolver {
-  constructor(
-    private readonly courseService: CourseService,
-    private readonly audienceService: AudienceService,
-  ) {}
+  constructor(private readonly courseService: CourseService) {}
 
   @Mutation('createCourse')
   create(
@@ -22,6 +30,9 @@ export class CourseResolver {
     @Args('data') createCourseInput: CreateCourseInput,
   ) {
     console.debug('creating course')
+
+    validateCourse(createCourseInput)
+
     return this.courseService.create({
       ...createCourseInput,
       creatorId: userId,
@@ -86,11 +97,6 @@ export class CourseResolver {
     @Args('courseId') courseId: string,
   ) {
     return this.courseService.createCourseDetailedOutline(userId, courseId)
-  }
-
-  @ResolveField('audience')
-  audience(@Parent() course: Course) {
-    return this.audienceService.findOne({ id: course.audienceId })
   }
 
   // https://docs.nestjs.com/graphql/subscriptions

@@ -21,7 +21,7 @@ model User {
 
 model Course {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  title          String
+  title          String?
   objective      String[] @default([])
   description    String?  @default("")
   language       String?  @default("English")
@@ -33,10 +33,9 @@ model Course {
   duration       Int // Course Length In hours
   durationLesson Int // Lesson Duration In minutes
 
-  creatorId  String // clerkUserId
-  audienceId String    @db.ObjectId
-  Creator    User?     @relation(fields: [creatorId], references: [clerkId])
-  Audience   Audience? @relation(fields: [audienceId], references: [id])
+  creatorId String // clerkUserId
+  Creator   User?    @relation(fields: [creatorId], references: [clerkId])
+  audience  Audience
 
   outline         CourseOutline? // Graphql type is enough
   detailedOutline CourseDetailedOutline? // Graphql ...
@@ -77,11 +76,11 @@ type DetailedOutlineSection {
 }
 
 type DetailedOutlineSectionTopic {
-  title            String
-  onScreenContent  String
-  topicDescription String
-  detailedCoverage String
-  resources        String
+  title            String?
+  onScreenContent  String?
+  topicDescription String?
+  detailedCoverage String?
+  resources        String?
   timingMins       Int
   connection       String[]
 }
@@ -96,19 +95,11 @@ type CourseTopic {
   subtopics String[]
 }
 
-model Audience {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+type Audience {
   ageStart Int
   ageEnd   Int
   level    String
-  desc     String?  @db.String // audience needs & interests
-  courses  Course[]
-
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
-
-  @@unique([ageStart, ageEnd, level])
-  @@map("audiences")
+  desc     String?
 }
 
 model Lesson {

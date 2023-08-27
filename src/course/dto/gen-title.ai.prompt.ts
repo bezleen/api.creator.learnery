@@ -1,4 +1,8 @@
-import { PromptTemplate } from 'langchain'
+import {
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  SystemMessagePromptTemplate,
+} from 'langchain/prompts'
 
 const GenTitleSample = [
   {
@@ -59,15 +63,18 @@ The class size is around {classSize} students.
 `.trim()
 // i am going with f-strings over jinja-2
 
-export const InstructionGenTitle = `
+const InstructionGenTitle = `
  Create a list of 5 course titles, each with a brief reasons (no more than 30 to 50 words) on why each title is a suitable one for this course. Make sure the titles are concise, engaging, and catchy. 
  Here is a sample expected answer for your ref:  I am expecting you to give a json object of the following format
  """
  ${GenTitleSample}
  """
 `.trim()
-// FIXME: can be included in systemmessage
-export const GenTitlePrompt = PromptTemplate.fromTemplate(getTitlePromptTemplate)
+
+export const chatTitlePrompt =ChatPromptTemplate.fromPromptMessages([
+  SystemMessagePromptTemplate.fromTemplate(getTitlePromptTemplate),
+  HumanMessagePromptTemplate.fromTemplate(InstructionGenTitle),
+])
 
 // FIXME: optimize move sample to Template
 

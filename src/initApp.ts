@@ -49,13 +49,31 @@ export async function initApp(app: INestApplication) {
       callback(new Error('cors: failed'), false)
     },
     credentials: true,
+    allowedHeaders: ['content-type', 'authorization', 'Accept-Version'],
+    exposedHeaders: ['*'],
+    preflightContinue: true,
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE', 'PATCH', 'HEAD'],
     optionsSuccessStatus: 200, //204 No content
   }
   // corsOptions= { //FIXME: not working
   //   origin: whitelist ,
+
   //   credentials: true,
   // }
-  app.enableCors(corsOptions)
+  // app.enableCors(corsOptions)
+
+  // app.use(cors())
+  app.enableCors({
+    origin: [
+      'https://studio.apollographql.com',
+      'http://localhost:3000',
+      'https://vercel.app',
+      /\.vercel\.app$/,
+    ],
+    credentials: true,
+    // optionsSuccessStatus: 200,
+    // preflightContinue: true,
+  })
   app.useGlobalFilters(new PrismaClientExceptionFilter())
   app.enableVersioning({
     type: VersioningType.HEADER,

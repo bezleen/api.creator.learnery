@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  ForbiddenException,
-  HttpException,
-  Injectable,
-} from '@nestjs/common'
+import { ConflictException, ForbiddenException, HttpException, Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { Prisma } from '@prisma/client'
 import {
@@ -14,92 +9,48 @@ import {
   GeneratedCourseTitle,
 } from '@src/graphql'
 import { OpenAIService } from '@ai/openai/openAIService'
-import { GenTitlePrompt, InstructionGenTitle } from '@src/course/dto/gen-title.ai.prompt'
-import { AudienceService } from '@src/audience/audience.service'
-import { LLMChain } from 'langchain/chains'
+import { chatTitlePrompt } from '@src/course/dto/gen-title.ai.prompt'
+import { ConversationChain } from 'langchain/chains'
 import { ChatOpenAI } from 'langchain/chat_models'
-import {
-  ChatPromptTemplate,
-  HumanMessagePromptTemplate,
-  SystemMessagePromptTemplate,
-} from 'langchain/prompts'
-import {
-  GenObjectivePrompt,
-  InstructionGenObjective,
-} from '@src/course/dto/gen-course-objectives.ai.prompt'
-import {
-  GenOutlinePrompt,
-  InstructionGenOutline,
-} from '@src/course/dto/gen-course-outline.ai.prompt'
 import NodeCache from 'node-cache'
-import {
-  GenDetailedOutlinePrompt,
-  InstructionGenDetailedOutline,
-} from '@/course/dto/gen-course-outline-detailed.ai.prompt'
+import { BufferMemory } from 'langchain/memory'
+import { chatDetailedOutlinePrompt } from '@/course/dto/gen-course-outline-detailed.ai.prompt'
+import { chatObjectivePrompt } from '@/course/dto/gen-course-objectives.ai.prompt'
+import { chatOutlinePrompt } from '@/course/dto/gen-course-outline.ai.prompt'
 
 // export const pubSub = new PubSub()
 // https://docs.nestjs.com/graphql/subscriptions#pubsub TODO: preferred approach
 
 @Injectable()
 export class CourseService {
-  private createTitleChain: LLMChain
-  private createObjectiveChain: LLMChain //FIXME: can be made a class variable
-  private createOutlineChain: LLMChain<string, ChatOpenAI>
-  private createDetailedOutlineChain: LLMChain<string, ChatOpenAI>
-  private cache: NodeCache
+  private cache: NodeCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
+  private chainCache: NodeCache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly openai: OpenAIService,
-    private readonly audienceService: AudienceService,
-  ) {
+  ) {}
+
+  getCourseChain(courseId: string): ConversationChain {
     const chat = () =>
       new ChatOpenAI({
         temperature: 0,
         verbose: true,
         n: 1,
         streaming: true,
-        modelName: 'gpt-3.5-turbo-16k', //FIXME: gpt-4
-      }) //or this.openai TODO:
-    const chatTitlePrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(GenTitlePrompt.template),
-      HumanMessagePromptTemplate.fromTemplate(InstructionGenTitle),
-    ])
-    const chatObjectivePrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(GenObjectivePrompt.template),
-      HumanMessagePromptTemplate.fromTemplate(InstructionGenObjective),
-    ])
-    const chatOutlinePrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(GenOutlinePrompt.template),
-      HumanMessagePromptTemplate.fromTemplate(InstructionGenOutline),
-    ])
-    const chatDetailedOutlinePrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(GenDetailedOutlinePrompt.template),
-      HumanMessagePromptTemplate.fromTemplate(InstructionGenDetailedOutline),
-    ])
-
-    /*FIXME: this is just PoC fails in scale. When there are concurrent queries fails easily*/
-    this.createTitleChain = new LLMChain({ llm: chat(), prompt: chatTitlePrompt })
-    this.createObjectiveChain = new LLMChain({ llm: chat(), prompt: chatObjectivePrompt }) //FIXME: it bettor to use a different connection
-    const createOutlineChain = new LLMChain({ llm: chat(), prompt: chatOutlinePrompt }) //FIXME: it bettor to use a different connection
-
-    this.createOutlineChain = createOutlineChain
-    this.createDetailedOutlineChain = new LLMChain({
-      llm: chat(),
-      prompt: chatDetailedOutlinePrompt,
-    })
-
-    this.cache = new NodeCache({ stdTTL: 0, checkperiod: 0 })
-
-    // TODO: integrate pineconeDB
+        modelName: 'gpt-3.5-turbo-16k', //FIXME: gpt-4 once we have paid billing
+      })
+    let chain: ConversationChain = this.chainCache.get(courseId)
+    if (!chain) {
+      chain = new ConversationChain({ llm: chat(), memory: new BufferMemory() })
+      this.chainCache.set(courseId, chain)
+    }
+    return chain
   }
 
   async create(data: Prisma.CourseUncheckedCreateInput) {
     console.debug({ createCourse: data })
-    const audience = await this.audienceService.findOne({ id: data.audienceId })
-    if (!audience) {
-      throw new HttpException('Audience not found', 404)
-    }
+
     return this.prisma.course.create({
       data: {
         ...data,
@@ -126,9 +77,12 @@ export class CourseService {
         where,
         data: data,
       })
-    } catch (e) {
+    } catch (e:any ) {
       console.error({ update: e, ctx: where }) //FIXME: exposes logic and stack trace to FE
-      throw new ConflictException(e, e['meta'])
+      if('meta' in e){
+        throw new ConflictException(e, e.meta)
+      }
+      throw new ConflictException(e, e)
     }
     // pubSub.publish(`course:${course.id}`, { course })
     return course
@@ -144,22 +98,8 @@ export class CourseService {
   }
 
   async createCourseTitle(userId: string, courseId: string) {
-    const course = await this.findOne({
-      id: courseId,
-    })
-    if (!course) {
-      throw new HttpException('Course not found', 404)
-    }
-    if (course.creatorId != userId) {
-      throw new ForbiddenException("Course doesn't belong to you")
-    }
-
-    const audience = await this.audienceService.findOne({ id: course.audienceId })
-    if (!audience) {
-      throw new HttpException('Audience not found', 404)
-    }
-
-    console.log({ course, audience })
+    const course =  await this.retrieveCourseForLLM(courseId, userId)
+    const {audience} = course
 
     const templateVal = {
       ...course,
@@ -172,138 +112,111 @@ export class CourseService {
       level: audience.level,
       audienceDescription: audience.desc,
     }
-    const formattedPrompt = await GenTitlePrompt.format(templateVal)
 
-    console.log({ formattedPrompt }) //FIXME comment once the flow is stable
-
-    let getTitles = await this.createTitleChain.call(templateVal)
-
-    // this.openai.call(`verify or convert to json format: ${GenTitleSample}`)
-
-    // getTitles = getTitles.text.split("\n\n")
-    console.log({ getTitles })
-
-    getTitles = JSON.parse(getTitles.text)
+    const getTitles = await this.openai.converseAI<[GeneratedCourseTitle]>(
+      chatTitlePrompt,
+      templateVal,
+      'genCourseTitle',
+    )
 
     return getTitles as [GeneratedCourseTitle]
   }
+
   async createCourseObjective(userId: string, courseId: string) {
-    const course = await this.findOne({
-      id: courseId,
-    })
+    const course =  await this.retrieveCourseForLLM(courseId, userId)
 
-    if (!course) {
-      throw new HttpException('Course not found', 404)
-    }
-    if (course.creatorId != userId) {
-      throw new ForbiddenException("Course doesn't belong to you")
-    }
-
-    if (course.title.trim() == '') {
+    if (!course.title) {
       throw new HttpException('Course Title not found', 404)
     }
 
-    const formattedPrompt = await GenObjectivePrompt.format({
+    const templateVal = {
       title: course.title,
-    })
+    }
+    const getObjectives = await this.openai.converseAI<[GeneratedCourseObjective]>(
+      chatObjectivePrompt,
+      templateVal,
+      'genCourseObjectives',
+    )
 
-    console.log({ formattedPrompt })
+    setTimeout(async () => {
+      if (!getObjectives) {
+        return
+      }
 
-    let getObjectives = await this.createObjectiveChain.call({
-      title: course.title,
-    })
+      const objectives = getObjectives.map(({ objective,outcome })=> {
+        return objective
+      })
+      await this.update({ id: courseId }, { objective: objectives})
+    }, 50)
 
-    console.log({ getObjectives })
-
-    getObjectives = JSON.parse(getObjectives.text)
 
     return getObjectives as [GeneratedCourseObjective]
   }
+
   async createCourseOutline(userId: string, courseId: string) {
-    let course: any = this.cache.get(courseId) //FIXME: remove on release
-    if (!course) {
-      course = await this.findOne({
-        id: courseId,
-      })
-    }
-    this.cache.set(courseId, course)
-    if (!course) {
-      throw new HttpException('Course not found', 404)
-    }
-    if (course.creatorId != userId) {
-      throw new ForbiddenException("Course doesn't belong to you")
-    }
+    const course =  await this.retrieveCourseForLLM(courseId, userId)
 
-    const audience = await this.audienceService.findOne({ id: course.audienceId })
-    if (!audience) {
-      throw new HttpException('Audience not found', 404)
-    }
 
-    let getOutline = await this.createOutlineChain.call({
+    const templateVal = {
       ...course,
-      audience: JSON.stringify(audience),
-    })
+      audience: JSON.stringify(course.audience),
+    }
 
-    console.log({ getOutline })
-
-    getOutline = JSON.parse(getOutline.text)
+    let getOutline = await this.openai.converseAI<CourseOutline>(
+      chatOutlinePrompt,
+      templateVal,
+      'genCourseOutline',
+    )
 
     setTimeout(async () => {
       if (!getOutline) {
         return
       }
       await this.update({ id: courseId }, { outline: getOutline })
-    }, 50)
+    }, 200)
 
     return getOutline as CourseOutline
   }
+
   async createCourseDetailedOutline(userId: string, courseId: string) {
-    const key = `detailed-${courseId}` //FIXME: remove after dev
-    let course: any = this.cache.get(key)
-    if (!course) {
-      course = await this.findOne({
-        id: courseId,
-      })
-    }
-    this.cache.set(key, course)
-    if (!course) {
-      throw new HttpException('Course not found', 404)
-    }
-    if (course.creatorId != userId) {
-      throw new ForbiddenException("Course doesn't belong to you")
-    }
-
-    const audience = await this.audienceService.findOne({ id: course.audienceId })
-    if (!audience) {
-      throw new HttpException('Audience not found', 404)
-    }
-
+    const course =  await this.retrieveCourseForLLM(courseId, userId)
     delete course['detailedOutline']
-    const promptValues = {
+    const templateVal = {
       course: JSON.stringify(course),
-      audience: JSON.stringify(audience),
+      audience: JSON.stringify(course.audience),
     }
 
-    const formattedPrompt = await GenDetailedOutlinePrompt.format(promptValues)
-
-    console.log({ formattedCourseDetailOutline: formattedPrompt })
-
-    let getDetailedOutline = await this.createDetailedOutlineChain.call(promptValues)
-
-    console.log({ getDetailedOutline })
-
-    getDetailedOutline = JSON.parse(getDetailedOutline.text)
-
-    // getDetailedOutline = getDetailedOutline['detailedOutline']
-
-    if (getDetailedOutline.length == 0) {
-      throw new HttpException('Course Outline not found', 404)
-    }
+    let getDetailedOutline = await this.openai.converseAI(
+      await chatDetailedOutlinePrompt(),
+      templateVal,
+      'genCourseDetailedOutline',
+    )
 
     setTimeout(async () => {
       await this.update({ id: courseId }, { detailedOutline: getDetailedOutline })
     }, 100)
     return getDetailedOutline as CourseDetailedOutline
+  }
+
+  private async retrieveCourseForLLM(courseId:string, userId:string){
+    /*let course: any = this.cache.get(key)
+    if (!course) {
+      course = await this.findOne({
+        id: courseId,
+      })
+    }
+    this.cache.set(key, course)*/
+    const course = await  this.findOne({id: courseId})
+
+    if (!course) {
+      throw new HttpException('Course not found', 404)
+    }
+
+    if (course.creatorId != userId) {
+      throw new ForbiddenException("Course doesn't belong to you")
+    }
+
+    return course
   }
 }
 

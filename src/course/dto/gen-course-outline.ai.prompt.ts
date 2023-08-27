@@ -1,4 +1,8 @@
-import { PromptTemplate } from 'langchain'
+import {
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  SystemMessagePromptTemplate,
+} from 'langchain/prompts'
 
 const getOutlineSample = {
   courseDuration: '8 weeks',
@@ -106,7 +110,7 @@ ${getOutlineSample}
 
 `.trim()
 
-export const InstructionGenOutline = `
+const InstructionGenOutline = `
 
 The course planned so far: 
 title: {title}
@@ -117,6 +121,8 @@ courseDuration: {duration}h
 
 `.trim()
 
-export const GenOutlinePrompt = PromptTemplate.fromTemplate(
-  getCourseOutlinePromptTemplate,
-)
+export const chatOutlinePrompt = ChatPromptTemplate.fromPromptMessages([
+  SystemMessagePromptTemplate.fromTemplate(  getCourseOutlinePromptTemplate,
+  ),
+  HumanMessagePromptTemplate.fromTemplate(InstructionGenOutline),
+])

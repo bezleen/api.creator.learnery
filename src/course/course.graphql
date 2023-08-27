@@ -1,6 +1,6 @@
 type Course {
-  id: String!
-  title: String!
+  id: String
+  title: String
   objective: [String!]
   description: String!
   language: String
@@ -13,8 +13,6 @@ type Course {
   durationLesson: Int!
   creatorId: String!
 
-  audienceId: String!
-
   outline: CourseOutline
   detailedOutline: CourseDetailedOutline
 
@@ -24,8 +22,23 @@ type Course {
   audience: Audience!
 }
 
+type Audience {
+  ageStart: Int!
+  ageEnd: Int!
+  level: String!
+  desc: String
+}
+
+input CreateAudienceInput {
+  ageStart: Int!
+  ageEnd: Int!
+  level: String!
+  desc: String
+}
+
+
+
 input CreateCourse {
-  title: String!
   description: String!
   language: String
   category: String!
@@ -35,7 +48,7 @@ input CreateCourse {
   topics: [String]
   duration: Int!
   durationLesson: Int!
-  audienceId: String!
+  audience: CreateAudienceInput!
 }
 
 input UpdateCourse {
@@ -50,7 +63,7 @@ input UpdateCourse {
   topics: [String!]
   duration: Int
   durationLesson: Int
-  audienceId: String
+  audience: CreateAudienceInput
 
   outline: UpdateCourseOutline
   detailedOutline: UpdateCourseDetailedOutline

@@ -18,12 +18,12 @@ export class AiModule implements OnModuleInit {
     const pineconeKey = this.config.get('PINECONE_API_KEY')
     const pineconeEnv = this.config.get('PINECONE_API_ENV')
     const pineconeIndex = this.config.get('PINECONE_INDEX')
-    setTimeout(async () => {
+    /*setTimeout(async () => { //FIXME: disable pinecone
       await this.pinecone.initService({
         env: pineconeEnv,
         key: pineconeKey,
         index: pineconeIndex,
       })
-    }, 50)
+    }, 50)*/
   }
 }

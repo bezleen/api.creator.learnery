@@ -1,10 +1,44 @@
 ### Cors-I
 
 OPTIONS /auth/signin
-Origin: https://creator-learnery-git-api-william-laciferin.vercel.app
+Origin: https://creator-learnery.vercel.app
+Host: {{u}}
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: content-type
+
+### Cors-II
+
+OPTIONS /auth/signin
+Origin: http://localhost
+Host: {{u}}
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: content-type
+
+### Cors-III
+
+OPTIONS /users/me
+Origin: http://localhost
 Host: {{u}}
 Access-Control-Request-Method: GET
-Access-Control-Request-Headers: content-type
+
+### Cors-IV
+
+OPTIONS http://hiro:1606/auth/signin
+host: hiro:1606
+proxy-connection: keep-alive
+accept: */*
+access-control-request-method: POST
+access-control-request-headers: content-type
+origin: http://localhost:3000
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36
+sec-fetch-mode: cors
+referer: http://localhost:3000/
+accept-encoding: gzip, deflate
+accept-language: en-GB,en-US;q=0.9,en;q=0.8
+content-length: 0
+
+###
+
 
 
 ### Enable Cors Origin
@@ -52,7 +86,6 @@ Content-Type: application/json
 "clientToken":"{{clientToken}}",
   "sessionId": "{{sessionId}}"
 }
-
 
 ### Me
 GET {{u}}/users/me

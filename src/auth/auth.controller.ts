@@ -9,10 +9,7 @@ import { Request, Response } from 'express'
 @Controller('auth')
 @ApiTags('Authentication') // Add a tag to categorize the APIs
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private config: ConfigService,
-  ) {}
+  constructor(private authService: AuthService, private config: ConfigService) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')
@@ -28,7 +25,7 @@ export class AuthController {
     const token = await this.authService.signin(dto)
 
     const cookieName = this.config.get('COOKIE_NAME')
-    const cookiePath = this.config.get('DOMAIN_PATH')
+    const cookiePath = this.config.get('COOKIE_PATH')
     res.clearCookie(cookieName, { path: cookiePath })
 
     console.log('signin: setting cookie for', req.ip)
@@ -40,19 +37,9 @@ export class AuthController {
       secure: true,
       httpOnly: true,
       sameSite: 'none',
-      signed: true, //FIXME: sign cookies in future
+      signed: true,
     })
 
-    res.cookie(cookieName, token.access_token, {
-      //FIXME: if this works, appolo sandbox its workign
-      path: cookiePath,
-      domain: this.config.get('DOMAIN'),
-      maxAge: this.config.get<number>('JWT_MAX_AGE'),
-      secure: false,
-      httpOnly: true,
-      sameSite: 'none',
-      signed: true, //FIXME: sign cookies in future
-    })
     res.send(token)
   }
 }
