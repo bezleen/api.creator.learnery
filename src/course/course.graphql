@@ -36,8 +36,6 @@ input CreateAudienceInput {
   desc: String
 }
 
-
-
 input CreateCourse {
   description: String!
   language: String

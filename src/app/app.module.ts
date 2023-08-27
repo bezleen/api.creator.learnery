@@ -71,23 +71,26 @@ console.debug({ mode, envFile })
         DATABASE_URL: Joi.string(),
         JWT_SECRET: Joi.string().default('Hiro@JWT#TOKEN$'),
         JWT_MAX_AGE: Joi.number()
-          .default(Number.MAX_SAFE_INTEGER>>1) //2 * 60 * 60 * 1000)
-          .max(Number.MAX_SAFE_INTEGER-1) //to round to 0
+          .default(Number.MAX_SAFE_INTEGER >> 1) //2 * 60 * 60 * 1000)
+          .max(Number.MAX_SAFE_INTEGER - 1) //to round to 0
           .min(60 * 1000),
         CLERK_SECRET_KEY: Joi.string().required().min(10),
         DOMAIN: Joi.string().optional().default(''),
         COOKIE_PATH: Joi.string().optional().default('/').min(1),
         COOKIE_NAME: Joi.string().optional().default('token').min(2),
         OPENAI_API_KEY: Joi.string().required().min(20), //FIXME: change length
-        OPENAI_CHAT_MODEL: Joi.string().optional().default('gpt-3.5-turbo-16k').valid(
-          'gpt-3.5-turbo',
-          'gpt-3.5-turbo-0613',
-          'gpt-3.5-turbo-16k-0613',
-          'gpt-3.5-turbo-16k',
-          'gpt-4',
-          'gpt-4-32k',
-          'gpt-3.5-turbo-16k-0613',
-        ) ,
+        OPENAI_CHAT_MODEL: Joi.string()
+          .optional()
+          .default('gpt-3.5-turbo-16k')
+          .valid(
+            'gpt-3.5-turbo',
+            'gpt-3.5-turbo-0613',
+            'gpt-3.5-turbo-16k-0613',
+            'gpt-3.5-turbo-16k',
+            'gpt-4',
+            'gpt-4-32k',
+            'gpt-3.5-turbo-16k-0613',
+          ),
         PINECONE_API_KEY: Joi.string().required().min(30),
         PINECONE_API_ENV: Joi.string().required().min(7),
         PINECONE_INDEX: Joi.string().optional().default('learnery'),
@@ -146,7 +149,7 @@ console.debug({ mode, envFile })
   ],
   controllers: [AppController, CategoryController, UserController, AuthController],
   providers: [
-  /*  {
+    /*  {
       provide: APP_FILTER, //FIXME; not working try with invalid pinecone cred
       useClass: GlobalExceptionFilter,
     },*/
