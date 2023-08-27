@@ -38,7 +38,7 @@ jobs:
         with:
           dry: false
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
-          same_commit: false
+          same_commit: true
           commit_message: 'style: pretty'
           commit_description: ''
           file_pattern: '*'
