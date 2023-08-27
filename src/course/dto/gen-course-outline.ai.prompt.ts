@@ -122,7 +122,6 @@ courseDuration: {duration}h
 `.trim()
 
 export const chatOutlinePrompt = ChatPromptTemplate.fromPromptMessages([
-  SystemMessagePromptTemplate.fromTemplate(  getCourseOutlinePromptTemplate,
-  ),
+  SystemMessagePromptTemplate.fromTemplate(getCourseOutlinePromptTemplate),
   HumanMessagePromptTemplate.fromTemplate(InstructionGenOutline),
 ])

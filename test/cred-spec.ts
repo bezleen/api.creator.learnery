@@ -6,13 +6,13 @@ export const dto: AuthDto = {
   sessionId: 'sess_2U1uGjI8tJOmnBAd1vePbi4dw3Q',
 }
 
-
 const devUser = {
   email: 'dev@learnery.network',
   password: 'test',
 }
 
 export const devLogin = {
-  sessionId: "sess_2UUTnjSSbnCR5sUTkSF9StqiVpw",
-  clientToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJkdmJfMlUxdlVSS3FiQXBXWmZDbUFKdXRpc0Vua3NWIn0.oSsXqvdqe3-a9CxVR290emzbvlBd98T5MK1xdEArufrFycl7v5ijzV5BAwGvizPh4e9Q-958_txssU417Es6z8VJCla64XEFB32IMEyD4DykYcsTrOH28um6RwL5vRI0h0P20C0tmsIliYIAh2mte6me5qA7aEhI5NKvlpFmXfuaq-L6EhzvnvekB2OyRX6fxPrrMxVEIGK1nJwLazbh7M2b9RLiHWM6ehgdTd4g0yI-F2eIdu1VDlH4lqxCDQ2_LrKKeQwDVXC0txpoDMappSbkf94n0E51J6QHgXHxxNwHuo-hsZuweRbpRE4utkhOd4nW5iHFhn49eru2CwkeiQ"
+  sessionId: 'sess_2UUTnjSSbnCR5sUTkSF9StqiVpw',
+  clientToken:
+    'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXYiOiJkdmJfMlUxdlVSS3FiQXBXWmZDbUFKdXRpc0Vua3NWIn0.oSsXqvdqe3-a9CxVR290emzbvlBd98T5MK1xdEArufrFycl7v5ijzV5BAwGvizPh4e9Q-958_txssU417Es6z8VJCla64XEFB32IMEyD4DykYcsTrOH28um6RwL5vRI0h0P20C0tmsIliYIAh2mte6me5qA7aEhI5NKvlpFmXfuaq-L6EhzvnvekB2OyRX6fxPrrMxVEIGK1nJwLazbh7M2b9RLiHWM6ehgdTd4g0yI-F2eIdu1VDlH4lqxCDQ2_LrKKeQwDVXC0txpoDMappSbkf94n0E51J6QHgXHxxNwHuo-hsZuweRbpRE4utkhOd4nW5iHFhn49eru2CwkeiQ',
 }

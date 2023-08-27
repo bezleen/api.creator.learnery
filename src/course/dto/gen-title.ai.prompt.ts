@@ -71,7 +71,7 @@ const InstructionGenTitle = `
  """
 `.trim()
 
-export const chatTitlePrompt =ChatPromptTemplate.fromPromptMessages([
+export const chatTitlePrompt = ChatPromptTemplate.fromPromptMessages([
   SystemMessagePromptTemplate.fromTemplate(getTitlePromptTemplate),
   HumanMessagePromptTemplate.fromTemplate(InstructionGenTitle),
 ])
