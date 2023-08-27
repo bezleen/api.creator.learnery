@@ -84,6 +84,7 @@ const detailedOutlineSample = {
   required: ['detailedOutline', 'summary', 'objectiveTopicConnections', 'rationale'],
 }
 
+
 const detailedOutlineSchema = {
   type: 'object',
   properties: {
@@ -148,7 +149,7 @@ Your a senior course designer.
 You are expected to create a detailed course outline based on user request, incorporating the UbD and UDL frameworks.
 `.trim()
 
-let InstructionGenDetailedOutline = `
+ let InstructionGenDetailedOutline = `
  
 The audience for the course is {audience}
 Here is the course designed so far: {course}. The course has already been designed with the rough outline. Now expand it and detail it
@@ -185,29 +186,24 @@ rationale: Please provide a detailed rationale for the curriculum, explaining th
 
 `.trim()
 
-const instructionTempl = HumanMessagePromptTemplate.fromTemplate(
-  InstructionGenDetailedOutline,
-)
+
+const instructionTempl = HumanMessagePromptTemplate.fromTemplate(InstructionGenDetailedOutline)
 
 // detailedOutlineSchema: ${genDetailedOutlineSchema}
 
-export const chatDetailedOutlinePrompt = async () => {
-  let prompt2 = await instructionTempl.format({
-    audience: 'Any one age 10+',
-    course: {
-      title: 'AI Beginner Course',
-    },
-  })
 
-  console.debug({ prompt2 })
+export  const chatDetailedOutlinePrompt = async ()=> {
+  let prompt2 =
+      await instructionTempl.format({ audience: 'Any one age 10+', course: {
+        title: 'AI Beginner Course' } })
+
+  console.debug({prompt2})
 
   return ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(prompt1),
     HumanMessagePromptTemplate.fromTemplate(prompt2.content),
     AIMessagePromptTemplate.fromTemplate(`${detailedOutlineSample}`),
     HumanMessagePromptTemplate.fromTemplate(InstructionGenDetailedOutline),
-    SystemMessagePromptTemplate.fromTemplate(
-      `transform the output strictly to this schema. rename the keys if not matching: ${detailedOutlineSchema}`,
-    ),
+    SystemMessagePromptTemplate.fromTemplate(`transform the output strictly to this schema. rename the keys if not matching: ${detailedOutlineSchema}`)
   ])
 }

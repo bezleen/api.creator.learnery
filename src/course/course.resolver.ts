@@ -18,6 +18,7 @@ function validateCourse(course: Partial<Course>) {
   }
 }
 
+
 @Resolver('Course')
 @UseGuards(GqlAuthGuard)
 export class CourseResolver {

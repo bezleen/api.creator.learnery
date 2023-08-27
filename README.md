@@ -4,6 +4,12 @@ Backend engine written on top of nest.js
 
 ![learnery-ai-2023070551946](https://github.com/learnery-engine/learnery-backend/assets/24226219/4f6c4a7b-9000-46e1-b218-b2c06af66358)
 
+## Technical Docs
+
+- [x] Deployed [here](https://learnery-engine.github.io/api.creator.learnery)
+- [x] Swagger doc [here](https://learnery.up.railway.app/api)
+- [x] Graphql Doc [here](https://studio.apollographql.com/org/learnery/graphs)
+
 ## Installation
 
 ```bash

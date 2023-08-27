@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  ForbiddenException,
-  HttpException,
-  Injectable,
-} from '@nestjs/common'
+import { ConflictException, ForbiddenException, HttpException, Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { Prisma } from '@prisma/client'
 import {
@@ -82,9 +77,9 @@ export class CourseService {
         where,
         data: data,
       })
-    } catch (e: any) {
+    } catch (e:any ) {
       console.error({ update: e, ctx: where }) //FIXME: exposes logic and stack trace to FE
-      if ('meta' in e) {
+      if('meta' in e){
         throw new ConflictException(e, e.meta)
       }
       throw new ConflictException(e, e)
@@ -103,8 +98,8 @@ export class CourseService {
   }
 
   async createCourseTitle(userId: string, courseId: string) {
-    const course = await this.retrieveCourseForLLM(courseId, userId)
-    const { audience } = course
+    const course =  await this.retrieveCourseForLLM(courseId, userId)
+    const {audience} = course
 
     const templateVal = {
       ...course,
@@ -128,7 +123,7 @@ export class CourseService {
   }
 
   async createCourseObjective(userId: string, courseId: string) {
-    const course = await this.retrieveCourseForLLM(courseId, userId)
+    const course =  await this.retrieveCourseForLLM(courseId, userId)
 
     if (!course.title) {
       throw new HttpException('Course Title not found', 404)
@@ -148,17 +143,19 @@ export class CourseService {
         return
       }
 
-      const objectives = getObjectives.map(({ objective, outcome }) => {
+      const objectives = getObjectives.map(({ objective,outcome })=> {
         return objective
       })
-      await this.update({ id: courseId }, { objective: objectives })
+      await this.update({ id: courseId }, { objective: objectives})
     }, 50)
+
 
     return getObjectives as [GeneratedCourseObjective]
   }
 
   async createCourseOutline(userId: string, courseId: string) {
-    const course = await this.retrieveCourseForLLM(courseId, userId)
+    const course =  await this.retrieveCourseForLLM(courseId, userId)
+
 
     const templateVal = {
       ...course,
@@ -182,7 +179,7 @@ export class CourseService {
   }
 
   async createCourseDetailedOutline(userId: string, courseId: string) {
-    const course = await this.retrieveCourseForLLM(courseId, userId)
+    const course =  await this.retrieveCourseForLLM(courseId, userId)
     delete course['detailedOutline']
     const templateVal = {
       course: JSON.stringify(course),
@@ -201,7 +198,7 @@ export class CourseService {
     return getDetailedOutline as CourseDetailedOutline
   }
 
-  private async retrieveCourseForLLM(courseId: string, userId: string) {
+  private async retrieveCourseForLLM(courseId:string, userId:string){
     /*let course: any = this.cache.get(key)
     if (!course) {
       course = await this.findOne({
@@ -209,7 +206,7 @@ export class CourseService {
       })
     }
     this.cache.set(key, course)*/
-    const course = await this.findOne({ id: courseId })
+    const course = await  this.findOne({id: courseId})
 
     if (!course) {
       throw new HttpException('Course not found', 404)

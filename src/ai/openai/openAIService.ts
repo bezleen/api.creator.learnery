@@ -6,10 +6,7 @@ import { ChatPromptTemplate } from 'langchain/prompts'
 class OpenAIConnectionPool {
   private readonly pool: Array<ChatOpenAI>
   private i: number
-  constructor(
-    private poolSize: number,
-    private openAIConfig: any,
-  ) {
+  constructor(private poolSize: number, private openAIConfig: any) {
     this.pool = []
     this.i = 0
     this.init()
@@ -44,6 +41,7 @@ export class OpenAIService extends ChatOpenAI {
     super(openAIConfig) // defaults to process.env["OPENAI_API_KEY"]
     this.pool = new OpenAIConnectionPool(this.poolSize, openAIConfig)
   }
+
 
   public async converseAI<outputSchema>(
     prompt: ChatPromptTemplate,

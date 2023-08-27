@@ -53,7 +53,7 @@ const genObjectiveSchema = {
   },
 }
 
-const InstructionGenObjective = `
+ const InstructionGenObjective = `
   Please write at least 4 concise learning objectives and outcomes that learners can expect to achieve after completing your course. 
   
   The expected format is an array of objectives:
@@ -70,6 +70,8 @@ const InstructionGenObjective = `
   ${genObjectiveSchema}
 
 `.trim()
+
+
 
 export const chatObjectivePrompt = ChatPromptTemplate.fromPromptMessages([
   SystemMessagePromptTemplate.fromTemplate(getCourseObjectivePromptTemplate),
