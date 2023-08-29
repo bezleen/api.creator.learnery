@@ -122,7 +122,7 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "tsconfig-paths-jest": "^0.0.1",
-    "type-graphql": "2.0.0-beta.1",
+    "type-graphql": "2.0.0-beta.3",
     "typescript": "^5.1.6"
   },
   "jest": {
