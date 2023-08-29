@@ -3,6 +3,12 @@ name: dependabot-merges
 on:
   pull_request:
 
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   auto-merge-patch:
     runs-on: ubuntu-latest
@@ -21,3 +27,12 @@ jobs:
         with:
           target: minor # Merge minor updates
           github-token: ${{ secrets.WORKFLOW_TOKEN }}
+
+  auto-merge-dev:
+      runs-on: ubuntu-latest
+      steps:
+          - uses: actions/checkout@v2
+          - uses: ahmadnassri/action-dependabot-auto-merge@v2
+            with:
+                # target: minor  # Merge minor updates can be major
+                github-token: ${{ secrets.WORKFLOW_TOKEN }}
