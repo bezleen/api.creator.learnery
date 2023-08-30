@@ -70,7 +70,7 @@
     "kleur": "^4.1.5",
     "langchain": "^0.0.131",
     "mongo-query-format": "^0.1.4",
-    "mongodb": "^5.7.0",
+    "mongodb": "^5.8.0",
     "node-cache": "^5.1.2",
     "openai": "^4.3.1",
     "passport": "^0.6.0",
