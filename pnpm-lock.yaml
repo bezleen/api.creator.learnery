@@ -194,8 +194,8 @@ devDependencies:
     specifier: ^5.62.0
     version: 5.62.0(eslint@8.45.0)(typescript@5.1.6)
   apollo-server-core:
-    specifier: ^3.12.0
-    version: 3.12.0(graphql@16.7.1)
+    specifier: ^3.12.1
+    version: 3.12.1(graphql@16.7.1)
   concurrently:
     specifier: ^8.2.0
     version: 8.2.0
@@ -5845,7 +5845,7 @@ packages:
     engines: { node: '>=12.0' }
     deprecated:
       The `apollo-datasource` package is part of Apollo Server v2 and v3, which are now
-      deprecated (end-of-life October 22nd 2023). See
+      deprecated (end-of-life October 22nd 2023 and October 22nd 2024, respectively). See
       https://www.apollographql.com/docs/apollo-server/previous-versions/ for more
       details.
     dependencies:
@@ -5862,24 +5862,25 @@ packages:
       }
     deprecated:
       The `apollo-reporting-protobuf` package is part of Apollo Server v2 and v3, which
-      are now deprecated (end-of-life October 22nd 2023). This package's functionality is
-      now found in the `@apollo/usage-reporting-protobuf` package. See
+      are now deprecated (end-of-life October 22nd 2023 and October 22nd 2024,
+      respectively). This package's functionality is now found in the
+      `@apollo/usage-reporting-protobuf` package. See
       https://www.apollographql.com/docs/apollo-server/previous-versions/ for more
       details.
     dependencies:
       '@apollo/protobufjs': 1.2.6
     dev: true
 
-  /apollo-server-core@3.12.0(graphql@16.7.1):
+  /apollo-server-core@3.12.1(graphql@16.7.1):
     resolution:
       {
-        integrity: sha512-hq7iH6Cgldgmnjs9FVSZeKWRpi0/ZR+iJ1arzeD2VXGxxgk1mAm/cz1Tx0TYgegZI+FvvrRl0UhKEx7sLnIxIg==,
+        integrity: sha512-9SF5WAkkV0FZQ2HVUWI9Jada1U0jg7e8NCN9EklbtvaCeUlOLyXyM+KCWuZ7+dqHxjshbtcwylPHutt3uzoNkw==,
       }
     engines: { node: '>=12.0' }
     deprecated:
       The `apollo-server-core` package is part of Apollo Server v2 and v3, which are now
-      deprecated (end-of-life October 22nd 2023). This package's functionality is now
-      found in the `@apollo/server` package. See
+      deprecated (end-of-life October 22nd 2023 and October 22nd 2024, respectively). This
+      package's functionality is now found in the `@apollo/server` package. See
       https://www.apollographql.com/docs/apollo-server/previous-versions/ for more
       details.
     peerDependencies:
@@ -5921,8 +5922,8 @@ packages:
     engines: { node: '>=12.0' }
     deprecated:
       The `apollo-server-env` package is part of Apollo Server v2 and v3, which are now
-      deprecated (end-of-life October 22nd 2023). This package's functionality is now
-      found in the `@apollo/utils.fetcher` package. See
+      deprecated (end-of-life October 22nd 2023 and October 22nd 2024, respectively). This
+      package's functionality is now found in the `@apollo/utils.fetcher` package. See
       https://www.apollographql.com/docs/apollo-server/previous-versions/ for more
       details.
     dependencies:
@@ -5939,8 +5940,8 @@ packages:
     engines: { node: '>=12.0' }
     deprecated:
       The `apollo-server-errors` package is part of Apollo Server v2 and v3, which are now
-      deprecated (end-of-life October 22nd 2023). This package's functionality is now
-      found in the `@apollo/server` package. See
+      deprecated (end-of-life October 22nd 2023 and October 22nd 2024, respectively). This
+      package's functionality is now found in the `@apollo/server` package. See
       https://www.apollographql.com/docs/apollo-server/previous-versions/ for more
       details.
     peerDependencies:
@@ -5957,10 +5958,10 @@ packages:
     engines: { node: '>=12.0' }
     deprecated:
       The `apollo-server-plugin-base` package is part of Apollo Server v2 and v3, which
-      are now deprecated (end-of-life October 22nd 2023). This package's functionality is
-      now found in the `@apollo/server` package. See
-      https://www.apollographql.com/docs/apollo-server/previous-versions/ for more
-      details.
+      are now deprecated (end-of-life October 22nd 2023 and October 22nd 2024,
+      respectively). This package's functionality is now found in the `@apollo/server`
+      package. See https://www.apollographql.com/docs/apollo-server/previous-versions/ for
+      more details.
     peerDependencies:
       graphql: ^15.3.0 || ^16.0.0
     dependencies:
@@ -5978,8 +5979,8 @@ packages:
     engines: { node: '>=12.0' }
     deprecated:
       The `apollo-server-types` package is part of Apollo Server v2 and v3, which are now
-      deprecated (end-of-life October 22nd 2023). This package's functionality is now
-      found in the `@apollo/server` package. See
+      deprecated (end-of-life October 22nd 2023 and October 22nd 2024, respectively). This
+      package's functionality is now found in the `@apollo/server` package. See
       https://www.apollographql.com/docs/apollo-server/previous-versions/ for more
       details.
     peerDependencies:
