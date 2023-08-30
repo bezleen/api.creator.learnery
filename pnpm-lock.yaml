@@ -102,8 +102,8 @@ dependencies:
     specifier: ^5.1.2
     version: 5.1.2
   openai:
-    specifier: ^4.0.1
-    version: 4.0.1
+    specifier: ^4.3.1
+    version: 4.3.1
   passport:
     specifier: ^0.6.0
     version: 0.6.0
@@ -12819,10 +12819,10 @@ packages:
       - debug
     dev: false
 
-  /openai@4.0.1:
+  /openai@4.3.1:
     resolution:
       {
-        integrity: sha512-UanMv/kCD/ylgOdBrkkRgkoFXdfENrXYWNvYdvPttXZaEJmRVY9MZSknlkWYH7iPMX6tTcz6szbI2d3O04UFag==,
+        integrity: sha512-64iI2LbJLk0Ss4Nv5IrdGFe6ALNnKlMuXoGuH525bJYxdupJfDCAtra/Jigex1z8it0U82M87tR2TMGU+HYeFQ==,
       }
     hasBin: true
     dependencies:
