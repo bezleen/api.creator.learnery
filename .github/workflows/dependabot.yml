@@ -12,7 +12,7 @@ jobs:
   auto-merge-patch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: ahmadnassri/action-dependabot-auto-merge@v2
         with:
           target: patch # Merge patch updates
@@ -21,7 +21,7 @@ jobs:
   auto-merge-minor:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: ahmadnassri/action-dependabot-auto-merge@v2
         with:
           target: minor # Merge minor updates
@@ -30,7 +30,7 @@ jobs:
   # auto-merge-dev:
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v4
   #     - uses: ahmadnassri/action-dependabot-auto-merge@v2
   #       with:
   #         # target: minor  # Merge minor updates can be major
