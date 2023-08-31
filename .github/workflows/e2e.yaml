@@ -29,7 +29,10 @@ env:
 
 jobs:
   build-and-test:
-    concurrency: db-test
+    # concurrency:  FIXME: enable in fut
+    #   group: db-test
+    #   cancel-in-progress: false
+
     runs-on: ubuntu-latest
 
     steps:
