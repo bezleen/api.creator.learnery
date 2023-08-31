@@ -9,5 +9,12 @@ updates:
     directory: '/' # Location of package manifests
     schedule:
       interval: 'daily'
+      # time: "09:00"
+      # timezone: "Asia/Calcutta"
+    target-branch: main
+    rebase-strategy: auto
+    labels:
+      - "dependabot"
+      - "npm dependencies"
     # pull-request-branch-name:
     #   separator: "-"
