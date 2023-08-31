@@ -84,8 +84,8 @@ dependencies:
     specifier: ^9.0.0
     version: 9.0.0(graphql@16.7.1)
   joi:
-    specifier: ^17.9.2
-    version: 17.9.2
+    specifier: ^17.10.0
+    version: 17.10.0
   kleur:
     specifier: ^4.1.5
     version: 4.1.5
@@ -11071,10 +11071,10 @@ packages:
       - ts-node
     dev: true
 
-  /joi@17.9.2:
+  /joi@17.10.0:
     resolution:
       {
-        integrity: sha512-Itk/r+V4Dx0V3c7RLFdRh12IOjySm2/WGPMubBT92cQvRfYZhPM2W0hZlctjj72iES8jsRCwp7S/cRmWBnJ4nw==,
+        integrity: sha512-hrazgRSlhzacZ69LdcKfhi3Vu13z2yFfoAzmEov3yFIJlatTdVGUW6vle1zjH8qkzdCn/qGw8rapjqsObbYXAg==,
       }
     dependencies:
       '@hapi/hoek': 9.3.0
