@@ -107,7 +107,7 @@
     "apollo-server-core": "^3.12.1",
     "concurrently": "^8.2.0",
     "eslint": "^8.48.0",
-    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.6.4",
     "pactum": "^3.5.0",
