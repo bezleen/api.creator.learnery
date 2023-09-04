@@ -89,7 +89,7 @@
     "@compodoc/compodoc": "^1.1.21",
     "@nestjs/cli": "^10.1.16",
     "@nestjs/schematics": "^10.0.2",
-    "@nestjs/swagger": "^7.1.4",
+    "@nestjs/swagger": "^7.1.10",
     "@nestjs/testing": "^10.0.5",
     "@prisma/client": "^5.2.0",
     "@swc/cli": "^0.1.62",

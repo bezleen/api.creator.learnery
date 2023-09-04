@@ -149,8 +149,8 @@ devDependencies:
     specifier: ^10.0.2
     version: 10.0.2(chokidar@3.5.3)(typescript@5.1.6)
   '@nestjs/swagger':
-    specifier: ^7.1.4
-    version: 7.1.4(@nestjs/common@10.2.2)(@nestjs/core@10.2.4)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)
+    specifier: ^7.1.10
+    version: 7.1.10(@nestjs/common@10.2.2)(@nestjs/core@10.2.4)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)
   '@nestjs/testing':
     specifier: ^10.0.5
     version: 10.0.5(@nestjs/common@10.2.2)(@nestjs/core@10.2.4)(@nestjs/platform-express@10.2.2)
@@ -3837,10 +3837,10 @@ packages:
       - chokidar
     dev: true
 
-  /@nestjs/swagger@7.1.4(@nestjs/common@10.2.2)(@nestjs/core@10.2.4)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13):
+  /@nestjs/swagger@7.1.10(@nestjs/common@10.2.2)(@nestjs/core@10.2.4)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13):
     resolution:
       {
-        integrity: sha512-OO3V/84L71ISmVwP3PCJztTzDp3CUm1Kx5objmhvYhVRB2dal1RhiwnFlSn5GfD5O+05zqbUOzU1jFCQJH1E4g==,
+        integrity: sha512-qreCcxgHFyFX1mOfK36pxiziy4xoa/XcxC0h4Zr9yH54WuqMqO9aaNFhFyuQ1iyd/3YBVQB21Un4gQnh9iGm0w==,
       }
     peerDependencies:
       '@fastify/static': ^6.0.0
@@ -3866,7 +3866,7 @@ packages:
       lodash: 4.17.21
       path-to-regexp: 3.2.0
       reflect-metadata: 0.1.13
-      swagger-ui-dist: 5.1.0
+      swagger-ui-dist: 5.4.2
     dev: true
 
   /@nestjs/testing@10.0.5(@nestjs/common@10.2.2)(@nestjs/core@10.2.4)(@nestjs/platform-express@10.2.2):
@@ -15369,17 +15369,17 @@ packages:
       }
     engines: { node: '>= 0.4' }
 
-  /swagger-ui-dist@5.1.0:
-    resolution:
-      {
-        integrity: sha512-c1KmAjuVODxw+vwkNLALQZrgdlBAuBbr2xSPfYrJgseEi7gFKcTvShysPmyuDI4kcUa1+5rFpjWvXdusKY74mg==,
-      }
-    dev: true
-
   /swagger-ui-dist@5.2.0:
     resolution:
       {
         integrity: sha512-rLvJBgualxNZcwKOmTFzy4zF1nHy+3S0pUDDR/ageDRZgi8aITSe7pVYiAy03xGQZtqEifjwEtHQE+eF14gveg==,
+      }
+    dev: true
+
+  /swagger-ui-dist@5.4.2:
+    resolution:
+      {
+        integrity: sha512-vT5QxP/NOr9m4gLZl+SpavWI3M9Fdh30+Sdw9rEtZbkqNmNNEPhjXas2xTD9rsJYYdLzAiMfwXvtooWH3xbLJA==,
       }
     dev: true
 
