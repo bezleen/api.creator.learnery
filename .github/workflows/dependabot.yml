@@ -33,6 +33,17 @@ jobs:
         with:
           target: minor # Merge minor updates
           github-token: ${{ secrets.WORKFLOW_TOKEN }}
+  
+
+  auto-merge-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2
+        with:
+          target: all # Merge minor updates
+          github-token: ${{ secrets.WORKFLOW_TOKEN }}
+          config: '.github/auto-merge.yml'
 
   # auto-merge-dev:
   #   runs-on: ubuntu-latest
