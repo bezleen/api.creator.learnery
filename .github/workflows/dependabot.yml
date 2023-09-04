@@ -3,13 +3,6 @@ name: dependabot-merges
 on:
   pull_request:
 
-  schedule:
-    - cron: '0 */2 * * *'
-
-  workflow_dispatch:
-
-  push:
-
 permissions:
   contents: write
   pages: write
@@ -34,6 +27,16 @@ jobs:
           target: minor # Merge minor updates
           github-token: ${{ secrets.WORKFLOW_TOKEN }}
   
+
+  auto-merge-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2
+        with:
+          target: all # Merge minor updates
+          github-token: ${{ secrets.WORKFLOW_TOKEN }}
+          config: '.github/auto-merge.yml'
 
   auto-merge-config:
     runs-on: ubuntu-latest
