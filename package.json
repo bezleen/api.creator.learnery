@@ -62,7 +62,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "express-session": "^1.17.3",
-    "graphql": "16.7.1",
+    "graphql": "16.8.0",
     "graphql-iso-date": "^3.6.1",
     "graphql-subscriptions": "2.0.0",
     "graphql-tools": "^9.0.0",
