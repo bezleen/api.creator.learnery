@@ -26,7 +26,6 @@ jobs:
         with:
           target: minor # Merge minor updates
           github-token: ${{ secrets.WORKFLOW_TOKEN }}
-  
 
   auto-merge-config:
     runs-on: ubuntu-latest
