@@ -4,8 +4,4 @@
 
 - match:
     dependency_type: all
-<<<<<<< HEAD
     update_type: semver:${TARGET}
-=======
-    update_type: semver:${TARGET}
->>>>>>> 86be27cdfcf319b78adfb044fab3af2ba45add99
