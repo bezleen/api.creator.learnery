@@ -6,10 +6,7 @@ import { ChatPromptTemplate } from 'langchain/prompts'
 class OpenAIConnectionPool {
   private readonly pool: Array<ChatOpenAI>
   private i: number
-  constructor(
-    private poolSize: number,
-    private openAIConfig: any,
-  ) {
+  constructor(private poolSize: number, private openAIConfig: any) {
     this.pool = []
     this.i = 0
     this.init()
