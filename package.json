@@ -9,7 +9,7 @@
     "seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "scripts": {
-    "prebuild": "npm run prisma:generate && npm run gen-typings",
+    "prebuild": "rimraf dist && npm run prisma:generate && npm run gen-typings",
     "postinstall": "npm run build",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"  \"prisma/**/*.ts\"",
