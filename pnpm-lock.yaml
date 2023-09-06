@@ -128,9 +128,6 @@ dependencies:
   rxjs:
     specifier: 7.8.1
     version: 7.8.1
-  sql-formatter:
-    specifier: ^12.2.4
-    version: 12.2.4
   ts-morph:
     specifier: ^19.0.0
     version: 19.0.0
@@ -8003,13 +8000,6 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /discontinuous-range@1.0.0:
-    resolution:
-      {
-        integrity: sha512-c68LpLbO+7kP/b1Hr1qs8/BJ09F5khZGTxqxZuhzxpmwJKOgRFHJWIb9/KmqnqHhLdO55aOxFH/EGBvUQbL/RQ==,
-      }
-    dev: false
-
   /doctrine@3.0.0:
     resolution:
       {
@@ -9522,14 +9512,6 @@ packages:
       {
         integrity: sha512-dGkopYfmB4sXMTcZslq5SojEYakpdCSj/SVSHLhv7D6RBHzvDtd/3Q8lTEOAhVKxPPeAHu/YYkENbbz3PaH+8w==,
       }
-    dev: false
-
-  /get-stdin@8.0.0:
-    resolution:
-      {
-        integrity: sha512-sY22aA6xchAzprjyqmSEQv4UbAAzRN0L2dQB0NlN5acTTK9Don6nhoc3eAbUnpZiCANAMfd/+40kVdKfFygohg==,
-      }
-    engines: { node: '>=10' }
     dev: false
 
   /get-stream@3.0.0:
@@ -12583,13 +12565,6 @@ packages:
       - supports-color
     dev: false
 
-  /moo@0.5.2:
-    resolution:
-      {
-        integrity: sha512-iSAJLHYKnX41mKcJKjqvnAN9sf0LMDTXDEvFv+ffuRR9a1MIuXLjMNL6EsnDHSkKLTWNqQQ5uo61P4EbU4NU+Q==,
-      }
-    dev: false
-
   /morgan@1.10.0:
     resolution:
       {
@@ -12678,19 +12653,6 @@ packages:
         integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==,
       }
     dev: true
-
-  /nearley@2.20.1:
-    resolution:
-      {
-        integrity: sha512-+Mc8UaAebFzgV+KpI5n7DasuuQCHA89dmwm7JXw3TV43ukfNQ9DnBH3Mdb2g/I4Fdxc26pwimBWvjIw0UAILSQ==,
-      }
-    hasBin: true
-    dependencies:
-      commander: 2.20.3
-      moo: 0.5.2
-      railroad-diagrams: 1.0.0
-      randexp: 0.4.6
-    dev: false
 
   /needle@2.4.0:
     resolution:
@@ -14082,24 +14044,6 @@ packages:
       through2: 2.0.5
     dev: true
 
-  /railroad-diagrams@1.0.0:
-    resolution:
-      {
-        integrity: sha512-cz93DjNeLY0idrCNOH6PviZGRN9GJhsdm9hpn1YCS879fj4W+x5IFJhhkRZcwVgMmFF7R82UA/7Oh+R8lLZg6A==,
-      }
-    dev: false
-
-  /randexp@0.4.6:
-    resolution:
-      {
-        integrity: sha512-80WNmd9DA0tmZrw9qQa62GPPWfuXJknrmVmLcxvq4uZBdYqb1wYoKTmnlGUchvVWe0XiLupYkBoXVOxz3C8DYQ==,
-      }
-    engines: { node: '>=0.12' }
-    dependencies:
-      discontinuous-range: 1.0.0
-      ret: 0.1.15
-    dev: false
-
   /random-bytes@1.0.0:
     resolution:
       {
@@ -14436,14 +14380,6 @@ packages:
       onetime: 5.1.2
       signal-exit: 3.0.7
     dev: true
-
-  /ret@0.1.15:
-    resolution:
-      {
-        integrity: sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==,
-      }
-    engines: { node: '>=0.12' }
-    dev: false
 
   /retry@0.13.1:
     resolution:
@@ -15054,18 +14990,6 @@ packages:
       {
         integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==,
       }
-    dev: false
-
-  /sql-formatter@12.2.4:
-    resolution:
-      {
-        integrity: sha512-Qj45LEHSfgrdYDOrAtIkR8SdS10SWcqCIM2WZwQwMKF2v9sM0K2dlThWPS7eYCUrhttZIrU1WwuIwHk7MjsWOw==,
-      }
-    hasBin: true
-    dependencies:
-      argparse: 2.0.1
-      get-stdin: 8.0.0
-      nearley: 2.20.1
     dev: false
 
   /stack-utils@2.0.6:
