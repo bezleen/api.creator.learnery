@@ -9,8 +9,8 @@ dependencies:
     specifier: ^4.9.3
     version: 4.9.3(graphql@16.8.0)
   '@clerk/clerk-sdk-node':
-    specifier: ^4.12.3
-    version: 4.12.3
+    specifier: ^4.12.5
+    version: 4.12.5
   '@nestjs/apollo':
     specifier: ^12.0.7
     version: 12.0.7(@apollo/server@4.9.3)(@nestjs/common@10.2.2)(@nestjs/core@10.2.4)(@nestjs/graphql@12.0.8)(graphql@16.8.0)
@@ -2608,14 +2608,14 @@ packages:
       }
     dev: true
 
-  /@clerk/backend@0.28.0:
+  /@clerk/backend@0.29.0:
     resolution:
       {
-        integrity: sha512-2HbpJljKhz6642cyIcL3NE/QUQM1Ty4Vm7h9Pc/PsmuINfb6DI2HaP29INb6bt8GiY9xbrJcGOkMfBS9iHCTMQ==,
+        integrity: sha512-2miuqyzmlzboTcLQOtafGw4+InnkFALMWjM9l9gu75KBWg1pUdFYLEDcJV+MHt0ZtY+pZO7aGnPE0Mf7QnG+bA==,
       }
     engines: { node: '>=14' }
     dependencies:
-      '@clerk/types': 3.50.0
+      '@clerk/types': 3.51.0
       '@peculiar/webcrypto': 1.4.1
       '@types/node': 16.18.6
       cookie: 0.5.0
@@ -2625,15 +2625,15 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@clerk/clerk-sdk-node@4.12.3:
+  /@clerk/clerk-sdk-node@4.12.5:
     resolution:
       {
-        integrity: sha512-IchaYk1tfT+bJz6LeC+WGJlFB0y1HNQbxnPKfsZMojZgWe68cK1TDF/n5w+4FKjUiRj2vNbewDoVUZhKZrRPnw==,
+        integrity: sha512-GW0eXhG2P7GCFKnc2j7zOAR2qK0fOQwoZAFvfovXJNyZhlcbg7NKtjsbW6Q8X7qrtaD2UX6SuOvuxQZP633H7w==,
       }
     engines: { node: '>=14' }
     dependencies:
-      '@clerk/backend': 0.28.0
-      '@clerk/types': 3.50.0
+      '@clerk/backend': 0.29.0
+      '@clerk/types': 3.51.0
       '@types/cookies': 0.7.7
       '@types/express': 4.17.14
       '@types/node-fetch': 2.6.2
@@ -2642,10 +2642,10 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@clerk/types@3.50.0:
+  /@clerk/types@3.51.0:
     resolution:
       {
-        integrity: sha512-3TWalDWPTFToXC/W07QUIBN96TA+4dR3YLBvwr9U2Z4RVG9in9HW4CTC6aHTnJ2kVtTcgDkXjDKeVKS1GjPCcA==,
+        integrity: sha512-JCSG2W1nI+zEIyDTGKfQJkvl2Ve5vpR3AxDsyXQMf/aZyXhBT351W1dPUfUW4K9MpLmZ2sB/1gj3UJFaBw9e7g==,
       }
     engines: { node: '>=14' }
     dependencies:
