@@ -8,12 +8,12 @@
 
 - match:
     dependency_type: all
-    update_type: "security:*"
+    update_type: 'security:*'
 
 - match:
     dependency_type: all
-    update_type: "*:minor"
+    update_type: '*:minor'
 
 - match:
     dependency_type: all
-    update_type: "*:patch"
+    update_type: '*:patch'
