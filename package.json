@@ -52,7 +52,7 @@
     "@nestjs/mapped-types": "^2.0.2",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/passport": "^10.0.1",
-    "@nestjs/platform-express": "^10.2.4",
+    "@nestjs/platform-express": "^10.2.5",
     "@pinecone-database/pinecone": "^1.0.0",
     "@solana/web3.js": "^1.78.4",
     "argon2": "^0.31.1",
