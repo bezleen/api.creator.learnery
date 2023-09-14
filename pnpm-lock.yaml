@@ -48,8 +48,8 @@ dependencies:
     specifier: ^1.0.0
     version: 1.0.0
   '@solana/web3.js':
-    specifier: ^1.78.4
-    version: 1.78.4
+    specifier: ^1.78.5
+    version: 1.78.5
   argon2:
     specifier: ^0.31.1
     version: 0.31.1
@@ -4354,10 +4354,10 @@ packages:
       buffer: 6.0.3
     dev: false
 
-  /@solana/web3.js@1.78.4:
+  /@solana/web3.js@1.78.5:
     resolution:
       {
-        integrity: sha512-up5VG1dK+GPhykmuMIozJZBbVqpm77vbOG6/r5dS7NBGZonwHfTLdBbsYc3rjmaQ4DpCXUa3tUc4RZHRORvZrw==,
+        integrity: sha512-2ZHsDNqkKdglJQrIvJ3p2DmgS3cGnary3VJyqt9C1SPrpAtLYzcElr3xyXJOznyQTU/8AMw+GoF11lFoKbicKg==,
       }
     dependencies:
       '@babel/runtime': 7.22.6
