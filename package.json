@@ -86,7 +86,7 @@
   "devDependencies": {
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
     "@compodoc/compodoc": "^1.1.21",
-    "@nestjs/cli": "^10.1.17",
+    "@nestjs/cli": "^10.1.18",
     "@nestjs/schematics": "^10.0.2",
     "@nestjs/swagger": "^7.1.11",
     "@nestjs/testing": "^10.2.5",
