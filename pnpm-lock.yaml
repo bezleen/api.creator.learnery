@@ -117,8 +117,8 @@ dependencies:
     specifier: ^5.3.0
     version: 5.3.0
   prisma-nestjs-graphql:
-    specifier: ^19.0.1
-    version: 19.0.1
+    specifier: ^19.2.0
+    version: 19.2.0
   reflect-metadata:
     specifier: ^0.1.13
     version: 0.1.13
@@ -4099,7 +4099,7 @@ packages:
     engines: { node: ^12.20.0 || ^14.18.0 || >=16.0.0 }
     dependencies:
       cross-spawn: 7.0.3
-      fast-glob: 3.3.0
+      fast-glob: 3.3.1
       is-glob: 4.0.3
       open: 9.1.0
       picocolors: 1.0.0
@@ -4205,10 +4205,10 @@ packages:
       prisma: 5.3.1
     dev: true
 
-  /@prisma/debug@5.2.0:
+  /@prisma/debug@5.3.1:
     resolution:
       {
-        integrity: sha512-dOrNOA8B65l3dCp2r3gn5A5dbMXNbEixO3JAaMWiS2q03qMU3/R9oNv86H2c1i3GSwQglH5gjwpkA9olp/+h1A==,
+        integrity: sha512-eYrxqslEKf+wpMFIIHgbcNYuZBXUdiJLA85Or3TwOhgPIN1ZoXT9CwJph3ynW8H1Xg0LkdYLwVmuULCwiMoU5A==,
       }
     dependencies:
       '@types/debug': 4.1.8
@@ -4233,13 +4233,13 @@ packages:
     requiresBuild: true
     dev: true
 
-  /@prisma/generator-helper@5.2.0:
+  /@prisma/generator-helper@5.3.1:
     resolution:
       {
-        integrity: sha512-jju+nGe8IgwDhs412sx6PSk5efkuoBqHOJSqbRBb9Y/fMfeDRGLVdwia8Hj+PKmd/YXrqFgBd4NDeFxeCcVVqw==,
+        integrity: sha512-zrYS0iHLgPlOJjYnd5KvVMMvSS+ktOL39EwooS5EnyvfzwfzxlKCeOUgxTfiKYs0WUWqzEvyNAYtramYgSknsQ==,
       }
     dependencies:
-      '@prisma/debug': 5.2.0
+      '@prisma/debug': 5.3.1
       '@types/cross-spawn': 6.0.2
       cross-spawn: 7.0.3
       kleur: 4.1.5
@@ -4618,7 +4618,7 @@ packages:
         integrity: sha512-RMSSvSfs9kb0VzkvQ2NWobwnj7TxCA9vI/IjR9bDHqgAyVbu2T0DN4wiKVqomyDWqO7dPr/tErSfq7urQ1Q37g==,
       }
     dependencies:
-      fast-glob: 3.3.0
+      fast-glob: 3.3.1
       minimatch: 5.1.6
       mkdirp: 1.0.4
       path-browserify: 1.0.1
@@ -4630,7 +4630,7 @@ packages:
         integrity: sha512-Unz/WHmd4pGax91rdIKWi51wnVUW11QttMEPpBiBgIewnc9UQIX7UDLxr5vRlqeByXCwhkF6VabSsI0raWcyAQ==,
       }
     dependencies:
-      fast-glob: 3.3.0
+      fast-glob: 3.3.1
       minimatch: 7.4.6
       mkdirp: 2.1.6
       path-browserify: 1.0.1
@@ -4642,7 +4642,7 @@ packages:
         integrity: sha512-7uKjByfbPpwuzkstL3L5MQyuXPSKdoNG93Fmi2JoDcTf3pEP731JdRFAduRVkOs8oqxPsXKA+ScrWkdQ8t/I+Q==,
       }
     dependencies:
-      fast-glob: 3.3.0
+      fast-glob: 3.3.1
       minimatch: 7.4.6
       mkdirp: 2.1.6
       path-browserify: 1.0.1
@@ -9010,6 +9010,7 @@ packages:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.5
+    dev: true
 
   /fast-glob@3.3.1:
     resolution:
@@ -9023,7 +9024,6 @@ packages:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.5
-    dev: false
 
   /fast-json-patch@3.1.1:
     resolution:
@@ -9716,7 +9716,7 @@ packages:
     dependencies:
       array-union: 2.1.0
       dir-glob: 3.0.1
-      fast-glob: 3.3.0
+      fast-glob: 3.3.1
       ignore: 5.2.4
       merge2: 1.4.1
       slash: 3.0.0
@@ -13816,14 +13816,14 @@ packages:
       react-is: 18.2.0
     dev: true
 
-  /prisma-nestjs-graphql@19.0.1:
+  /prisma-nestjs-graphql@19.2.0:
     resolution:
       {
-        integrity: sha512-kIzd5tvV2iE3+kDwKdnGAEEJui2FpnVFOs8J8AzlchrcoOCVHirfxEQSKnTlNsyhshcQ4a1LsGFOy3I3GnF0Mg==,
+        integrity: sha512-ydg2vgek59/gw0eiFIZ3bRplOGjmJS5qjKjCazA5H/1HywuHFkWcn9rrZojfyJ3t9I/HubTVugOrkhdhgWQQfg==,
       }
     hasBin: true
     dependencies:
-      '@prisma/generator-helper': 5.2.0
+      '@prisma/generator-helper': 5.3.1
       await-event-emitter: 2.0.2
       filenamify: 4.3.0
       flat: 5.0.2
