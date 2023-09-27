@@ -9,8 +9,8 @@ dependencies:
     specifier: ^4.9.3
     version: 4.9.3(graphql@16.8.1)
   '@clerk/clerk-sdk-node':
-    specifier: ^4.12.6
-    version: 4.12.6
+    specifier: ^4.12.7
+    version: 4.12.7
   '@nestjs/apollo':
     specifier: ^12.0.9
     version: 12.0.9(@apollo/server@4.9.3)(@nestjs/common@10.2.6)(@nestjs/core@10.2.6)(@nestjs/graphql@12.0.9)(graphql@16.8.1)
@@ -2609,10 +2609,10 @@ packages:
       }
     dev: true
 
-  /@clerk/backend@0.29.1:
+  /@clerk/backend@0.29.2:
     resolution:
       {
-        integrity: sha512-PNlnIrNacY88bg2/rD6RvOmMrzHFhIbBHBsDn4OWdzRvb+DzBfgorJR0/tq2Mgf1X3Zor3fux9057JSYT46rFw==,
+        integrity: sha512-7BJiQf7tRKuAq61o1LHMEeBkM8HW8HbjxE2bdSF/V2HdW6XlB+FNXFBFWscf5TCB8p5yJWpzTPmGuWT8GSMD+Q==,
       }
     engines: { node: '>=14' }
     dependencies:
@@ -2626,14 +2626,14 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@clerk/clerk-sdk-node@4.12.6:
+  /@clerk/clerk-sdk-node@4.12.7:
     resolution:
       {
-        integrity: sha512-fdlAjKVgOHGsfGLNyIImTTgosHNOqCGJTytq2G0+YDjF46RzQ+eCyPDnvnR0wuVuNSM68qIutHn5DUiNTo+Wdw==,
+        integrity: sha512-E8VbfLQ6F6VBRrLbB2o4n2/pKma0qQDw1I7rF4wr5/XazwpmLX29/rUJ9XoF0MspKcPeA7dVzQlvcskpsBjuGw==,
       }
     engines: { node: '>=14' }
     dependencies:
-      '@clerk/backend': 0.29.1
+      '@clerk/backend': 0.29.2
       '@clerk/types': 3.52.0
       '@types/cookies': 0.7.7
       '@types/express': 4.17.14
