@@ -78,7 +78,7 @@ console.debug({ mode, envFile })
         DOMAIN: Joi.string().optional().default(''),
         COOKIE_PATH: Joi.string().optional().default('/').min(1),
         COOKIE_NAME: Joi.string().optional().default('token').min(2),
-        OPENAI_API_KEY: Joi.string().required().min(20), //FIXME: change length
+        // OPENAI_API_KEY: Joi.string().required().min(20), //FIXME: change length
         OPENAI_CHAT_MODEL: Joi.string()
           .optional()
           .default('gpt-3.5-turbo-16k')
@@ -91,9 +91,9 @@ console.debug({ mode, envFile })
             'gpt-4-32k',
             'gpt-3.5-turbo-16k-0613',
           ),
-        PINECONE_API_KEY: Joi.string().required().min(30),
-        PINECONE_API_ENV: Joi.string().required().min(7),
-        PINECONE_INDEX: Joi.string().optional().default('learnery'),
+        // PINECONE_API_KEY: Joi.string().required().min(30),
+        // PINECONE_API_ENV: Joi.string().required().min(7),
+        // PINECONE_INDEX: Joi.string().optional().default('learnery'),
       }),
     }),
     CacheModule.register({ isGlobal: true }),
@@ -140,28 +140,29 @@ console.debug({ mode, envFile })
       },
     }),
     PrismaModule,
-    AuthModule,
-    UserModule,
-    CategoryModule,
-    ClerkModule,
-    CourseModule,
-    AiModule,
+    // AuthModule,
+    // UserModule,
+    // CategoryModule,
+    // ClerkModule,
+    // CourseModule,
+    // AiModule,
   ],
-  controllers: [AppController, CategoryController, UserController, AuthController],
+  // controllers: [AppController, CategoryController, UserController, AuthController],
+  controllers: [AppController],
   providers: [
     /*  {
       provide: APP_FILTER, //FIXME; not working try with invalid pinecone cred
       useClass: GlobalExceptionFilter,
     },*/
     AppService,
-    CategoryService,
-    UserService,
-    AuthService,
+    // CategoryService,
+    // UserService,
+    // AuthService,
     JwtService,
-    ClerkService,
-    OpenAIService,
-    PineconeService,
-    AiService,
+    // ClerkService,
+    // OpenAIService,
+    // PineconeService,
+    // AiService,
   ],
 })
 export class AppModule implements OnModuleInit, NestModule {
