@@ -1,34 +1,40 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PerformanceTaskService } from './performance-task.service';
-import { CreatePerformanceTaskInput } from './dto/create-performance-task.input';
-import { UpdatePerformanceTaskInput } from './dto/update-performance-task.input';
+import { CreatePerformanceTaskInputDTO } from './dto/create-performance-task.input';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from '@/auth/guard';
+import { GetUserGraphql } from '@/auth/decorator';
+import { UpdatePerformanceTaskInputDTO } from './dto/update-performance-task.input';
 
 @Resolver('PerformanceTask')
 export class PerformanceTaskResolver {
-  constructor(private readonly performanceTaskService: PerformanceTaskService) {}
+  constructor(private readonly performanceTaskService: PerformanceTaskService) { }
 
   @Mutation('createPerformanceTask')
-  create(@Args('createPerformanceTaskInput') createPerformanceTaskInput: CreatePerformanceTaskInput) {
+  create(
+    @Args('data') createPerformanceTaskInput: CreatePerformanceTaskInputDTO
+  ) {
     return this.performanceTaskService.create(createPerformanceTaskInput);
   }
 
-  @Query('performanceTask')
+  @Query('performanceTasks')
   findAll() {
     return this.performanceTaskService.findAll();
   }
 
   @Query('performanceTask')
-  findOne(@Args('id') id: number) {
-    return this.performanceTaskService.findOne(id);
+  findOne(@Args('id') id: string) {
+    return this.performanceTaskService.findOne({id});
   }
 
   @Mutation('updatePerformanceTask')
-  update(@Args('updatePerformanceTaskInput') updatePerformanceTaskInput: UpdatePerformanceTaskInput) {
-    return this.performanceTaskService.update(updatePerformanceTaskInput.id, updatePerformanceTaskInput);
+  async update(@Args('id') id: string, @Args('data') updatePerformanceTaskInput: UpdatePerformanceTaskInputDTO) {
+    const UpdatePerformanceTask = await this.performanceTaskService.update({id}, updatePerformanceTaskInput);
+    return UpdatePerformanceTask
   }
 
   @Mutation('removePerformanceTask')
-  remove(@Args('id') id: number) {
-    return this.performanceTaskService.remove(id);
+  remove(@Args('id') id: string) {
+    return this.performanceTaskService.remove({id});
   }
 }

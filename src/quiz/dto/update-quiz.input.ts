@@ -1,6 +1,3 @@
-import { CreateQuizInput } from './create-quiz.input';
-import { PartialType } from '@nestjs/mapped-types';
+import { UpdateQuizInput } from '../../graphql';
 
-export class UpdateQuizInput extends PartialType(CreateQuizInput) {
-  id: number;
-}
+export class UpdateQuizInputDTO extends UpdateQuizInput {}

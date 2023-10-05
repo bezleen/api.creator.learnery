@@ -133,10 +133,9 @@ type Topic {
 
 model PerformanceTask {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  objectives  String[] @default([])
+  objectives  String   @default("")
   description String?  @default("")
   language    String?  @default("English")
-  category    String
   tone        String   @default("Friendly")
   modality    String   @default("Hybrid")
 
@@ -146,4 +145,74 @@ model PerformanceTask {
   updatedAt DateTime @updatedAt @db.Timestamp
 
   @@map("performance-task")
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  FILL_IN_THE_BLANK_WITH_OPTIONS
+  TRUE_FALSE
+  FILL_IN_THE_BLANK_FREE_TEXT
+  ESSAY
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+type Taxonomy {
+  difficulty Difficulty
+  quantity Int
+}
+
+type Answer {
+  content String
+  isCorrect Boolean @default(false)
+}
+
+type Question {
+  content String
+  type QuestionType
+  difficulty Difficulty
+  answers Answer[]
+} 
+
+
+model Worksheet{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  objectives  String   @default("")
+  description String?  @default("")
+  language    String?  @default("English")
+  tone        String   @default("Friendly")
+  modality    String   @default("Hybrid")
+
+  audience  Audience
+  questionTypes QuestionType[]
+  taxonomies Taxonomy[]
+  questions Question[]
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  @@map("worksheet")
+}
+
+model Quiz{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  objectives  String   @default("")
+  description String?  @default("")
+  language    String?  @default("English")
+  tone        String   @default("Friendly")
+  modality    String   @default("Hybrid")
+
+  audience  Audience
+  questionTypes QuestionType[]
+  taxonomies Taxonomy[]
+  questions Question[]
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  @@map("quiz")
 }

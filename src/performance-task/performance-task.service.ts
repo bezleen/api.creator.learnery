@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePerformanceTaskInput } from './dto/create-performance-task.input';
-import { UpdatePerformanceTaskInput } from './dto/update-performance-task.input';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class PerformanceTaskService {
-  create(createPerformanceTaskInput: CreatePerformanceTaskInput) {
-    return 'This action adds a new performanceTask';
+  constructor(
+    private readonly prisma: PrismaService,
+  ) {}
+
+  create(data: Prisma.PerformanceTaskCreateInput) {
+    console.debug({ createPerformanceTask: data })
+
+    return this.prisma.performanceTask.create({
+      data: data
+    })
   }
 
   findAll() {
-    return `This action returns all performanceTask`;
+    return this.prisma.performanceTask.findMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} performanceTask`;
+  findOne(where: Prisma.PerformanceTaskWhereUniqueInput) {
+    return this.prisma.performanceTask.findUnique({
+      where,
+    })
   }
 
-  update(id: number, updatePerformanceTaskInput: UpdatePerformanceTaskInput) {
-    return `This action updates a #${id} performanceTask`;
+  async update(where: Prisma.PerformanceTaskWhereUniqueInput, data: Prisma.PerformanceTaskUpdateInput) {
+    let performanceTask: any
+    try {
+      performanceTask = await this.prisma.performanceTask.update({
+        where,
+        data: data,
+      })
+    } catch (e: any) {
+      throw new Error (e)
+    }
+    return performanceTask
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} performanceTask`;
+  remove(where: Prisma.PerformanceTaskWhereUniqueInput) {
+    return this.prisma.performanceTask.delete({
+      where,
+    })
   }
 }

@@ -35,6 +35,10 @@ import { AiModule } from '../ai/ai.module'
 import { AiService } from '../ai/ai.service'
 import { PineconeService } from '@src/ai/pinecone/pinecone.service'
 import { OpenAIService } from '@src/ai/openai/openAIService'
+import { PerformanceTaskModule } from '@/performance-task/performance-task.module'
+import { join } from 'path'
+import { WorksheetModule } from '@/worksheet/worksheet.module'
+import { QuizModule } from '@/quiz/quiz.module'
 
 let mode = process.env.MODE
 let envFile: string
@@ -74,7 +78,7 @@ console.debug({ mode, envFile })
           .default(Number.MAX_SAFE_INTEGER >> 1) //2 * 60 * 60 * 1000)
           .max(Number.MAX_SAFE_INTEGER - 1) //to round to 0
           .min(60 * 1000),
-        CLERK_SECRET_KEY: Joi.string().required().min(10),
+        // CLERK_SECRET_KEY: Joi.string().required().min(10),
         DOMAIN: Joi.string().optional().default(''),
         COOKIE_PATH: Joi.string().optional().default('/').min(1),
         COOKIE_NAME: Joi.string().optional().default('token').min(2),
@@ -117,6 +121,10 @@ console.debug({ mode, envFile })
       driver: ApolloDriver,
       plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
       typePaths: ['./**/*.graphql'],
+      definitions:{
+        path: join(process.cwd(), 'src/graphql.ts'),
+        outputAs: 'class'
+      },
       resolvers: { DateTime: GraphQLDateTime },
       subscriptions: {
         'graphql-ws': {
@@ -140,8 +148,11 @@ console.debug({ mode, envFile })
       },
     }),
     PrismaModule,
-    // AuthModule,
-    // UserModule,
+    PerformanceTaskModule,
+    WorksheetModule,
+    QuizModule,
+    AuthModule,
+    UserModule,
     // CategoryModule,
     // ClerkModule,
     // CourseModule,

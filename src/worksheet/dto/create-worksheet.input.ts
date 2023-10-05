@@ -1,1 +1,3 @@
-export class CreateWorksheetInput {}
+import { CreateWorksheetInput } from "../../graphql";
+
+export class CreateWorksheetInputDTO extends CreateWorksheetInput{}

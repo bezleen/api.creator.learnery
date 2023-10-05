@@ -13,7 +13,6 @@ enum Difficulty {
 }
 
 type Question {
-  id: String!
   content: String!
   type: QuestionType!
   difficulty: Difficulty!
@@ -21,8 +20,8 @@ type Question {
 }
 
 type Answer {
-  id: String!
-  text: String!
+  content: String!
+  isCorrect: Boolean!
 }
 
 type Taxonomy {
@@ -34,14 +33,14 @@ type Quiz {
   id: String!
 
   objectives: String!
-  description: String!
+  description: String
   tone: String!
   modality: String!
   language: String
   audience: Audience!
   questionTypes: [QuestionType!]!
-  taxonomies: [Taxonomy!]
-  questions: [Question!]
+  taxonomies: [Taxonomy!]!
+  questions: [Question!]!
 
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -80,7 +79,7 @@ input TaxonomyInput {
 
 input CreateQuizInput {
   objectives: String!
-  description: String!
+  description: String
   tone: String!
   modality: String!
   language: String
@@ -91,16 +90,27 @@ input CreateQuizInput {
 }
 
 input UpdateQuizInput {
-  id: String!
+  objectives: String
+  description: String
+  tone: String
+  modality: String
+  language: String
+  audience: CreateAudienceInput
+  questionTypes: [QuestionType!]
+  taxonomies: [TaxonomyInput!]
+  questions: [CreateQuestionInput!]
 }
 
 type Query {
-  quiz: [Quiz]!
+  quizzes: [Quiz]!
+
   quiz(id: String!): Quiz
 }
 
 type Mutation {
-  createQuiz(createQuizInput: CreateQuizInput!): Quiz!
-  updateQuiz(updateQuizInput: UpdateQuizInput!): Quiz!
+  createQuiz(data: CreateQuizInput!): Quiz
+
+  updateQuiz(id: String!, data: UpdateQuizInput!): Quiz!
+
   removeQuiz(id: String!): Quiz
 }

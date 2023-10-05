@@ -1,26 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { CreateWorksheetInput } from './dto/create-worksheet.input';
-import { UpdateWorksheetInput } from './dto/update-worksheet.input';
+import { PrismaService } from '@/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class WorksheetService {
-  create(createWorksheetInput: CreateWorksheetInput) {
-    return 'This action adds a new worksheet';
+  constructor(
+    private readonly prisma: PrismaService,
+  ) { }
+
+  create(data: Prisma.WorksheetCreateInput) {
+    console.debug({ createWorksheet: data })
+
+    return this.prisma.worksheet.create({
+      data: data
+    })
   }
 
   findAll() {
-    return `This action returns all worksheet`;
+    return this.prisma.worksheet.findMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} worksheet`;
+  findOne(where: Prisma.WorksheetWhereUniqueInput) {
+    return this.prisma.worksheet.findUnique({
+      where,
+    })
   }
 
-  update(id: number, updateWorksheetInput: UpdateWorksheetInput) {
-    return `This action updates a #${id} worksheet`;
+  async update(where: Prisma.WorksheetWhereUniqueInput, data: Prisma.WorksheetUpdateInput) {
+    let worksheet: any
+    try {
+      worksheet = await this.prisma.worksheet.update({
+        where,
+        data: data,
+      })
+    } catch (e: any) {
+      throw new Error(e)
+    }
+    return worksheet
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} worksheet`;
+  remove(where: Prisma.WorksheetWhereUniqueInput) {
+    return this.prisma.worksheet.delete({
+      where,
+    })
   }
 }

@@ -13,7 +13,6 @@
 # }
 
 # type Question {
-#   id: String!
 #   content: String!
 #   type: QuestionType!
 #   difficulty: Difficulty!
@@ -28,22 +27,22 @@
 type PerformanceTask {
   id: String!
   objectives: String!
-  description: String!
+  description: String
   tone: String!
   modality: String!
   language: String
   audience: Audience!
   # questionTypes: [QuestionType!]!
-  # taxonomies: [Taxonomy!]
-  # questions: [Question!]
+  # taxonomies: [Taxonomy!]!
+  # questions: [Question!]!
 
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
 # type Answer {
-#   id: String!
 #   text: String!
+#   isCorrect: Boolean!
 # }
 
 type Audience {
@@ -79,7 +78,7 @@ input CreateAudienceInput {
 
 input CreatePerformanceTaskInput {
   objectives: String!
-  description: String!
+  description: String
   tone: String!
   modality: String!
   language: String
@@ -87,16 +86,24 @@ input CreatePerformanceTaskInput {
 }
 
 input UpdatePerformanceTaskInput {
-  id: String!
+  objectives: String
+  description: String
+  tone: String
+  modality: String
+  language: String
+  audience: CreateAudienceInput
 }
 
 type Query {
-  performanceTask: [PerformanceTask]!
-  performanceTask(id: String!): PerformanceTask
+  performanceTasks: [PerformanceTask]!
+
+  performanceTask(id: String!): PerformanceTask!
 }
 
 type Mutation {
-  createPerformanceTask(createPerformanceTaskInput: CreatePerformanceTaskInput!): PerformanceTask!
-  updatePerformanceTask(updatePerformanceTaskInput: UpdatePerformanceTaskInput!): PerformanceTask!
+  createPerformanceTask(data: CreatePerformanceTaskInput!): PerformanceTask
+
+  updatePerformanceTask(id: String!, data: UpdatePerformanceTaskInput!): PerformanceTask!
+
   removePerformanceTask(id: String!): PerformanceTask
 }

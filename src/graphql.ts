@@ -8,6 +8,20 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export enum QuestionType {
+    MULTIPLE_CHOICE = "MULTIPLE_CHOICE",
+    FILL_IN_THE_BLANK_WITH_OPTIONS = "FILL_IN_THE_BLANK_WITH_OPTIONS",
+    TRUE_FALSE = "TRUE_FALSE",
+    FILL_IN_THE_BLANK_FREE_TEXT = "FILL_IN_THE_BLANK_FREE_TEXT",
+    ESSAY = "ESSAY"
+}
+
+export enum Difficulty {
+    EASY = "EASY",
+    MEDIUM = "MEDIUM",
+    HARD = "HARD"
+}
+
 export class AuthInput {
     clientToken: string;
     sessionId: string;
@@ -107,6 +121,89 @@ export class InputTopic {
     subtopics: Nullable<string>[];
 }
 
+export class CreatePerformanceTaskInput {
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: CreateAudienceInput;
+}
+
+export class UpdatePerformanceTaskInput {
+    objectives?: Nullable<string>;
+    description?: Nullable<string>;
+    tone?: Nullable<string>;
+    modality?: Nullable<string>;
+    language?: Nullable<string>;
+    audience?: Nullable<CreateAudienceInput>;
+}
+
+export class CreateQuestionInput {
+    content: string;
+    type: QuestionType;
+    difficulty: Difficulty;
+    answers: AnswerInput[];
+}
+
+export class AnswerInput {
+    content: string;
+    isCorrect: boolean;
+}
+
+export class TaxonomyInput {
+    difficulty: Difficulty;
+    quantity: number;
+}
+
+export class CreateQuizInput {
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: CreateAudienceInput;
+    questionTypes: QuestionType[];
+    taxonomies?: Nullable<TaxonomyInput[]>;
+    questions?: Nullable<CreateQuestionInput[]>;
+}
+
+export class UpdateQuizInput {
+    objectives?: Nullable<string>;
+    description?: Nullable<string>;
+    tone?: Nullable<string>;
+    modality?: Nullable<string>;
+    language?: Nullable<string>;
+    audience?: Nullable<CreateAudienceInput>;
+    questionTypes?: Nullable<QuestionType[]>;
+    taxonomies?: Nullable<TaxonomyInput[]>;
+    questions?: Nullable<CreateQuestionInput[]>;
+}
+
+export class CreateWorksheetInput {
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: CreateAudienceInput;
+    questionTypes: QuestionType[];
+    taxonomies?: Nullable<TaxonomyInput[]>;
+    questions?: Nullable<CreateQuestionInput[]>;
+}
+
+export class UpdateWorksheetInput {
+    objectives?: Nullable<string>;
+    description?: Nullable<string>;
+    tone?: Nullable<string>;
+    modality?: Nullable<string>;
+    language?: Nullable<string>;
+    audience?: Nullable<CreateAudienceInput>;
+    questionTypes?: Nullable<QuestionType[]>;
+    taxonomies?: Nullable<TaxonomyInput[]>;
+    questions?: Nullable<CreateQuestionInput[]>;
+}
+
 export class AuthPayload {
     accessToken: string;
 }
@@ -127,6 +224,24 @@ export abstract class IMutation {
     abstract createCourseOutline(courseId: string): CourseOutline | Promise<CourseOutline>;
 
     abstract createCourseDetailedOutline(courseId: string): CourseDetailedOutline | Promise<CourseDetailedOutline>;
+
+    abstract createPerformanceTask(data: CreatePerformanceTaskInput): Nullable<PerformanceTask> | Promise<Nullable<PerformanceTask>>;
+
+    abstract updatePerformanceTask(id: string, data: UpdatePerformanceTaskInput): PerformanceTask | Promise<PerformanceTask>;
+
+    abstract removePerformanceTask(id: string): Nullable<PerformanceTask> | Promise<Nullable<PerformanceTask>>;
+
+    abstract createQuiz(data: CreateQuizInput): Nullable<Quiz> | Promise<Nullable<Quiz>>;
+
+    abstract updateQuiz(id: string, data: UpdateQuizInput): Quiz | Promise<Quiz>;
+
+    abstract removeQuiz(id: string): Nullable<Quiz> | Promise<Nullable<Quiz>>;
+
+    abstract createWorksheet(data: CreateWorksheetInput): Nullable<Worksheet> | Promise<Nullable<Worksheet>>;
+
+    abstract updateWorksheet(id: string, data: UpdateWorksheetInput): Worksheet | Promise<Worksheet>;
+
+    abstract removeWorksheet(id: string): Nullable<Worksheet> | Promise<Nullable<Worksheet>>;
 }
 
 export abstract class IQuery {
@@ -136,7 +251,19 @@ export abstract class IQuery {
 
     abstract course(id: string): Course | Promise<Course>;
 
+    abstract performanceTasks(): Nullable<PerformanceTask>[] | Promise<Nullable<PerformanceTask>[]>;
+
+    abstract performanceTask(id: string): PerformanceTask | Promise<PerformanceTask>;
+
+    abstract quizzes(): Nullable<Quiz>[] | Promise<Nullable<Quiz>[]>;
+
+    abstract quiz(id: string): Nullable<Quiz> | Promise<Nullable<Quiz>>;
+
     abstract me(): User | Promise<User>;
+
+    abstract worksheets(): Nullable<Worksheet>[] | Promise<Nullable<Worksheet>[]>;
+
+    abstract worksheet(id: string): Worksheet | Promise<Worksheet>;
 }
 
 export class Course {
@@ -226,11 +353,70 @@ export abstract class ISubscription {
     abstract courseUpdated(courseId: string): Course | Promise<Course>;
 }
 
+export class PerformanceTask {
+    id: string;
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: Audience;
+    createdAt: DateTime;
+    updatedAt: DateTime;
+}
+
+export class Question {
+    content: string;
+    type: QuestionType;
+    difficulty: Difficulty;
+    answers: Answer[];
+}
+
+export class Answer {
+    content: string;
+    isCorrect: boolean;
+}
+
+export class Taxonomy {
+    difficulty: Difficulty;
+    quantity: number;
+}
+
+export class Quiz {
+    id: string;
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: Audience;
+    questionTypes: QuestionType[];
+    taxonomies: Taxonomy[];
+    questions: Question[];
+    createdAt: DateTime;
+    updatedAt: DateTime;
+}
+
 export class User {
     id: string;
     email?: Nullable<string>;
     firstName?: Nullable<string>;
     lastName?: Nullable<string>;
+}
+
+export class Worksheet {
+    id: string;
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: Audience;
+    questionTypes: QuestionType[];
+    taxonomies: Taxonomy[];
+    questions: Question[];
+    createdAt: DateTime;
+    updatedAt: DateTime;
 }
 
 export type DateTime = any;

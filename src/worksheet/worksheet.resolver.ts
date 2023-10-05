@@ -1,34 +1,34 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { WorksheetService } from './worksheet.service';
-import { CreateWorksheetInput } from './dto/create-worksheet.input';
-import { UpdateWorksheetInput } from './dto/update-worksheet.input';
+import { CreateWorksheetInputDTO } from './dto/create-worksheet.input';
+import { UpdateWorksheetInputDTO } from './dto/update-worksheet.input';
 
 @Resolver('Worksheet')
 export class WorksheetResolver {
-  constructor(private readonly worksheetService: WorksheetService) {}
+  constructor(private readonly worksheetService: WorksheetService) { }
 
   @Mutation('createWorksheet')
-  create(@Args('createWorksheetInput') createWorksheetInput: CreateWorksheetInput) {
+  create(@Args('data') createWorksheetInput: CreateWorksheetInputDTO) {
     return this.worksheetService.create(createWorksheetInput);
   }
 
-  @Query('worksheet')
+  @Query('worksheets')
   findAll() {
     return this.worksheetService.findAll();
   }
 
   @Query('worksheet')
-  findOne(@Args('id') id: number) {
-    return this.worksheetService.findOne(id);
+  findOne(@Args('id') id: string) {
+    return this.worksheetService.findOne({id});
   }
 
   @Mutation('updateWorksheet')
-  update(@Args('updateWorksheetInput') updateWorksheetInput: UpdateWorksheetInput) {
-    return this.worksheetService.update(updateWorksheetInput.id, updateWorksheetInput);
+  update(@Args('id') id: string, @Args('data') updateWorksheetInput: UpdateWorksheetInputDTO) {
+    return this.worksheetService.update({id}, updateWorksheetInput);
   }
 
   @Mutation('removeWorksheet')
-  remove(@Args('id') id: number) {
-    return this.worksheetService.remove(id);
+  remove(@Args('id') id: string) {
+    return this.worksheetService.remove({id});
   }
 }

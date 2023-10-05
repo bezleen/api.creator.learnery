@@ -1,26 +1,47 @@
+import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreateQuizInput } from './dto/create-quiz.input';
-import { UpdateQuizInput } from './dto/update-quiz.input';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class QuizService {
-  create(createQuizInput: CreateQuizInput) {
-    return 'This action adds a new quiz';
+  constructor(
+    private readonly prisma: PrismaService,
+  ) { }
+
+  create(data: Prisma.QuizCreateInput) {
+    console.debug({ createQuiz: data })
+
+    return this.prisma.quiz.create({
+      data: data
+    })
   }
 
   findAll() {
-    return `This action returns all quiz`;
+    return this.prisma.quiz.findMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} quiz`;
+  findOne(where: Prisma.QuizWhereUniqueInput) {
+    return this.prisma.quiz.findUnique({
+      where,
+    })
   }
 
-  update(id: number, updateQuizInput: UpdateQuizInput) {
-    return `This action updates a #${id} quiz`;
+  async update(where: Prisma.QuizWhereUniqueInput, data: Prisma.QuizUpdateInput) {
+    let quiz: any
+    try {
+      quiz = await this.prisma.quiz.update({
+        where,
+        data: data,
+      })
+    } catch (e: any) {
+      throw new Error(e)
+    }
+    return quiz
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} quiz`;
+  remove(where: Prisma.QuizWhereUniqueInput) {
+    return this.prisma.quiz.delete({
+      where,
+    })
   }
 }
