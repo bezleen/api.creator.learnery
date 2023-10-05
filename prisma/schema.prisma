@@ -130,3 +130,20 @@ type Topic {
   resource         String?
   timing           String?
 }
+
+model PerformanceTask {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  objectives  String[] @default([])
+  description String?  @default("")
+  language    String?  @default("English")
+  category    String
+  tone        String   @default("Friendly")
+  modality    String   @default("Hybrid")
+
+  audience  Audience
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  @@map("performance-task")
+}
