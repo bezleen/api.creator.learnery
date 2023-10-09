@@ -1,5 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -9,6 +9,10 @@ export class QuizService {
   ) { }
 
   create(data: Prisma.QuizCreateInput) {
+    if(Object.keys(data.questionTypes).length > 3){
+      throw new BadRequestException('you can only choose 3 type of question ')
+    }
+
     console.debug({ createQuiz: data })
 
     return this.prisma.quiz.create({

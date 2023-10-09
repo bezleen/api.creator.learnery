@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 
@@ -9,6 +9,10 @@ export class WorksheetService {
   ) { }
 
   create(data: Prisma.WorksheetCreateInput) {
+    if(Object.keys(data.questionTypes).length > 3){
+      throw new BadRequestException('you can only choose 3 type of question ')
+    }
+
     console.debug({ createWorksheet: data })
 
     return this.prisma.worksheet.create({
