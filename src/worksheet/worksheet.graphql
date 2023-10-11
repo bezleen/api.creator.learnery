@@ -30,8 +30,6 @@ type Taxonomy {
 }
 
 type Worksheet {
-  id: String!
-
   objectives: String!
   description: String
   tone: String!
@@ -41,9 +39,6 @@ type Worksheet {
   questionTypes: [QuestionType!]!
   taxonomies: [Taxonomy!]!
   questions: [Question!]!
-
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
 type Audience {
@@ -89,28 +84,34 @@ input CreateWorksheetInput {
   questions: [CreateQuestionInput!]
 }
 
-input UpdateWorksheetInput {
-  objectives: String
-  description: String
-  tone: String
-  modality: String
-  language: String
-  audience: CreateAudienceInput
-  questionTypes: [QuestionType!]
-  taxonomies: [TaxonomyInput!]
-  questions: [CreateQuestionInput!]
+scalar JSON
+
+enum ProgressStatus {
+  INITED
+  INITFAIL
+  COMPLETE
+  PENDING
+}
+
+type RespondWorksheet {
+  id: String!
+  userId: String
+  request: Worksheet
+  result: JSON
+  createdDate: DateTime
+  updatedDate: DateTime
+  progressPercent: Int
+  progressStatus: ProgressStatus!
 }
 
 type Query {
-  worksheets: [Worksheet]!
+  worksheets: [RespondWorksheet]!
 
-  worksheet(id: String!): Worksheet!
+  worksheet(id: String!): RespondWorksheet!
 }
 
 type Mutation {
-  createWorksheet(data: CreateWorksheetInput!): Worksheet
+  createWorksheet(data: CreateWorksheetInput!): RespondWorksheet
 
-  updateWorksheet(id: String! ,data: UpdateWorksheetInput!): Worksheet!
-
-  removeWorksheet(id: String!): Worksheet
+  removeWorksheet(id: String!): RespondWorksheet
 }

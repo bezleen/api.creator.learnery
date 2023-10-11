@@ -1,7 +1,6 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { QuizService } from './quiz.service';
 import { CreateQuizInputDTO } from './dto/create-quiz.input';
-import { UpdateQuizInputDTO } from './dto/update-quiz.input';
 
 @Resolver('Quiz')
 export class QuizResolver {
@@ -20,11 +19,6 @@ export class QuizResolver {
   @Query('quiz')
   findOne(@Args('id') id: string) {
     return this.quizService.findOne({id});
-  }
-
-  @Mutation('updateQuiz')
-  update(@Args('id') id: string, @Args('data') updateQuizInput: UpdateQuizInputDTO) {
-    return this.quizService.update({id}, updateQuizInput);
   }
 
   @Mutation('removeQuiz')

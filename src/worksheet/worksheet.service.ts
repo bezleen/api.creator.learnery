@@ -8,43 +8,33 @@ export class WorksheetService {
     private readonly prisma: PrismaService,
   ) { }
 
-  create(data: Prisma.WorksheetCreateInput) {
+  async create(data: Prisma.WorksheetCreateInput) {
     if(Object.keys(data.questionTypes).length > 3){
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
-    console.debug({ createWorksheet: data })
-
-    return this.prisma.worksheet.create({
-      data: data
+    const createdWorksheet = await this.prisma.materialWorksheet.create({
+      data: {
+        request: data,
+        result: {},
+      }
     })
+
+    return createdWorksheet
   }
 
-  findAll() {
-    return this.prisma.worksheet.findMany()
+  async findAll() {
+    return await this.prisma.materialWorksheet.findMany()
   }
 
-  findOne(where: Prisma.WorksheetWhereUniqueInput) {
-    return this.prisma.worksheet.findUnique({
+  findOne(where: Prisma.MaterialWorksheetWhereUniqueInput) {
+    return this.prisma.materialWorksheet.findUnique({
       where,
     })
   }
 
-  async update(where: Prisma.WorksheetWhereUniqueInput, data: Prisma.WorksheetUpdateInput) {
-    let worksheet: any
-    try {
-      worksheet = await this.prisma.worksheet.update({
-        where,
-        data: data,
-      })
-    } catch (e: any) {
-      throw new Error(e)
-    }
-    return worksheet
-  }
-
-  remove(where: Prisma.WorksheetWhereUniqueInput) {
-    return this.prisma.worksheet.delete({
+  remove(where: Prisma.MaterialWorksheetWhereUniqueInput) {
+    return this.prisma.materialWorksheet.delete({
       where,
     })
   }

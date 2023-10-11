@@ -1,6 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, ProgressStatus } from '@prisma/client';
 
 @Injectable()
 export class QuizService {
@@ -8,43 +8,34 @@ export class QuizService {
     private readonly prisma: PrismaService,
   ) { }
 
-  create(data: Prisma.QuizCreateInput) {
+  async create(data: Prisma.QuizCreateInput) {
     if(Object.keys(data.questionTypes).length > 3){
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
-    console.debug({ createQuiz: data })
-
-    return this.prisma.quiz.create({
-      data: data
+    const createdQuiz = await this.prisma.materialQuiz.create({
+      data: {
+        request: data,
+        result: {},
+      }
     })
+
+    return createdQuiz
   }
 
-  findAll() {
-    return this.prisma.quiz.findMany()
+  async findAll() {
+    return await this.prisma.materialQuiz.findMany()
   }
 
-  findOne(where: Prisma.QuizWhereUniqueInput) {
-    return this.prisma.quiz.findUnique({
+  async findOne(where: Prisma.MaterialQuizWhereUniqueInput) {
+
+    return this.prisma.materialQuiz.findUnique({
       where,
     })
   }
 
-  async update(where: Prisma.QuizWhereUniqueInput, data: Prisma.QuizUpdateInput) {
-    let quiz: any
-    try {
-      quiz = await this.prisma.quiz.update({
-        where,
-        data: data,
-      })
-    } catch (e: any) {
-      throw new Error(e)
-    }
-    return quiz
-  }
-
-  remove(where: Prisma.QuizWhereUniqueInput) {
-    return this.prisma.quiz.delete({
+  remove(where: Prisma.MaterialQuizWhereUniqueInput) {
+    return this.prisma.materialQuiz.delete({
       where,
     })
   }

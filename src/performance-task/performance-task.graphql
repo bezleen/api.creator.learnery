@@ -1,49 +1,11 @@
-# enum QuestionType {
-#   MULTIPLE_CHOICE
-#   FILL_IN_THE_BLANK_WITH_OPTIONS
-#   TRUE_FALSE
-#   FILL_IN_THE_BLANK_FREE_TEXT
-#   ESSAY
-# }
-
-# enum Difficulty {
-#   EASY
-#   MEDIUM
-#   HARD
-# }
-
-# type Question {
-#   content: String!
-#   type: QuestionType!
-#   difficulty: Difficulty!
-#   answers: [Answer!]!
-# }
-
-# type Taxonomy {
-#   difficulty: Difficulty!
-#   quantity: Int!
-# }
-
 type PerformanceTask {
-  id: String!
   objectives: String!
   description: String
   tone: String!
   modality: String!
   language: String
   audience: Audience!
-  # questionTypes: [QuestionType!]!
-  # taxonomies: [Taxonomy!]!
-  # questions: [Question!]!
-
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
-
-# type Answer {
-#   text: String!
-#   isCorrect: Boolean!
-# }
 
 type Audience {
   ageStart: Int!
@@ -58,23 +20,6 @@ input CreateAudienceInput {
   level: String!
   desc: String
 }
-
-# input CreateQuestionInput {
-#   content: String!
-#   type: QuestionType!
-#   difficulty: Difficulty!
-#   answers: [AnswerInput!]!
-# }
-
-# input AnswerInput {
-#   content: String!
-#   isCorrect: Boolean!
-# }
-
-# input TaxonomyInput {
-#   difficulty: Difficulty!
-#   quantity: Int!
-# }
 
 input CreatePerformanceTaskInput {
   objectives: String!
@@ -94,16 +39,34 @@ input UpdatePerformanceTaskInput {
   audience: CreateAudienceInput
 }
 
-type Query {
-  performanceTasks: [PerformanceTask]!
+scalar JSON
 
-  performanceTask(id: String!): PerformanceTask!
+enum ProgressStatus {
+  INITED
+  INITFAIL
+  COMPLETE
+  PENDING
+}
+
+type RespondPerformanceTask {
+  id: String!
+  userId: String
+  request: PerformanceTask
+  result: JSON
+  createdDate: DateTime
+  updatedDate: DateTime
+  progressPercent: Int
+  progressStatus: ProgressStatus!
+}
+
+type Query {
+  performanceTasks: [RespondPerformanceTask]!
+
+  performanceTask(id: String!): RespondPerformanceTask!
 }
 
 type Mutation {
-  createPerformanceTask(data: CreatePerformanceTaskInput!): PerformanceTask
+  createPerformanceTask(data: CreatePerformanceTaskInput!): RespondPerformanceTask
 
-  updatePerformanceTask(id: String!, data: UpdatePerformanceTaskInput!): PerformanceTask!
-
-  removePerformanceTask(id: String!): PerformanceTask
+  removePerformanceTask(id: String!): RespondPerformanceTask
 }

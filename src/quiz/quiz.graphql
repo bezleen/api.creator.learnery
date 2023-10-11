@@ -30,8 +30,6 @@ type Taxonomy {
 }
 
 type Quiz {
-  id: String!
-
   objectives: String!
   description: String
   tone: String!
@@ -41,9 +39,6 @@ type Quiz {
   questionTypes: [QuestionType!]!
   taxonomies: [Taxonomy!]!
   questions: [Question!]!
-
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
 type Audience {
@@ -89,28 +84,34 @@ input CreateQuizInput {
   questions: [CreateQuestionInput!]
 }
 
-input UpdateQuizInput {
-  objectives: String
-  description: String
-  tone: String
-  modality: String
-  language: String
-  audience: CreateAudienceInput
-  questionTypes: [QuestionType!]
-  taxonomies: [TaxonomyInput!]
-  questions: [CreateQuestionInput!]
+scalar JSON
+
+enum ProgressStatus {
+  INITED
+  INITFAIL
+  COMPLETE
+  PENDING
+}
+
+type RespondQuiz {
+  id: String!
+  userId: String
+  request: Quiz
+  result: JSON
+  createdDate: DateTime
+  updatedDate: DateTime
+  progressPercent: Int
+  progressStatus: ProgressStatus!
 }
 
 type Query {
-  quizzes: [Quiz]!
+  quizzes: [RespondQuiz]!
 
-  quiz(id: String!): Quiz
+  quiz(id: String!): RespondQuiz!
 }
 
 type Mutation {
-  createQuiz(data: CreateQuizInput!): Quiz
+  createQuiz(data: CreateQuizInput!): RespondQuiz
 
-  updateQuiz(id: String!, data: UpdateQuizInput!): Quiz!
-
-  removeQuiz(id: String!): Quiz
+  removeQuiz(id: String!): RespondQuiz
 }

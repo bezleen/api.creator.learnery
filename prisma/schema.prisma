@@ -131,8 +131,7 @@ type Topic {
   timing           String?
 }
 
-model PerformanceTask {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+type PerformanceTask {
   objectives  String   @default("")
   description String?  @default("")
   language    String?  @default("English")
@@ -140,11 +139,6 @@ model PerformanceTask {
   modality    String   @default("Hybrid")
 
   audience  Audience
-
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
-
-  @@map("performance-task")
 }
 
 enum QuestionType {
@@ -179,8 +173,7 @@ type Question {
 } 
 
 
-model Worksheet{
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+type Worksheet{
   objectives  String   @default("")
   description String?  @default("")
   language    String?  @default("English")
@@ -192,14 +185,9 @@ model Worksheet{
   taxonomies Taxonomy[]
   questions Question[]
 
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
-
-  @@map("worksheet")
 }
 
-model Quiz{
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+type Quiz{
   objectives  String   @default("")
   description String?  @default("")
   language    String?  @default("English")
@@ -211,8 +199,50 @@ model Quiz{
   taxonomies Taxonomy[]
   questions Question[]
 
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
+}
 
-  @@map("quiz")
+enum ProgressStatus {
+  INITED
+  INITFAIL
+  COMPLETE
+  PENDING
+}
+
+model MaterialQuiz{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @map("user_id") @db.ObjectId
+  request     Quiz?
+  result      Json?
+  createdDate DateTime @map("createdDate") @default(now())
+  updatedDate DateTime @map("updatedDate") @updatedAt
+  progressPercent Int  @default(0)
+  progressStatus ProgressStatus @default(PENDING)
+
+  @@map("material_quiz")
+}
+
+model MaterialWorksheet{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @map("user_id") @db.ObjectId
+  request     Worksheet?
+  result      Json?
+  createdDate DateTime @map("createdDate") @default(now())
+  updatedDate DateTime @map("updatedDate") @updatedAt
+  progressPercent Int  @default(0)
+  progressStatus ProgressStatus @default(PENDING)
+
+  @@map("material_worksheet")
+}
+
+model MaterialPerformanceTask{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @map("user_id") @db.ObjectId
+  request     PerformanceTask?
+  result      Json?
+  createdDate DateTime @map("createdDate") @default(now())
+  updatedDate DateTime @map("updatedDate") @updatedAt
+  progressPercent Int  @default(0)
+  progressStatus ProgressStatus @default(PENDING)
+
+  @@map("material_pt")
 }

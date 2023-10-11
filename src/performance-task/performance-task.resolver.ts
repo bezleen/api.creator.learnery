@@ -4,7 +4,6 @@ import { CreatePerformanceTaskInputDTO } from './dto/create-performance-task.inp
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '@/auth/guard';
 import { GetUserGraphql } from '@/auth/decorator';
-import { UpdatePerformanceTaskInputDTO } from './dto/update-performance-task.input';
 
 @Resolver('PerformanceTask')
 export class PerformanceTaskResolver {
@@ -25,12 +24,6 @@ export class PerformanceTaskResolver {
   @Query('performanceTask')
   findOne(@Args('id') id: string) {
     return this.performanceTaskService.findOne({id});
-  }
-
-  @Mutation('updatePerformanceTask')
-  async update(@Args('id') id: string, @Args('data') updatePerformanceTaskInput: UpdatePerformanceTaskInputDTO) {
-    const UpdatePerformanceTask = await this.performanceTaskService.update({id}, updatePerformanceTaskInput);
-    return UpdatePerformanceTask
   }
 
   @Mutation('removePerformanceTask')

@@ -8,39 +8,29 @@ export class PerformanceTaskService {
     private readonly prisma: PrismaService,
   ) {}
 
-  create(data: Prisma.PerformanceTaskCreateInput) {
-    console.debug({ createPerformanceTask: data })
-
-    return this.prisma.performanceTask.create({
-      data: data
+  async create(data: Prisma.PerformanceTaskCreateInput) {
+    const createdPerformanceTask = await this.prisma.materialPerformanceTask.create({
+      data: {
+        request: data,
+        result: {},
+      }
     })
+
+    return createdPerformanceTask
   }
 
   findAll() {
-    return this.prisma.performanceTask.findMany()
+    return this.prisma.materialPerformanceTask.findMany()
   }
 
-  findOne(where: Prisma.PerformanceTaskWhereUniqueInput) {
-    return this.prisma.performanceTask.findUnique({
+  findOne(where: Prisma.MaterialPerformanceTaskWhereUniqueInput) {
+    return this.prisma.materialPerformanceTask.findUnique({
       where,
     })
   }
 
-  async update(where: Prisma.PerformanceTaskWhereUniqueInput, data: Prisma.PerformanceTaskUpdateInput) {
-    let performanceTask: any
-    try {
-      performanceTask = await this.prisma.performanceTask.update({
-        where,
-        data: data,
-      })
-    } catch (e: any) {
-      throw new Error (e)
-    }
-    return performanceTask
-  }
-
-  remove(where: Prisma.PerformanceTaskWhereUniqueInput) {
-    return this.prisma.performanceTask.delete({
+  remove(where: Prisma.MaterialPerformanceTaskWhereUniqueInput) {
+    return this.prisma.materialPerformanceTask.delete({
       where,
     })
   }
