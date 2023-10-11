@@ -17,17 +17,9 @@ RUN #npm run build already post-install
 
 # Deploy stage
 FROM node:19-alpine
-
-
-ENV PORT=8080
-ENV NODE_ENV="production"
-ENV MODE="prod"
-ENV DATABASE_URL=""
-ENV JWT_SECRET="Hiro@laciferin"
-
 WORKDIR /app
 
-EXPOSE $PORT
+EXPOSE 7008
 
 COPY --from=builder /app ./
 
