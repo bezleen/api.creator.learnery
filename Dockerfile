@@ -59,13 +59,6 @@ RUN #npm run build already post-install
 # Deploy stage
 FROM node:19-alpine
 
-
-ENV PORT=7008
-ENV NODE_ENV="production"
-ENV MODE="prod"
-ENV DATABASE_URL="mongodb+srv://root:root@cluster0.1acfctl.mongodb.net/learnery?retryWrites=true&w=majority"
-ENV JWT_SECRET="Hiro@laciferin"
-
 WORKDIR /app
 
 EXPOSE $PORT
