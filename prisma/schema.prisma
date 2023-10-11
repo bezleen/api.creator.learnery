@@ -5,7 +5,6 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 model User {
@@ -133,13 +132,13 @@ type Topic {
 }
 
 type PerformanceTask {
-  objectives  String   @default("")
-  description String?  @default("")
-  language    String?  @default("English")
-  tone        String   @default("Friendly")
-  modality    String   @default("Hybrid")
+  objectives  String  @default("")
+  description String? @default("")
+  language    String? @default("English")
+  tone        String  @default("Friendly")
+  modality    String  @default("Hybrid")
 
-  audience  Audience
+  audience Audience
 }
 
 enum QuestionType {
@@ -158,48 +157,45 @@ enum Difficulty {
 
 type Taxonomy {
   difficulty Difficulty
-  quantity Int
+  quantity   Int
 }
 
 type Answer {
-  content String
+  content   String
   isCorrect Boolean @default(false)
 }
 
 type Question {
-  content String
-  type QuestionType
+  content    String
+  type       QuestionType
   difficulty Difficulty
-  answers Answer[]
-} 
-
-
-type Worksheet{
-  objectives  String   @default("")
-  description String?  @default("")
-  language    String?  @default("English")
-  tone        String   @default("Friendly")
-  modality    String   @default("Hybrid")
-
-  audience  Audience
-  questionTypes QuestionType[]
-  taxonomies Taxonomy[]
-  questions Question[]
-
+  answers    Answer[]
 }
 
-type Quiz{
-  objectives  String   @default("")
-  description String?  @default("")
-  language    String?  @default("English")
-  tone        String   @default("Friendly")
-  modality    String   @default("Hybrid")
+type Worksheet {
+  objectives  String  @default("")
+  description String? @default("")
+  language    String? @default("English")
+  tone        String  @default("Friendly")
+  modality    String  @default("Hybrid")
 
-  audience  Audience
+  audience      Audience
   questionTypes QuestionType[]
-  taxonomies Taxonomy[]
-  questions Question[]
+  taxonomies    Taxonomy[]
+  questions     Question[]
+}
 
+type Quiz {
+  objectives  String  @default("")
+  description String? @default("")
+  language    String? @default("English")
+  tone        String  @default("Friendly")
+  modality    String  @default("Hybrid")
+
+  audience      Audience
+  questionTypes QuestionType[]
+  taxonomies    Taxonomy[]
+  questions     Question[]
 }
 
 enum ProgressStatus {
@@ -209,41 +205,41 @@ enum ProgressStatus {
   PENDING
 }
 
-model MaterialQuiz{
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String?  @map("user_id") @db.ObjectId
-  request     Quiz?
-  result      Json?
-  createdDate DateTime @map("createdDate") @default(now())
-  updatedDate DateTime @map("updatedDate") @updatedAt
-  progressPercent Int  @default(0)
-  progressStatus ProgressStatus @default(PENDING)
+model MaterialQuiz {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?        @map("user_id") @db.ObjectId
+  request         Quiz?
+  result          Json?
+  createdDate     DateTime       @default(now()) @map("createdDate")
+  updatedDate     DateTime       @updatedAt @map("updatedDate")
+  progressPercent Int            @default(0)
+  progressStatus  ProgressStatus @default(PENDING)
 
   @@map("material_quiz")
 }
 
-model MaterialWorksheet{
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String?  @map("user_id") @db.ObjectId
-  request     Worksheet?
-  result      Json?
-  createdDate DateTime @map("createdDate") @default(now())
-  updatedDate DateTime @map("updatedDate") @updatedAt
-  progressPercent Int  @default(0)
-  progressStatus ProgressStatus @default(PENDING)
+model MaterialWorksheet {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?        @map("user_id") @db.ObjectId
+  request         Worksheet?
+  result          Json?
+  createdDate     DateTime       @default(now()) @map("createdDate")
+  updatedDate     DateTime       @updatedAt @map("updatedDate")
+  progressPercent Int            @default(0)
+  progressStatus  ProgressStatus @default(PENDING)
 
   @@map("material_worksheet")
 }
 
-model MaterialPerformanceTask{
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String?  @map("user_id") @db.ObjectId
-  request     PerformanceTask?
-  result      Json?
-  createdDate DateTime @map("createdDate") @default(now())
-  updatedDate DateTime @map("updatedDate") @updatedAt
-  progressPercent Int  @default(0)
-  progressStatus ProgressStatus @default(PENDING)
+model MaterialPerformanceTask {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?          @map("user_id") @db.ObjectId
+  request         PerformanceTask?
+  result          Json?
+  createdDate     DateTime         @default(now()) @map("createdDate")
+  updatedDate     DateTime         @updatedAt @map("updatedDate")
+  progressPercent Int              @default(0)
+  progressStatus  ProgressStatus   @default(PENDING)
 
   @@map("material_pt")
 }
