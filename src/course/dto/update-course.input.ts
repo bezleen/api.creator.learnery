@@ -1,3 +1,3 @@
-import { UpdateCourse } from '../../graphql'
+// import { UpdateCourse } from '../../graphql'
 
-export class UpdateCourseInput extends UpdateCourse {}
+// export class UpdateCourseInput extends UpdateCourse {}
