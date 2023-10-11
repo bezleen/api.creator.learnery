@@ -5,6 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 model User {
@@ -129,4 +130,120 @@ type Topic {
   detailedCoverage String
   resource         String?
   timing           String?
+}
+
+type PerformanceTask {
+  objectives  String   @default("")
+  description String?  @default("")
+  language    String?  @default("English")
+  tone        String   @default("Friendly")
+  modality    String   @default("Hybrid")
+
+  audience  Audience
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  FILL_IN_THE_BLANK_WITH_OPTIONS
+  TRUE_FALSE
+  FILL_IN_THE_BLANK_FREE_TEXT
+  ESSAY
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+type Taxonomy {
+  difficulty Difficulty
+  quantity Int
+}
+
+type Answer {
+  content String
+  isCorrect Boolean @default(false)
+}
+
+type Question {
+  content String
+  type QuestionType
+  difficulty Difficulty
+  answers Answer[]
+} 
+
+
+type Worksheet{
+  objectives  String   @default("")
+  description String?  @default("")
+  language    String?  @default("English")
+  tone        String   @default("Friendly")
+  modality    String   @default("Hybrid")
+
+  audience  Audience
+  questionTypes QuestionType[]
+  taxonomies Taxonomy[]
+  questions Question[]
+
+}
+
+type Quiz{
+  objectives  String   @default("")
+  description String?  @default("")
+  language    String?  @default("English")
+  tone        String   @default("Friendly")
+  modality    String   @default("Hybrid")
+
+  audience  Audience
+  questionTypes QuestionType[]
+  taxonomies Taxonomy[]
+  questions Question[]
+
+}
+
+enum ProgressStatus {
+  INITED
+  INITFAIL
+  COMPLETE
+  PENDING
+}
+
+model MaterialQuiz{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @map("user_id") @db.ObjectId
+  request     Quiz?
+  result      Json?
+  createdDate DateTime @map("createdDate") @default(now())
+  updatedDate DateTime @map("updatedDate") @updatedAt
+  progressPercent Int  @default(0)
+  progressStatus ProgressStatus @default(PENDING)
+
+  @@map("material_quiz")
+}
+
+model MaterialWorksheet{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @map("user_id") @db.ObjectId
+  request     Worksheet?
+  result      Json?
+  createdDate DateTime @map("createdDate") @default(now())
+  updatedDate DateTime @map("updatedDate") @updatedAt
+  progressPercent Int  @default(0)
+  progressStatus ProgressStatus @default(PENDING)
+
+  @@map("material_worksheet")
+}
+
+model MaterialPerformanceTask{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @map("user_id") @db.ObjectId
+  request     PerformanceTask?
+  result      Json?
+  createdDate DateTime @map("createdDate") @default(now())
+  updatedDate DateTime @map("updatedDate") @updatedAt
+  progressPercent Int  @default(0)
+  progressStatus ProgressStatus @default(PENDING)
+
+  @@map("material_pt")
 }
