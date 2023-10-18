@@ -68,8 +68,6 @@ export async function initApp(app: INestApplication) {
       'https://studio.apollographql.com',
       'http://localhost:3000',
       'https://vercel.app',
-      'http://localhost',
-      'https://learnery-nest-api.orasci.site/graphql',
       'https://learnery-material.orasci.site/',
       /\.vercel\.app$/,
     ],
@@ -77,6 +75,7 @@ export async function initApp(app: INestApplication) {
     // optionsSuccessStatus: 200,
     // preflightContinue: true,
   })
+  
   app.useGlobalFilters(new PrismaClientExceptionFilter())
   app.enableVersioning({
     type: VersioningType.HEADER,
