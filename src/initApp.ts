@@ -65,11 +65,12 @@ export async function initApp(app: INestApplication) {
   // app.use(cors())
   app.enableCors({
     origin: [
-      'https://studio.apollographql.com',
-      'http://localhost:3000',
-      'https://vercel.app',
-      'https://learnery-material.orasci.site/',
-      /\.vercel\.app$/,
+      // 'https://studio.apollographql.com',
+      // 'http://localhost:3000',
+      // 'https://vercel.app',
+      // 'https://learnery-material.orasci.site/',
+      // /\.vercel\.app$/,
+      "*"
     ],
     credentials: true,
     // optionsSuccessStatus: 200,
