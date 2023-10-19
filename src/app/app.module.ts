@@ -35,10 +35,8 @@ import { AiModule } from '../ai/ai.module'
 import { AiService } from '../ai/ai.service'
 import { PineconeService } from '@src/ai/pinecone/pinecone.service'
 import { OpenAIService } from '@src/ai/openai/openAIService'
-import { PerformanceTaskModule } from '@/performance-task/performance-task.module'
 import { join } from 'path'
-import { WorksheetModule } from '@/worksheet/worksheet.module'
-import { QuizModule } from '@/quiz/quiz.module'
+import { MaterialModule } from '@/material/material.module'
 
 let mode = process.env.MODE
 let envFile: string
@@ -148,9 +146,7 @@ console.debug({ mode, envFile })
       },
     }),
     PrismaModule,
-    PerformanceTaskModule,
-    WorksheetModule,
-    QuizModule,
+    MaterialModule
     // AuthModule,
     // UserModule,
     // CategoryModule,

@@ -8,13 +8,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export enum ProgressStatus {
-    INITED = "INITED",
-    INITFAIL = "INITFAIL",
-    COMPLETE = "COMPLETE",
-    PENDING = "PENDING"
-}
-
 export enum QuestionType {
     MULTIPLE_CHOICE = "MULTIPLE_CHOICE",
     FILL_IN_THE_BLANK_WITH_OPTIONS = "FILL_IN_THE_BLANK_WITH_OPTIONS",
@@ -29,6 +22,19 @@ export enum Difficulty {
     HARD = "HARD"
 }
 
+export enum ProgressStatus {
+    INITED = "INITED",
+    INITFAIL = "INITFAIL",
+    COMPLETE = "COMPLETE",
+    PENDING = "PENDING"
+}
+
+export enum MaterialType {
+    QUIZ = "QUIZ",
+    WORKSHEET = "WORKSHEET",
+    PERFORMANCE_TASK = "PERFORMANCE_TASK"
+}
+
 export class AuthInput {
     clientToken: string;
     sessionId: string;
@@ -41,39 +47,15 @@ export class CreateAudienceInput {
     desc?: Nullable<string>;
 }
 
-export class CreatePerformanceTaskInput {
-    objectives: string;
-    description?: Nullable<string>;
-    tone: string;
-    modality: string;
-    language?: Nullable<string>;
-    audience: CreateAudienceInput;
+export class DifficultyDistributionInput {
+    difficulty: Difficulty;
+    numberOfQuestions: number;
 }
 
-export class UpdatePerformanceTaskInput {
-    objectives?: Nullable<string>;
-    description?: Nullable<string>;
-    tone?: Nullable<string>;
-    modality?: Nullable<string>;
-    language?: Nullable<string>;
-    audience?: Nullable<CreateAudienceInput>;
-}
-
-export class CreateQuestionInput {
-    content: string;
+export class TypeQuestionInput {
     type: QuestionType;
-    difficulty: Difficulty;
-    answers: AnswerInput[];
-}
-
-export class AnswerInput {
-    content: string;
-    isCorrect: boolean;
-}
-
-export class TaxonomyInput {
-    difficulty: Difficulty;
-    quantity: number;
+    totalQuestions: number;
+    bloomTaxonomy?: Nullable<DifficultyDistributionInput[]>;
 }
 
 export class CreateQuizInput {
@@ -83,9 +65,7 @@ export class CreateQuizInput {
     modality: string;
     language?: Nullable<string>;
     audience: CreateAudienceInput;
-    questionTypes: QuestionType[];
-    taxonomies?: Nullable<TaxonomyInput[]>;
-    questions?: Nullable<CreateQuestionInput[]>;
+    questionTypes: TypeQuestionInput[];
 }
 
 export class CreateWorksheetInput {
@@ -95,9 +75,37 @@ export class CreateWorksheetInput {
     modality: string;
     language?: Nullable<string>;
     audience: CreateAudienceInput;
-    questionTypes: QuestionType[];
-    taxonomies?: Nullable<TaxonomyInput[]>;
-    questions?: Nullable<CreateQuestionInput[]>;
+    questionTypes: TypeQuestionInput[];
+}
+
+export class CreatePerformanceTaskInput {
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: CreateAudienceInput;
+}
+
+export class CreateMaterialQuizInput {
+    userId?: Nullable<string>;
+    request: CreateQuizInput;
+    progressPercent?: Nullable<number>;
+    progressStatus: ProgressStatus;
+}
+
+export class CreateMaterialPerformanceTaskInput {
+    userId?: Nullable<string>;
+    request: CreatePerformanceTaskInput;
+    progressPercent?: Nullable<number>;
+    progressStatus: ProgressStatus;
+}
+
+export class CreateMaterialWorksheetInput {
+    userId?: Nullable<string>;
+    request: CreateWorksheetInput;
+    progressPercent?: Nullable<number>;
+    progressStatus: ProgressStatus;
 }
 
 export class AuthPayload {
@@ -107,35 +115,61 @@ export class AuthPayload {
 export abstract class IMutation {
     abstract signIn(data: AuthInput): AuthPayload | Promise<AuthPayload>;
 
-    abstract createPerformanceTask(data: CreatePerformanceTaskInput): Nullable<RespondPerformanceTask> | Promise<Nullable<RespondPerformanceTask>>;
+    abstract createMaterialQuiz(data: CreateMaterialQuizInput): Material | Promise<Material>;
 
-    abstract removePerformanceTask(id: string): Nullable<RespondPerformanceTask> | Promise<Nullable<RespondPerformanceTask>>;
+    abstract createMaterialPerformanceTask(data: CreateMaterialPerformanceTaskInput): Material | Promise<Material>;
 
-    abstract createQuiz(data: CreateQuizInput): Nullable<RespondQuiz> | Promise<Nullable<RespondQuiz>>;
+    abstract createMaterialWorksheet(data: CreateMaterialWorksheetInput): Material | Promise<Material>;
 
-    abstract removeQuiz(id: string): Nullable<RespondQuiz> | Promise<Nullable<RespondQuiz>>;
-
-    abstract createWorksheet(data: CreateWorksheetInput): Nullable<RespondWorksheet> | Promise<Nullable<RespondWorksheet>>;
-
-    abstract removeWorksheet(id: string): Nullable<RespondWorksheet> | Promise<Nullable<RespondWorksheet>>;
+    abstract removeMaterial(id: string): Nullable<Material> | Promise<Nullable<Material>>;
 }
 
 export abstract class IQuery {
     abstract categories(): string[] | Promise<string[]>;
 
-    abstract performanceTasks(): Nullable<RespondPerformanceTask>[] | Promise<Nullable<RespondPerformanceTask>[]>;
+    abstract materials(): Nullable<Material>[] | Promise<Nullable<Material>[]>;
 
-    abstract performanceTask(id: string): RespondPerformanceTask | Promise<RespondPerformanceTask>;
-
-    abstract quizzes(): Nullable<RespondQuiz>[] | Promise<Nullable<RespondQuiz>[]>;
-
-    abstract quiz(id: string): RespondQuiz | Promise<RespondQuiz>;
+    abstract material(id: string): Material | Promise<Material>;
 
     abstract me(): User | Promise<User>;
+}
 
-    abstract worksheets(): Nullable<RespondWorksheet>[] | Promise<Nullable<RespondWorksheet>[]>;
+export class DifficultyDistribution {
+    difficulty: Difficulty;
+    numberOfQuestions: number;
+}
 
-    abstract worksheet(id: string): RespondWorksheet | Promise<RespondWorksheet>;
+export class Audience {
+    ageStart: number;
+    ageEnd: number;
+    level: string;
+    desc?: Nullable<string>;
+}
+
+export class TypeQuestion {
+    type: QuestionType;
+    totalQuestions: number;
+    bloomTaxonomy?: Nullable<DifficultyDistribution[]>;
+}
+
+export class Quiz {
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: Audience;
+    questionTypes: TypeQuestion[];
+}
+
+export class Worksheet {
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: Audience;
+    questionTypes: TypeQuestion[];
 }
 
 export class PerformanceTask {
@@ -147,58 +181,23 @@ export class PerformanceTask {
     audience: Audience;
 }
 
-export class Audience {
-    ageStart: number;
-    ageEnd: number;
-    level: string;
-    desc?: Nullable<string>;
+export class RequestType {
+    quiz?: Nullable<Quiz>;
+    performanceTask?: Nullable<PerformanceTask>;
+    worksheet?: Nullable<Worksheet>;
 }
 
-export class RespondPerformanceTask {
+export class Material {
     id: string;
     userId?: Nullable<string>;
-    request?: Nullable<PerformanceTask>;
+    type?: Nullable<MaterialType>;
+    request?: Nullable<RequestType>;
+    rawResult?: Nullable<string>;
     result?: Nullable<JSON>;
-    createdDate?: Nullable<DateTime>;
-    updatedDate?: Nullable<DateTime>;
-    progressPercent?: Nullable<number>;
-    progressStatus: ProgressStatus;
-}
-
-export class Question {
-    content: string;
-    type: QuestionType;
-    difficulty: Difficulty;
-    answers: Answer[];
-}
-
-export class Answer {
-    content: string;
-    isCorrect: boolean;
-}
-
-export class Taxonomy {
-    difficulty: Difficulty;
-    quantity: number;
-}
-
-export class Quiz {
-    objectives: string;
-    description?: Nullable<string>;
-    tone: string;
-    modality: string;
-    language?: Nullable<string>;
-    audience: Audience;
-    questionTypes: QuestionType[];
-    taxonomies: Taxonomy[];
-    questions: Question[];
-}
-
-export class RespondQuiz {
-    id: string;
-    userId?: Nullable<string>;
-    request?: Nullable<Quiz>;
-    result?: Nullable<JSON>;
+    startDate?: Nullable<DateTime>;
+    endDate?: Nullable<DateTime>;
+    runDuration?: Nullable<number>;
+    waitDuration?: Nullable<number>;
     createdDate?: Nullable<DateTime>;
     updatedDate?: Nullable<DateTime>;
     progressPercent?: Nullable<number>;
@@ -210,29 +209,6 @@ export class User {
     email?: Nullable<string>;
     firstName?: Nullable<string>;
     lastName?: Nullable<string>;
-}
-
-export class Worksheet {
-    objectives: string;
-    description?: Nullable<string>;
-    tone: string;
-    modality: string;
-    language?: Nullable<string>;
-    audience: Audience;
-    questionTypes: QuestionType[];
-    taxonomies: Taxonomy[];
-    questions: Question[];
-}
-
-export class RespondWorksheet {
-    id: string;
-    userId?: Nullable<string>;
-    request?: Nullable<Worksheet>;
-    result?: Nullable<JSON>;
-    createdDate?: Nullable<DateTime>;
-    updatedDate?: Nullable<DateTime>;
-    progressPercent?: Nullable<number>;
-    progressStatus: ProgressStatus;
 }
 
 export type DateTime = any;

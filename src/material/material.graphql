@@ -1,0 +1,186 @@
+enum QuestionType {
+  MULTIPLE_CHOICE
+  FILL_IN_THE_BLANK_WITH_OPTIONS
+  TRUE_FALSE
+  FILL_IN_THE_BLANK_FREE_TEXT
+  ESSAY
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+type DifficultyDistribution {
+  difficulty: Difficulty!
+  numberOfQuestions: Int!
+}
+
+type Audience {
+  ageStart: Int!
+  ageEnd: Int!
+  level: String!
+  desc: String
+}
+
+input CreateAudienceInput {
+  ageStart: Int!
+  ageEnd: Int!
+  level: String!
+  desc: String
+}
+
+input DifficultyDistributionInput {
+  difficulty: Difficulty!
+  numberOfQuestions: Int!
+}
+
+scalar JSON
+
+enum ProgressStatus {
+  INITED
+  INITFAIL
+  COMPLETE
+  PENDING
+}
+
+enum MaterialType {
+  QUIZ
+  WORKSHEET
+  PERFORMANCE_TASK
+}
+
+type TypeQuestion {
+  type: QuestionType!
+  totalQuestions: Int!
+  bloomTaxonomy: [DifficultyDistribution!]
+
+}
+
+type Quiz {
+  objectives: String!
+  description: String
+  tone: String!
+  modality: String!
+  language: String
+  audience: Audience!
+  questionTypes: [TypeQuestion!]!
+}
+
+type Worksheet {
+  objectives: String!
+  description: String
+  tone: String!
+  modality: String!
+  language: String
+  audience: Audience!
+  questionTypes: [TypeQuestion!]!
+}
+
+type PerformanceTask {
+  objectives: String!
+  description: String
+  tone: String!
+  modality: String!
+  language: String
+  audience: Audience!
+}
+
+# union RequestType = Quiz | PerformanceTask | Worksheet
+
+type RequestType {
+  quiz: Quiz
+  performanceTask: PerformanceTask
+  worksheet: Worksheet
+}
+
+type Material {
+  id: String!
+  userId: String
+  type: MaterialType
+  request: RequestType
+  rawResult: String
+  result: JSON
+  startDate: DateTime
+  endDate: DateTime
+  runDuration: Int
+  waitDuration: Int
+  createdDate: DateTime
+  updatedDate: DateTime
+  progressPercent: Int
+  progressStatus: ProgressStatus!
+}
+
+input TypeQuestionInput {
+  type: QuestionType!
+  totalQuestions: Int!
+  bloomTaxonomy: [DifficultyDistributionInput!]
+
+}
+
+input CreateQuizInput {
+  objectives: String!
+  description: String
+  tone: String!
+  modality: String!
+  language: String
+  audience: CreateAudienceInput!
+  questionTypes: [TypeQuestionInput!]!
+}
+
+input CreateWorksheetInput {
+  objectives: String!
+  description: String
+  tone: String!
+  modality: String!
+  language: String
+  audience: CreateAudienceInput!
+  questionTypes: [TypeQuestionInput!]!
+}
+
+input CreatePerformanceTaskInput {
+  objectives: String!
+  description: String
+  tone: String!
+  modality: String!
+  language: String
+  audience: CreateAudienceInput!
+}
+
+input CreateMaterialQuizInput {
+  userId: String
+  request: CreateQuizInput!
+  progressPercent: Int
+  progressStatus: ProgressStatus!
+}
+
+input CreateMaterialPerformanceTaskInput {
+  userId: String
+  request: CreatePerformanceTaskInput!
+  progressPercent: Int
+  progressStatus: ProgressStatus!
+}
+
+input CreateMaterialWorksheetInput {
+  userId: String
+  request: CreateWorksheetInput!
+  progressPercent: Int
+  progressStatus: ProgressStatus!
+}
+
+type Query {
+  materials: [Material]!
+
+  material(id: String!): Material!
+}
+
+type Mutation {
+  createMaterialQuiz(data: CreateMaterialQuizInput!): Material!
+
+  createMaterialPerformanceTask(data: CreateMaterialPerformanceTaskInput!): Material!
+
+  createMaterialWorksheet(data: CreateMaterialWorksheetInput!): Material!
+
+  removeMaterial(id: String!): Material
+}
