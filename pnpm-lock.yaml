@@ -53,6 +53,9 @@ dependencies:
   argon2:
     specifier: ^0.31.1
     version: 0.31.1
+  axios:
+    specifier: ^1.5.1
+    version: 1.5.1
   cache-manager:
     specifier: ^5.2.3
     version: 5.2.3
@@ -91,7 +94,7 @@ dependencies:
     version: 4.1.5
   langchain:
     specifier: ^0.0.145
-    version: 0.0.145(@pinecone-database/pinecone@1.1.0)(mongodb@5.8.0)
+    version: 0.0.145(@pinecone-database/pinecone@1.1.0)(axios@1.5.1)(mongodb@5.8.0)
   mongo-query-format:
     specifier: ^0.1.4
     version: 0.1.4
@@ -4753,6 +4756,16 @@ packages:
       - debug
     dev: false
 
+  /axios@1.5.1:
+    resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
+    dependencies:
+      follow-redirects: 1.15.2(debug@4.3.4)
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /babel-jest@29.7.0(@babel/core@7.22.10):
     resolution: {integrity: sha512-BrvGY3xZSwEcCzKvKsCi2GgHqDqsYkOP4/by5xCgIwGXQxIEh+8ew3gmrE1y7XRR6LHZIj6yLYnUi/mm2KXKBg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -6924,7 +6937,6 @@ packages:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
-    dev: true
 
   /formdata-node@4.4.1:
     resolution: {integrity: sha512-0iirZp3uVDjVGt9p49aTaqjk84TrglENEDuqfdlZQ1roC9CWlPk6Avf8EEnZNcAqPonwkG35x4n3ww/1THYAeQ==}
@@ -8461,7 +8473,7 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /langchain@0.0.145(@pinecone-database/pinecone@1.1.0)(mongodb@5.8.0):
+  /langchain@0.0.145(@pinecone-database/pinecone@1.1.0)(axios@1.5.1)(mongodb@5.8.0):
     resolution: {integrity: sha512-hgCYArkLgibyjka75muVwDlId2q8D+UPpqtr1XCJvZxU01bYagCKi22jDXiLpIdGTaDYbrAZpNENFphurXQ0Wg==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -8704,6 +8716,7 @@ packages:
       '@anthropic-ai/sdk': 0.6.2
       '@pinecone-database/pinecone': 1.1.0
       ansi-styles: 5.2.0
+      axios: 1.5.1
       binary-extensions: 2.2.0
       camelcase: 6.3.0
       decamelize: 1.2.0

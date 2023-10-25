@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { MaterialType } from '@prisma/client';
+import axios from 'axios';
 import { CreateMaterialPerformanceTaskInputDTO, CreateMaterialQuizInputDTO, CreateMaterialWorksheetInputDTO } from './dto/create-material.input';
 
 @Injectable()
@@ -28,6 +29,24 @@ export class MaterialService {
         progressStatus: data.progressStatus,
       }
     })
+
+    const payload_ai = {
+      offer_id: createdQuiz.id,
+      user_id: createdQuiz.userId || "string"
+    }
+
+    try {
+      const response = await axios.post('https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/quiz', payload_ai);
+
+      if (response.status !== 200) {
+        throw new Error('Fail to call api from daemon server');
+      }
+
+    } catch (error) {
+
+      throw new Error('Fail to call api from daemon server');
+    }
+
     return createdQuiz
   }
 
@@ -45,6 +64,24 @@ export class MaterialService {
         progressStatus: data.progressStatus,
       }
     })
+
+    const payload_ai = {
+      offer_id: createdPerformanceTask.id,
+      user_id: createdPerformanceTask.userId || "string"
+    }
+
+    try {
+      const response = await axios.post('https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/performance-task', payload_ai);
+
+      if (response.status !== 200) {
+        throw new Error('Fail to call api from daemon server');
+      }
+
+    } catch (error) {
+
+      throw new Error('Fail to call api from daemon server');
+    }
+
     return createdPerformanceTask
   }
 
@@ -66,6 +103,25 @@ export class MaterialService {
         progressStatus: data.progressStatus,
       }
     })
+
+    const payload_ai = {
+      offer_id: createdWorksheet.id,
+      user_id: createdWorksheet.userId || "string"
+    }
+
+    try {
+      const response = await axios.post('https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/worksheet', payload_ai);
+
+      if (response.status !== 200) {
+        throw new Error('Fail to call api from daemon server');
+      }
+
+    } catch (error) {
+
+      throw new Error('Fail to call api from daemon server');
+    }
+
+
     return createdWorksheet
   }
 
