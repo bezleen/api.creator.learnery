@@ -211,7 +211,7 @@ type RequestType{
 
 model Material {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String?        @map("user_id") @db.ObjectId
+  userId          String?        @map("userId") 
   type            MaterialType
   request         RequestType?   
   rawResult       String?

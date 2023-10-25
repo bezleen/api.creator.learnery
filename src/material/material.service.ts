@@ -54,7 +54,8 @@ export class MaterialService {
 
     const createdPerformanceTask = await this.prisma.material.create({
       data: {
-        userId: data?.userId,
+        // userId: data?.userId,
+        userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
         type: MaterialType.PERFORMANCE_TASK,
         request: {
           performanceTask: data.request
@@ -67,7 +68,7 @@ export class MaterialService {
 
     const payload_ai = {
       offer_id: createdPerformanceTask.id,
-      user_id: createdPerformanceTask.userId || "string"
+      user_id: createdPerformanceTask.userId
     }
 
     try {
