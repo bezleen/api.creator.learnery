@@ -23,10 +23,11 @@ export enum Difficulty {
 }
 
 export enum ProgressStatus {
-    INITED = "INITED",
-    INITFAIL = "INITFAIL",
-    COMPLETE = "COMPLETE",
-    PENDING = "PENDING"
+    RETRY = "RETRY",
+    FAIL = "FAIL",
+    COMPLETED = "COMPLETED",
+    PENDING = "PENDING",
+    STARTED = "STARTED"
 }
 
 export enum MaterialType {

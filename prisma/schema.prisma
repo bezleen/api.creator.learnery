@@ -190,10 +190,11 @@ type Quiz {
 }
 
 enum ProgressStatus {
-  INITED
-  INITFAIL
-  COMPLETE
+  RETRY
+  FAIL
+  COMPLETED
   PENDING
+  STARTED
 }
 
 enum MaterialType {
