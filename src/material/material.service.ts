@@ -25,8 +25,6 @@ export class MaterialService {
           quiz: data.request
         },
         result: {},
-        progressPercent: data?.progressPercent,
-        progressStatus: data.progressStatus,
       }
     })
 
@@ -61,8 +59,6 @@ export class MaterialService {
           performanceTask: data.request
         },
         result: {},
-        progressPercent: data?.progressPercent,
-        progressStatus: data.progressStatus,
       }
     })
 
@@ -100,8 +96,6 @@ export class MaterialService {
           worksheet: data.request
         },
         result: {},
-        progressPercent: data?.progressPercent,
-        progressStatus: data.progressStatus,
       }
     })
 

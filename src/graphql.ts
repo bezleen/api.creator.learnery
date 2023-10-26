@@ -91,22 +91,16 @@ export class CreatePerformanceTaskInput {
 export class CreateMaterialQuizInput {
     userId?: Nullable<string>;
     request: CreateQuizInput;
-    progressPercent?: Nullable<number>;
-    progressStatus: ProgressStatus;
 }
 
 export class CreateMaterialPerformanceTaskInput {
     userId?: Nullable<string>;
     request: CreatePerformanceTaskInput;
-    progressPercent?: Nullable<number>;
-    progressStatus: ProgressStatus;
 }
 
 export class CreateMaterialWorksheetInput {
     userId?: Nullable<string>;
     request: CreateWorksheetInput;
-    progressPercent?: Nullable<number>;
-    progressStatus: ProgressStatus;
 }
 
 export class AuthPayload {

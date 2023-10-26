@@ -152,22 +152,16 @@ input CreatePerformanceTaskInput {
 input CreateMaterialQuizInput {
   userId: String
   request: CreateQuizInput!
-  progressPercent: Int
-  progressStatus: ProgressStatus!
 }
 
 input CreateMaterialPerformanceTaskInput {
   userId: String
   request: CreatePerformanceTaskInput!
-  progressPercent: Int
-  progressStatus: ProgressStatus!
 }
 
 input CreateMaterialWorksheetInput {
   userId: String
   request: CreateWorksheetInput!
-  progressPercent: Int
-  progressStatus: ProgressStatus!
 }
 
 type Query {
