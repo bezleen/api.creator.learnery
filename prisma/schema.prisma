@@ -222,7 +222,7 @@ model Material {
   waitDuration    Int?           @default(0)
   createdDate     DateTime       @default(now()) @map("createdDate")
   updatedDate     DateTime       @updatedAt @map("updatedDate")
-  progressPercent Int?            @default(0)
+  progressPercent Int?           @default(0)
   progressStatus  ProgressStatus @default(PENDING)
 
   @@map("material")
