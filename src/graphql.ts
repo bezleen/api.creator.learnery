@@ -88,21 +88,6 @@ export class CreatePerformanceTaskInput {
     audience: CreateAudienceInput;
 }
 
-export class CreateMaterialQuizInput {
-    userId?: Nullable<string>;
-    request: CreateQuizInput;
-}
-
-export class CreateMaterialPerformanceTaskInput {
-    userId?: Nullable<string>;
-    request: CreatePerformanceTaskInput;
-}
-
-export class CreateMaterialWorksheetInput {
-    userId?: Nullable<string>;
-    request: CreateWorksheetInput;
-}
-
 export class AuthPayload {
     accessToken: string;
 }
@@ -110,11 +95,11 @@ export class AuthPayload {
 export abstract class IMutation {
     abstract signIn(data: AuthInput): AuthPayload | Promise<AuthPayload>;
 
-    abstract createMaterialQuiz(data: CreateMaterialQuizInput): Material | Promise<Material>;
+    abstract createMaterialQuiz(data: CreateQuizInput): Material | Promise<Material>;
 
-    abstract createMaterialPerformanceTask(data: CreateMaterialPerformanceTaskInput): Material | Promise<Material>;
+    abstract createMaterialPerformanceTask(data: CreatePerformanceTaskInput): Material | Promise<Material>;
 
-    abstract createMaterialWorksheet(data: CreateMaterialWorksheetInput): Material | Promise<Material>;
+    abstract createMaterialWorksheet(data: CreateWorksheetInput): Material | Promise<Material>;
 
     abstract removeMaterial(id: string): Nullable<Material> | Promise<Nullable<Material>>;
 }

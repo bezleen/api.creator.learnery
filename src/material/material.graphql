@@ -149,21 +149,6 @@ input CreatePerformanceTaskInput {
   audience: CreateAudienceInput!
 }
 
-input CreateMaterialQuizInput {
-  userId: String
-  request: CreateQuizInput!
-}
-
-input CreateMaterialPerformanceTaskInput {
-  userId: String
-  request: CreatePerformanceTaskInput!
-}
-
-input CreateMaterialWorksheetInput {
-  userId: String
-  request: CreateWorksheetInput!
-}
-
 type Query {
   materials: [Material]!
 
@@ -171,11 +156,11 @@ type Query {
 }
 
 type Mutation {
-  createMaterialQuiz(data: CreateMaterialQuizInput!): Material!
+  createMaterialQuiz(data: CreateQuizInput!): Material!
 
-  createMaterialPerformanceTask(data: CreateMaterialPerformanceTaskInput!): Material!
+  createMaterialPerformanceTask(data: CreatePerformanceTaskInput!): Material!
 
-  createMaterialWorksheet(data: CreateMaterialWorksheetInput!): Material!
+  createMaterialWorksheet(data: CreateWorksheetInput!): Material!
 
   removeMaterial(id: String!): Material
 }

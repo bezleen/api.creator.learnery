@@ -3,7 +3,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { MaterialType } from '@prisma/client';
 import axios from 'axios';
-import { CreateMaterialPerformanceTaskInputDTO, CreateMaterialQuizInputDTO, CreateMaterialWorksheetInputDTO } from './dto/create-material.input';
+import { CreatePerformanceTaskInputDTO, CreateQuizInputDTO, CreateWorksheetInputDTO } from './dto/create-material.input';
 
 @Injectable()
 export class MaterialService {
@@ -11,18 +11,18 @@ export class MaterialService {
     private readonly prisma: PrismaService,
   ) { }
 
-  async createQuiz(data: CreateMaterialQuizInputDTO) {
+  async createQuiz(data: CreateQuizInputDTO) {
 
-    if (Object.keys(data.request.questionTypes).length > 3) {
+    if (Object.keys(data.questionTypes).length > 3) {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
     const createdQuiz = await this.prisma.material.create({
       data: {
-        userId: data?.userId,
+        userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
         type: MaterialType.QUIZ,
         request: {
-          quiz: data.request
+          quiz: data
         },
         result: {},
       }
@@ -30,7 +30,7 @@ export class MaterialService {
 
     const payload_ai = {
       offer_id: createdQuiz.id,
-      user_id: createdQuiz.userId || "string"
+      user_id: createdQuiz.userId
     }
 
     try {
@@ -48,7 +48,7 @@ export class MaterialService {
     return createdQuiz
   }
 
-  async createPerformanceTask(data: CreateMaterialPerformanceTaskInputDTO) {
+  async createPerformanceTask(data: CreatePerformanceTaskInputDTO) {
 
     const createdPerformanceTask = await this.prisma.material.create({
       data: {
@@ -56,7 +56,7 @@ export class MaterialService {
         userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
         type: MaterialType.PERFORMANCE_TASK,
         request: {
-          performanceTask: data.request
+          performanceTask: data
         },
         result: {},
       }
@@ -82,18 +82,18 @@ export class MaterialService {
     return createdPerformanceTask
   }
 
-  async createWorksheet(data: CreateMaterialWorksheetInputDTO) {
+  async createWorksheet(data: CreateWorksheetInputDTO) {
 
-    if (Object.keys(data.request.questionTypes).length > 3) {
+    if (Object.keys(data.questionTypes).length > 3) {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
     const createdWorksheet = await this.prisma.material.create({
       data: {
-        userId: data?.userId,
+        userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
         type: MaterialType.WORKSHEET,
         request: {
-          worksheet: data.request
+          worksheet: data
         },
         result: {},
       }
@@ -101,7 +101,7 @@ export class MaterialService {
 
     const payload_ai = {
       offer_id: createdWorksheet.id,
-      user_id: createdWorksheet.userId || "string"
+      user_id: createdWorksheet.userId
     }
 
     try {

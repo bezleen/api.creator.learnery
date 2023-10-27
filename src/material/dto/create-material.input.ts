@@ -1,7 +1,7 @@
-import { CreateMaterialQuizInput, CreateMaterialPerformanceTaskInput, CreateMaterialWorksheetInput } from "@/graphql";
+import { CreatePerformanceTaskInput, CreateQuizInput, CreateWorksheetInput } from "@/graphql";
 
-export class CreateMaterialQuizInputDTO extends CreateMaterialQuizInput{}
+export class CreateQuizInputDTO extends CreateQuizInput{}
 
-export class CreateMaterialPerformanceTaskInputDTO extends CreateMaterialPerformanceTaskInput{}
+export class CreatePerformanceTaskInputDTO extends CreatePerformanceTaskInput{}
 
-export class CreateMaterialWorksheetInputDTO extends CreateMaterialWorksheetInput{}
+export class CreateWorksheetInputDTO extends CreateWorksheetInput{}
