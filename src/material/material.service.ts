@@ -17,6 +17,10 @@ export class MaterialService {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
+    if (data.audience.ageStart >= data.audience.ageEnd) {
+      throw new Error('ageStart cannot be greater or equal than ageEnd')
+    }
+
     const createdQuiz = await this.prisma.material.create({
       data: {
         userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
@@ -56,6 +60,10 @@ export class MaterialService {
       throw new Error('Invalid time format!');
     }
 
+    if (data.audience.ageStart >= data.audience.ageEnd) {
+      throw new Error('ageStart cannot be greater or equal than ageEnd')
+    }
+
     const createdPerformanceTask = await this.prisma.material.create({
       data: {
         // userId: data?.userId,
@@ -67,7 +75,6 @@ export class MaterialService {
         result: {},
       }
     })
-
 
     const payload_ai = {
       offer_id: createdPerformanceTask.id,
@@ -93,6 +100,10 @@ export class MaterialService {
 
     if (Object.keys(data.questionTypes).length > 3) {
       throw new BadRequestException('you can only choose 3 type of question ')
+    }
+
+    if (data.audience.ageStart >= data.audience.ageEnd) {
+      throw new Error('ageStart cannot be greater or equal than ageEnd')
     }
 
     const createdWorksheet = await this.prisma.material.create({
