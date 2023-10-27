@@ -86,6 +86,9 @@ type PerformanceTask {
   modality: String!
   language: String
   audience: Audience!
+  numberOfQuestions: Int!
+  classSize: Int!
+  timeActivity: String!
 }
 
 # union RequestType = Quiz | PerformanceTask | Worksheet
@@ -147,6 +150,9 @@ input CreatePerformanceTaskInput {
   modality: String!
   language: String
   audience: CreateAudienceInput!
+  numberOfQuestions: Int!
+  classSize: Int!
+  timeActivity: String!
 }
 
 type Query {

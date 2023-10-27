@@ -132,11 +132,14 @@ type Topic {
 }
 
 type PerformanceTask {
-  objectives  String  @default("")
-  description String? @default("")
-  language    String? @default("English")
-  tone        String  @default("Friendly")
-  modality    String  @default("Hybrid")
+  objectives   String  @default("")
+  description  String? @default("")
+  language     String? @default("English")
+  tone         String  @default("Friendly")
+  modality     String  @default("Hybrid")
+  timeActivity String
+  classSize    Int
+  numberOfQuestions Int
 
   audience Audience
 }

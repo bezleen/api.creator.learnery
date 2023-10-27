@@ -86,6 +86,9 @@ export class CreatePerformanceTaskInput {
     modality: string;
     language?: Nullable<string>;
     audience: CreateAudienceInput;
+    numberOfQuestions: number;
+    classSize: number;
+    timeActivity: string;
 }
 
 export class AuthPayload {
@@ -159,6 +162,9 @@ export class PerformanceTask {
     modality: string;
     language?: Nullable<string>;
     audience: Audience;
+    numberOfQuestions: number;
+    classSize: number;
+    timeActivity: string;
 }
 
 export class RequestType {

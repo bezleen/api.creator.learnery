@@ -50,6 +50,12 @@ export class MaterialService {
 
   async createPerformanceTask(data: CreatePerformanceTaskInputDTO) {
 
+    const regex = /^\s*(\d+)\s*.*/
+
+    if (!regex.test(data.timeActivity) ){
+      throw new Error('Invalid time format!');
+    }
+
     const createdPerformanceTask = await this.prisma.material.create({
       data: {
         // userId: data?.userId,
@@ -61,6 +67,7 @@ export class MaterialService {
         result: {},
       }
     })
+
 
     const payload_ai = {
       offer_id: createdPerformanceTask.id,
