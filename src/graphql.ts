@@ -86,7 +86,6 @@ export class CreatePerformanceTaskInput {
     modality: string;
     language?: Nullable<string>;
     audience: CreateAudienceInput;
-    numberOfQuestions?: Nullable<number>;
     classSize?: Nullable<number>;
     timeActivity?: Nullable<string>;
 }
