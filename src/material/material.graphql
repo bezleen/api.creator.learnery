@@ -150,9 +150,9 @@ input CreatePerformanceTaskInput {
   modality: String!
   language: String
   audience: CreateAudienceInput!
-  numberOfQuestions: Int!
-  classSize: Int!
-  timeActivity: String!
+  numberOfQuestions: Int
+  classSize: Int
+  timeActivity: String
 }
 
 type Query {

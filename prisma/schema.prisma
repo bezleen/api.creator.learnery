@@ -137,9 +137,9 @@ type PerformanceTask {
   language     String? @default("English")
   tone         String  @default("Friendly")
   modality     String  @default("Hybrid")
-  timeActivity String
-  classSize    Int
-  numberOfQuestions Int
+  timeActivity String? @default("30 minutes")
+  classSize    Int?    @default(10)
+  numberOfQuestions Int?  @default(10)
 
   audience Audience
 }

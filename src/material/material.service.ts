@@ -54,11 +54,11 @@ export class MaterialService {
 
   async createPerformanceTask(data: CreatePerformanceTaskInputDTO) {
 
-    const regex = /^\s*(\d+)\s*.*/
+    // const regex = /^\s*(\d+)\s*.*/
 
-    if (!regex.test(data.timeActivity) ){
-      throw new Error('Invalid time format!');
-    }
+    // if (!regex.test(data.timeActivity) ){
+    //   throw new Error('Invalid time format!');
+    // }
 
     if (data.audience.ageStart >= data.audience.ageEnd) {
       throw new Error('ageStart cannot be greater or equal than ageEnd')
