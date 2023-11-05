@@ -4,6 +4,10 @@ import { Prisma } from '@prisma/client';
 import { MaterialType } from '@prisma/client';
 import axios from 'axios';
 import { CreatePerformanceTaskInputDTO, CreateQuizInputDTO, CreateWorksheetInputDTO } from './dto/create-material.input';
+import { marked } from 'marked'
+import * as path from 'path';
+import * as fs from 'fs';
+import scopackager from 'simple-scorm-packager';
 
 @Injectable()
 export class MaterialService {
@@ -153,4 +157,64 @@ export class MaterialService {
       where,
     })
   }
+
+  async createScorm(id: string) {
+    const material = await this.prisma.material.findUnique({
+      where: {
+        id
+      }
+    })
+
+    const rawResult = material.rawResult
+
+    const htmlContent = marked(rawResult);
+
+    const htmlFilePath = path.join(path.resolve(__dirname, '../../src/public/'), 'index.html')
+
+    fs.writeFile(htmlFilePath, htmlContent, (err) => {
+      if (err) throw new Error(err.message)
+    })
+
+    const folderOutputPath = path.resolve(__dirname, '../../src/output/')
+
+    const config = {
+      version: '1.2',
+      organization: 'Learnery',
+      title: material.type,
+      language: material.request?.performanceTask?.language || material.request?.quiz?.language || material.request?.worksheet?.language || 'en-US',
+      startingPage: 'index.html',
+      source: path.resolve(__dirname, '../../src/public'),
+      package: {
+        version: process.env.npm_package_version,
+        zip: true,
+        author: material?.userId || 'bach',
+        outputFolder: folderOutputPath,
+        description: material.request?.performanceTask?.description || material.request?.worksheet?.description || material.request?.quiz?.description || '',
+        keywords: ['scorm', 'test', 'course'],
+        typicalDuration: 'PT0H5M0S',
+        // rights: `©${new Date().getFullYear()} My Amazing Company. All right reserved.`,
+        // vcard: {
+        //   author: 'Firstname Lastname',
+        //   org: 'My Amazing Company',
+        //   tel: '(000) 000-0000',
+        //   address: 'my address',
+        //   mail: 'my@email.com',
+        //   url: 'https://mydomain.com'
+        // }
+      }
+    }
+
+    await scopackager(config, (msg: string) => {
+      console.log(msg)
+    })
+
+    return 'Create Success'
+  } 
+
+  
+  async getScorm(id: string) {
+    return 
+  }
 }
+
+

@@ -70,6 +70,7 @@
     "joi": "^17.10.2",
     "kleur": "^4.1.5",
     "langchain": "^0.0.145",
+    "marked": "^9.1.5",
     "mongo-query-format": "^0.1.4",
     "mongodb": "^5.8.0",
     "node-cache": "^5.1.2",
@@ -81,7 +82,8 @@
     "prisma-nestjs-graphql": "^19.2.0",
     "reflect-metadata": "^0.1.13",
     "request-ip": "^3.3.0",
-    "rxjs": "7.8.1"
+    "rxjs": "7.8.1",
+    "simple-scorm-packager": "^0.2.7"
   },
   "devDependencies": {
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
