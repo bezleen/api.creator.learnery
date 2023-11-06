@@ -13,7 +13,8 @@ export enum QuestionType {
     FILL_IN_THE_BLANK_WITH_OPTIONS = "FILL_IN_THE_BLANK_WITH_OPTIONS",
     TRUE_FALSE = "TRUE_FALSE",
     FILL_IN_THE_BLANK_FREE_TEXT = "FILL_IN_THE_BLANK_FREE_TEXT",
-    ESSAY = "ESSAY"
+    ESSAY = "ESSAY",
+    MATCHING = "MATCHING"
 }
 
 export enum Difficulty {

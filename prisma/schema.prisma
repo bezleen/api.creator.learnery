@@ -149,6 +149,7 @@ enum QuestionType {
   TRUE_FALSE
   FILL_IN_THE_BLANK_FREE_TEXT
   ESSAY
+  MATCHING
 }
 
 enum Difficulty {

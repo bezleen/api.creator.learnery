@@ -211,10 +211,7 @@ export class MaterialService {
     return 'Create Success'
   } 
 
-  
-  async getScorm(id: string) {
-    return 
-  }
+
 }
 
 

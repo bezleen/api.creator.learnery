@@ -16,11 +16,4 @@ export class MaterialController {
         return response ? response : 'Fail to Create Scorm'
     }
 
-    @Get('/get-scorm/:id')
-    async getScorm(@Param('id') id: string, @Res() res: Response){
-        const response = await this.materialService.getScorm(id)
-
-    
-        return response ? response : 'Fail to Create Scorm'
-    }
 }
