@@ -13,7 +13,9 @@ export class MaterialController {
         const response = await this.materialService.createScorm(id)
 
     
-        return response ? response : 'Fail to Create Scorm'
+        return res.status(200).json({
+            message: "success"
+        })
     }
 
 }
