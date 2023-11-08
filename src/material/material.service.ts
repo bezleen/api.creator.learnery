@@ -123,9 +123,9 @@ export class MaterialService {
 
   async createWorksheet(data: CreateWorksheetInputDTO) {
 
-    if (Object.keys(data.questionTypes).length > 3) {
-      throw new BadRequestException('you can only choose 3 type of question ')
-    }
+    // if (Object.keys(data.questionTypes).length > 3) {
+    //   throw new BadRequestException('you can only choose 3 type of question ')
+    // }
 
     if (data.audience.ageStart >= data.audience.ageEnd) {
       throw new Error('ageStart cannot be greater or equal than ageEnd')
