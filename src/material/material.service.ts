@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { MaterialType } from '@prisma/client';
+import { MaterialType, QuestionType } from '@prisma/client';
 import axios from 'axios';
 import { CreatePerformanceTaskInputDTO, CreateQuizInputDTO, CreateWorksheetInputDTO } from './dto/create-material.input';
 
@@ -26,7 +26,18 @@ export class MaterialService {
         userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
         type: MaterialType.QUIZ,
         request: {
-          quiz: data
+          quiz: {
+            objectives: data.objectives,
+            description: data?.description,
+            tone: data.tone,
+            modality: data.modality,
+            language: data?.language,
+            audience: data?.audience,
+            questionTypes: data?.questionTypes || {
+              type: QuestionType.MATCHING,
+              totalQuestions: 10,
+            }
+          }
         },
         result: {},
       }
