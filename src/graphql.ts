@@ -67,7 +67,7 @@ export class CreateQuizInput {
     modality: string;
     language?: Nullable<string>;
     audience: CreateAudienceInput;
-    questionTypes: TypeQuestionInput[];
+    questionTypes?: Nullable<TypeQuestionInput[]>;
 }
 
 export class CreateWorksheetInput {
@@ -77,7 +77,7 @@ export class CreateWorksheetInput {
     modality: string;
     language?: Nullable<string>;
     audience: CreateAudienceInput;
-    questionTypes: TypeQuestionInput[];
+    questionTypes?: Nullable<TypeQuestionInput[]>;
 }
 
 export class CreatePerformanceTaskInput {
