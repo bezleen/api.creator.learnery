@@ -136,7 +136,32 @@ export class MaterialService {
         userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
         type: MaterialType.WORKSHEET,
         request: {
-          worksheet: data
+          worksheet: {
+            objectives: data.objectives,
+            description: data?.description,
+            tone: data.tone,
+            modality: data.modality,
+            language: data?.language,
+            audience: data?.audience,
+            questionTypes: data?.questionTypes || {
+              type: QuestionType.MATCHING,
+              totalQuestions: 6,
+              bloomTaxonomy: [
+                {
+                  difficulty: Difficulty.EASY,
+                  numberOfQuestions: 3
+                },
+                {
+                  difficulty: Difficulty.MEDIUM,
+                  numberOfQuestions: 2
+                },
+                {
+                  difficulty: Difficulty.HARD,
+                  numberOfQuestions: 1
+                }
+              ]
+            }
+          }
         },
         result: {},
       }
