@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { MaterialType, QuestionType } from '@prisma/client';
+import { MaterialType, QuestionType, Difficulty } from '@prisma/client';
 import axios from 'axios';
 import { CreatePerformanceTaskInputDTO, CreateQuizInputDTO, CreateWorksheetInputDTO } from './dto/create-material.input';
 
@@ -35,7 +35,21 @@ export class MaterialService {
             audience: data?.audience,
             questionTypes: data?.questionTypes || {
               type: QuestionType.MATCHING,
-              totalQuestions: 10,
+              totalQuestions: 6,
+              bloomTaxonomy: [
+                {
+                  difficulty: Difficulty.EASY,
+                  numberOfQuestions: 3
+                },
+                {
+                  difficulty: Difficulty.MEDIUM,
+                  numberOfQuestions: 2
+                },
+                {
+                  difficulty: Difficulty.HARD,
+                  numberOfQuestions: 1
+                }
+              ]
             }
           }
         },
