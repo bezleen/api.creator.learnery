@@ -165,15 +165,18 @@ export class MaterialService {
       }
     })
 
-    const rawResult = material.rawResult
+    this.createQuestion()
 
-    const htmlContent = marked(rawResult);
 
-    const htmlFilePath = path.join(path.resolve(__dirname, '../../src/public/'), 'index.html')
+    // const rawResult = material.rawResult
 
-    fs.writeFile(htmlFilePath, htmlContent, (err) => {
-      if (err) throw new Error(err.message)
-    })
+    // const htmlContent = marked(rawResult);
+
+    // const htmlFilePath = path.join(path.resolve(__dirname, '../../src/public/'), 'index.html')
+
+    // fs.writeFile(htmlFilePath, htmlContent, (err) => {
+    //   if (err) throw new Error(err.message)
+    // })
 
     const folderOutputPath = path.resolve(__dirname, '../../src/output/')
 
@@ -209,8 +212,53 @@ export class MaterialService {
     })
 
     return 'Create Success'
-  } 
+  }
 
+  async createQuestion() {
+    const questionsData = [
+      {
+        id: "com.scorm.golfsamples.interactions.playing_1",
+        text: "The rules of golf are maintained by:'?",
+        type: "choice",
+        answers: ["The UN", "USGA and Royal and Ancient", "The PGA", "Each course has it's own rules"],
+        correctAnswer: "USGA and Royal and Ancient",
+        objectiveId: "obj_playing"
+      },
+      {
+        id: "com.scorm.golfsamples.interactions.playing_1",
+        text: "The rules of golf are maintained by:'?",
+        type: "choice",
+        answers: ["The UN", "USGA and Royal and Ancient", "The PGA", "Each course has it's own rules"],
+        correctAnswer: "USGA and Royal and Ancient",
+        objectiveId: "obj_playing"
+      },
+      {
+        id: "com.scorm.golfsamples.interactions.playing_1",
+        text: "The rules of golf are maintained by:'?",
+        type: "choice",
+        answers: ["The UN", "USGA and Royal and Ancient", "The PGA", "Each course has it's own rules"],
+        correctAnswer: "USGA and Royal and Ancient",
+        objectiveId: "obj_playing"
+      },
+      // Các câu hỏi khác từ database
+    ];
+
+    // Tạo nội dung cho file questions.js
+    const jsCode = `
+  ${questionsData.map(question => `
+  test.AddQuestion(new Question("${question.id}",
+                                  "${question.text}",
+                                  "${question.type}",
+                                  ${JSON.stringify(question.answers)},
+                                  "${question.correctAnswer}",
+                                  "${question.objectiveId}")
+                  );
+  `).join('')}
+  `;
+
+    // Ghi nội dung vào file questions.js
+    fs.writeFileSync('/home/bach/Work-Project/api.creator.learnery/src/public/material/questions.js', jsCode);
+  }
 
 }
 
