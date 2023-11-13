@@ -131,7 +131,7 @@ input CreateQuizInput {
   modality: String!
   language: String
   audience: CreateAudienceInput!
-  questionTypes: [TypeQuestionInput!]
+  questionTypes: [TypeQuestionInput!]!
 }
 
 input CreateWorksheetInput {
@@ -141,7 +141,7 @@ input CreateWorksheetInput {
   modality: String!
   language: String
   audience: CreateAudienceInput!
-  questionTypes: [TypeQuestionInput!]
+  questionTypes: [TypeQuestionInput!]!
 }
 
 input CreatePerformanceTaskInput {

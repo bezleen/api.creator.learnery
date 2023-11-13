@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { MaterialType, QuestionType, Difficulty } from '@prisma/client';
+import { MaterialType } from '@prisma/client';
 import axios from 'axios';
 import { CreatePerformanceTaskInputDTO, CreateQuizInputDTO, CreateWorksheetInputDTO } from './dto/create-material.input';
 
@@ -13,9 +13,9 @@ export class MaterialService {
 
   async createQuiz(data: CreateQuizInputDTO) {
 
-    // if (Object.keys(data.questionTypes).length > 3) {
-    //   throw new BadRequestException('you can only choose 3 type of question ')
-    // }
+    if (Object.keys(data.questionTypes).length > 3) {
+      throw new BadRequestException('you can only choose 3 type of question ')
+    }
 
     if (data.audience.ageStart >= data.audience.ageEnd) {
       throw new Error('ageStart cannot be greater or equal than ageEnd')
@@ -26,32 +26,7 @@ export class MaterialService {
         userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
         type: MaterialType.QUIZ,
         request: {
-          quiz: {
-            objectives: data.objectives,
-            description: data?.description,
-            tone: data.tone,
-            modality: data.modality,
-            language: data?.language,
-            audience: data?.audience,
-            questionTypes: data?.questionTypes || {
-              type: QuestionType.MATCHING,
-              totalQuestions: 6,
-              bloomTaxonomy: [
-                {
-                  difficulty: Difficulty.EASY,
-                  numberOfQuestions: 3
-                },
-                {
-                  difficulty: Difficulty.MEDIUM,
-                  numberOfQuestions: 2
-                },
-                {
-                  difficulty: Difficulty.HARD,
-                  numberOfQuestions: 1
-                }
-              ]
-            }
-          }
+          quiz: data
         },
         result: {},
       }
@@ -123,9 +98,9 @@ export class MaterialService {
 
   async createWorksheet(data: CreateWorksheetInputDTO) {
 
-    // if (Object.keys(data.questionTypes).length > 3) {
-    //   throw new BadRequestException('you can only choose 3 type of question ')
-    // }
+    if (Object.keys(data.questionTypes).length > 3) {
+      throw new BadRequestException('you can only choose 3 type of question ')
+    }
 
     if (data.audience.ageStart >= data.audience.ageEnd) {
       throw new Error('ageStart cannot be greater or equal than ageEnd')
@@ -136,32 +111,7 @@ export class MaterialService {
         userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
         type: MaterialType.WORKSHEET,
         request: {
-          worksheet: {
-            objectives: data.objectives,
-            description: data?.description,
-            tone: data.tone,
-            modality: data.modality,
-            language: data?.language,
-            audience: data?.audience,
-            questionTypes: data?.questionTypes || {
-              type: QuestionType.MATCHING,
-              totalQuestions: 6,
-              bloomTaxonomy: [
-                {
-                  difficulty: Difficulty.EASY,
-                  numberOfQuestions: 3
-                },
-                {
-                  difficulty: Difficulty.MEDIUM,
-                  numberOfQuestions: 2
-                },
-                {
-                  difficulty: Difficulty.HARD,
-                  numberOfQuestions: 1
-                }
-              ]
-            }
-          }
+          worksheet: data
         },
         result: {},
       }
