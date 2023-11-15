@@ -57,7 +57,6 @@ type TypeQuestion {
   type: QuestionType!
   totalQuestions: Int!
   bloomTaxonomy: [DifficultyDistribution!]
-
 }
 
 type Quiz {

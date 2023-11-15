@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { MaterialType } from '@prisma/client';
 import axios from 'axios';
 import { CreatePerformanceTaskInputDTO, CreateQuizInputDTO, CreateWorksheetInputDTO } from './dto/create-material.input';
+import { DifficultyDistributionInput, Difficulty, TypeQuestionInput } from '@/graphql';
 
 @Injectable()
 export class MaterialService {
@@ -13,24 +14,31 @@ export class MaterialService {
 
   async createQuiz(data: CreateQuizInputDTO) {
 
-    if (Object.keys(data.questionTypes).length > 3) {
-      throw new BadRequestException('you can only choose 3 type of question ')
-    }
-
     if (data.audience.ageStart >= data.audience.ageEnd) {
       throw new Error('ageStart cannot be greater or equal than ageEnd')
     }
 
-    const createdQuiz = await this.prisma.material.create({
-      data: {
-        userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
-        type: MaterialType.QUIZ,
-        request: {
-          quiz: data
-        },
-        result: {},
+    if (Object.keys(data.questionTypes).length > 3) {
+      throw new BadRequestException('you can only choose 3 type of question ')
+    }
+
+    data.questionTypes.map(item => {
+      if(!item.bloomTaxonomy){
+        item.bloomTaxonomy = this.getDefaultBloomTaxonomy(item.totalQuestions);
       }
-    })
+      return item
+    });
+
+      const createdQuiz = await this.prisma.material.create({
+        data: {
+          userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
+          type: MaterialType.QUIZ,
+          request: {
+            quiz: data
+          },
+          result: {},
+        }
+      })
 
     const payload_ai = {
       offer_id: createdQuiz.id,
@@ -98,13 +106,20 @@ export class MaterialService {
 
   async createWorksheet(data: CreateWorksheetInputDTO) {
 
+    if (data.audience.ageStart >= data.audience.ageEnd) {
+      throw new Error('ageStart cannot be greater or equal than ageEnd')
+    }
+
     if (Object.keys(data.questionTypes).length > 3) {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
-    if (data.audience.ageStart >= data.audience.ageEnd) {
-      throw new Error('ageStart cannot be greater or equal than ageEnd')
-    }
+    data.questionTypes.map(item => {
+      if(!item.bloomTaxonomy){
+        item.bloomTaxonomy = this.getDefaultBloomTaxonomy(item.totalQuestions);
+      }
+      return item
+    });
 
     const createdWorksheet = await this.prisma.material.create({
       data: {
@@ -153,4 +168,26 @@ export class MaterialService {
       where,
     })
   }
+
+  getDefaultBloomTaxonomy(totalQuestions: number): DifficultyDistributionInput[] {
+    const bloomTaxonomy: DifficultyDistributionInput[] = [];
+    const levels = [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD];
+
+    for (let i = 0; i < totalQuestions; i++) {
+      const difficulty = levels[i % levels.length];
+      const existingLevel = bloomTaxonomy.find((level) => level.difficulty === difficulty);
+  
+      if (existingLevel) {
+        existingLevel.numberOfQuestions += 1;
+      } else {
+        bloomTaxonomy.push({
+          difficulty,
+          numberOfQuestions: 1,
+        });
+      }
+    }
+  
+    return bloomTaxonomy;
+  }
+
 }
