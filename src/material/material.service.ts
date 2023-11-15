@@ -23,9 +23,16 @@ export class MaterialService {
     }
 
     data.questionTypes.map(item => {
+      
       if(!item.bloomTaxonomy){
         item.bloomTaxonomy = this.getDefaultBloomTaxonomy(item.totalQuestions);
       }
+
+      const calculatedTotalQuestions = item.bloomTaxonomy.reduce((total, level) => total + level.numberOfQuestions, 0);
+      if (calculatedTotalQuestions !== item.totalQuestions) {
+        throw new Error ("The total number of questions is incorrect!")
+      }
+  
       return item
     });
 
@@ -115,9 +122,16 @@ export class MaterialService {
     }
 
     data.questionTypes.map(item => {
+
       if(!item.bloomTaxonomy){
         item.bloomTaxonomy = this.getDefaultBloomTaxonomy(item.totalQuestions);
       }
+
+      const calculatedTotalQuestions = item.bloomTaxonomy.reduce((total, level) => total + level.numberOfQuestions, 0);
+      if (calculatedTotalQuestions !== item.totalQuestions) {
+        throw new Error ("The total number of questions is incorrect!")
+      }
+  
       return item
     });
 
