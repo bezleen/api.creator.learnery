@@ -23,7 +23,7 @@ export class MaterialService {
     }
 
     data.questionTypes.map(item => {
-      
+
       if(!item.bloomTaxonomy){
         item.bloomTaxonomy = this.getDefaultBloomTaxonomy(item.totalQuestions);
       }
@@ -35,7 +35,7 @@ export class MaterialService {
   
       return item
     });
-
+    
       const createdQuiz = await this.prisma.material.create({
         data: {
           userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
