@@ -1,22 +1,27 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from '@/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
-import { MaterialType } from '@prisma/client';
-import axios from 'axios';
-import { CreatePerformanceTaskInputDTO, CreateQuizInputDTO, CreateWorksheetInputDTO } from './dto/create-material.input';
+import { BadRequestException, Injectable } from '@nestjs/common'
+import { PrismaService } from '@/prisma/prisma.service'
+import { Prisma } from '@prisma/client'
+import { MaterialType } from '@prisma/client'
+import axios from 'axios'
+import {
+  CreatePerformanceTaskInputDTO,
+  CreateQuizInputDTO,
+  CreateWorksheetInputDTO,
+} from './dto/create-material.input'
 import { marked } from 'marked'
-import * as path from 'path';
-import * as fs from 'fs';
-import scopackager from 'simple-scorm-packager';
+import * as path from 'path'
+import * as fs from 'fs'
+import scopackager from 'simple-scorm-packager'
+import PizZip from 'pizzip'
+import Docxtemplater from 'docxtemplater'
+import { PDFNet } from '@pdftron/pdfnet-node'
+import { Response } from 'express'
 
 @Injectable()
 export class MaterialService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createQuiz(data: CreateQuizInputDTO) {
-
     if (Object.keys(data.questionTypes).length > 3) {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
@@ -27,37 +32,37 @@ export class MaterialService {
 
     const createdQuiz = await this.prisma.material.create({
       data: {
-        userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
+        userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
         type: MaterialType.QUIZ,
         request: {
-          quiz: data
+          quiz: data,
         },
         result: {},
-      }
+      },
     })
 
     const payload_ai = {
       offer_id: createdQuiz.id,
-      user_id: createdQuiz.userId
+      user_id: createdQuiz.userId,
     }
 
     try {
-      const response = await axios.post('https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/quiz', payload_ai);
+      const response = await axios.post(
+        'https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/quiz',
+        payload_ai,
+      )
 
       if (response.status !== 200) {
-        throw new Error('Fail to call api from daemon server');
+        throw new Error('Fail to call api from daemon server')
       }
-
     } catch (error) {
-
-      throw new Error('Fail to call api from daemon server');
+      throw new Error('Fail to call api from daemon server')
     }
 
     return createdQuiz
   }
 
   async createPerformanceTask(data: CreatePerformanceTaskInputDTO) {
-
     // const regex = /^\s*(\d+)\s*.*/
 
     // if (!regex.test(data.timeActivity) ){
@@ -71,37 +76,37 @@ export class MaterialService {
     const createdPerformanceTask = await this.prisma.material.create({
       data: {
         // userId: data?.userId,
-        userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
+        userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
         type: MaterialType.PERFORMANCE_TASK,
         request: {
-          performanceTask: data
+          performanceTask: data,
         },
         result: {},
-      }
+      },
     })
 
     const payload_ai = {
       offer_id: createdPerformanceTask.id,
-      user_id: createdPerformanceTask.userId
+      user_id: createdPerformanceTask.userId,
     }
 
     try {
-      const response = await axios.post('https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/performance-task', payload_ai);
+      const response = await axios.post(
+        'https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/performance-task',
+        payload_ai,
+      )
 
       if (response.status !== 200) {
-        throw new Error('Fail to call api from daemon server');
+        throw new Error('Fail to call api from daemon server')
       }
-
     } catch (error) {
-
-      throw new Error('Fail to call api from daemon server');
+      throw new Error('Fail to call api from daemon server')
     }
 
     return createdPerformanceTask
   }
 
   async createWorksheet(data: CreateWorksheetInputDTO) {
-
     if (Object.keys(data.questionTypes).length > 3) {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
@@ -112,32 +117,32 @@ export class MaterialService {
 
     const createdWorksheet = await this.prisma.material.create({
       data: {
-        userId: "user_2U2EbVpMtK3doTltzvdoTNIa7ru",
+        userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
         type: MaterialType.WORKSHEET,
         request: {
-          worksheet: data
+          worksheet: data,
         },
         result: {},
-      }
+      },
     })
 
     const payload_ai = {
       offer_id: createdWorksheet.id,
-      user_id: createdWorksheet.userId
+      user_id: createdWorksheet.userId,
     }
 
     try {
-      const response = await axios.post('https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/worksheet', payload_ai);
+      const response = await axios.post(
+        'https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/worksheet',
+        payload_ai,
+      )
 
       if (response.status !== 200) {
-        throw new Error('Fail to call api from daemon server');
+        throw new Error('Fail to call api from daemon server')
       }
-
     } catch (error) {
-
-      throw new Error('Fail to call api from daemon server');
+      throw new Error('Fail to call api from daemon server')
     }
-
 
     return createdWorksheet
   }
@@ -158,108 +163,185 @@ export class MaterialService {
     })
   }
 
-  async createScorm(id: string) {
+  // async createScorm(id: string) {
+  //   const material = await this.prisma.material.findUnique({
+  //     where: {
+  //       id
+  //     }
+  //   })
+
+  //   this.createQuestion()
+
+  //   // const rawResult = material.rawResult
+
+  //   // const htmlContent = marked(rawResult);
+
+  //   // const htmlFilePath = path.join(path.resolve(__dirname, '../../src/public/'), 'index.html')
+
+  //   // fs.writeFile(htmlFilePath, htmlContent, (err) => {
+  //   //   if (err) throw new Error(err.message)
+  //   // })
+
+  //   const folderOutputPath = path.resolve(__dirname, '../../src/output/')
+
+  //   const config = {
+  //     version: '1.2',
+  //     organization: 'Learnery',
+  //     title: material.type,
+  //     language: material.request?.performanceTask?.language || material.request?.quiz?.language || material.request?.worksheet?.language || 'en-US',
+  //     startingPage: 'index.html',
+  //     source: path.resolve(__dirname, '../../src/public'),
+  //     package: {
+  //       version: process.env.npm_package_version,
+  //       zip: true,
+  //       author: material?.userId || 'bach',
+  //       outputFolder: folderOutputPath,
+  //       description: material.request?.performanceTask?.description || material.request?.worksheet?.description || material.request?.quiz?.description || '',
+  //       keywords: ['scorm', 'test', 'course'],
+  //       typicalDuration: 'PT0H5M0S',
+  //       // rights: `©${new Date().getFullYear()} My Amazing Company. All right reserved.`,
+  //       // vcard: {
+  //       //   author: 'Firstname Lastname',
+  //       //   org: 'My Amazing Company',
+  //       //   tel: '(000) 000-0000',
+  //       //   address: 'my address',
+  //       //   mail: 'my@email.com',
+  //       //   url: 'https://mydomain.com'
+  //       // }
+  //     }
+  //   }
+
+  //   await scopackager(config, (msg: string) => {
+  //     console.log(msg)
+  //   })
+
+  //   return 'Create Success'
+  // }
+
+  // async createQuestion() {
+  //   const questionsData = [
+  //     {
+  //       id: "com.scorm.golfsamples.interactions.playing_1",
+  //       text: "The rules of golf are maintained by:'?",
+  //       type: "choice",
+  //       answers: ["The UN", "USGA and Royal and Ancient", "The PGA", "Each course has it's own rules"],
+  //       correctAnswer: "USGA and Royal and Ancient",
+  //       objectiveId: "obj_playing"
+  //     },
+  //     {
+  //       id: "com.scorm.golfsamples.interactions.playing_1",
+  //       text: "The rules of golf are maintained by:'?",
+  //       type: "choice",
+  //       answers: ["The UN", "USGA and Royal and Ancient", "The PGA", "Each course has it's own rules"],
+  //       correctAnswer: "USGA and Royal and Ancient",
+  //       objectiveId: "obj_playing"
+  //     },
+  //     {
+  //       id: "com.scorm.golfsamples.interactions.playing_1",
+  //       text: "The rules of golf are maintained by:'?",
+  //       type: "choice",
+  //       answers: ["The UN", "USGA and Royal and Ancient", "The PGA", "Each course has it's own rules"],
+  //       correctAnswer: "USGA and Royal and Ancient",
+  //       objectiveId: "obj_playing"
+  //     },
+  //     // Các câu hỏi khác từ database
+  //   ];
+
+  //   // Tạo nội dung cho file questions.js
+  //   const jsCode = `
+  // ${questionsData.map(question => `
+  // test.AddQuestion(new Question("${question.id}",
+  //                                 "${question.text}",
+  //                                 "${question.type}",
+  //                                 ${JSON.stringify(question.answers)},
+  //                                 "${question.correctAnswer}",
+  //                                 "${question.objectiveId}")
+  //                 );
+  // `).join('')}
+  // `;
+
+  //   // Ghi nội dung vào file questions.js
+  //   fs.writeFileSync('/home/bach/Work-Project/api.creator.learnery/src/public/material/questions.js', jsCode);
+  // }
+
+  async getPDF(id: string, res: Response) {
     const material = await this.prisma.material.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     })
 
-    this.createQuestion()
+    const materialResult: any = material.result
+    const materialRequest: any = material.request
 
+    const content = fs.readFileSync(
+      path.resolve(
+        __dirname,
+        '../../src/template-material/performance_task_template.docx',
+      ),
+      'binary',
+    )
 
-    // const rawResult = material.rawResult
+    const zip = new PizZip(content)
 
-    // const htmlContent = marked(rawResult);
+    const doc = new Docxtemplater(zip, {
+      paragraphLoop: true,
+      linebreaks: true,
+    })
 
-    // const htmlFilePath = path.join(path.resolve(__dirname, '../../src/public/'), 'index.html')
+    doc.render({
+      subject: materialRequest.performanceTask.objectives,
+      level: materialRequest.performanceTask.audience.level,
+      startDate: new Date(material.startDate).toLocaleDateString(),
+      activityTitle: materialResult.performanceTask.result[0].content,
+      goal: materialResult.performanceTask.result[1].content,
+      role: materialResult.performanceTask.result[2].content,
+      audience: materialResult.performanceTask.result[3].content,
+      situation: materialResult.performanceTask.result[4].content,
+      productPerformanceAndPurpose: materialResult.performanceTask.result[5].content,
+      table: materialResult.performanceTask.result[6].content.table,
+      suggestedSampleAnswer: materialResult.performanceTask.result[7].content,
+      suggestedScore: materialResult.performanceTask.result[8].content,
+    })
 
-    // fs.writeFile(htmlFilePath, htmlContent, (err) => {
-    //   if (err) throw new Error(err.message)
-    // })
+    const buf = doc.getZip().generate({
+      type: 'nodebuffer',
+      compression: 'DEFLATE',
+    })
 
-    const folderOutputPath = path.resolve(__dirname, '../../src/output/')
+    fs.writeFileSync(
+      path.resolve(__dirname, '../../src/template-material/output.docx'),
+      buf,
+    )
 
-    const config = {
-      version: '1.2',
-      organization: 'Learnery',
-      title: material.type,
-      language: material.request?.performanceTask?.language || material.request?.quiz?.language || material.request?.worksheet?.language || 'en-US',
-      startingPage: 'index.html',
-      source: path.resolve(__dirname, '../../src/public'),
-      package: {
-        version: process.env.npm_package_version,
-        zip: true,
-        author: material?.userId || 'bach',
-        outputFolder: folderOutputPath,
-        description: material.request?.performanceTask?.description || material.request?.worksheet?.description || material.request?.quiz?.description || '',
-        keywords: ['scorm', 'test', 'course'],
-        typicalDuration: 'PT0H5M0S',
-        // rights: `©${new Date().getFullYear()} My Amazing Company. All right reserved.`,
-        // vcard: {
-        //   author: 'Firstname Lastname',
-        //   org: 'My Amazing Company',
-        //   tel: '(000) 000-0000',
-        //   address: 'my address',
-        //   mail: 'my@email.com',
-        //   url: 'https://mydomain.com'
-        // }
-      }
+    const convertToPdf = async () => {
+      const doc = await PDFNet.PDFDoc.create()
+      await PDFNet.Convert.toPdf(
+        doc,
+        path.resolve(__dirname, '../../src/template-material/output.docx'),
+      )
+      await doc.save(
+        path.resolve(__dirname, '../../src/template-material/output.pdf'),
+        PDFNet.SDFDoc.SaveOptions.e_linearized,
+      )
     }
 
-    await scopackager(config, (msg: string) => {
-      console.log(msg)
-    })
+    PDFNet.runWithCleanup(
+      convertToPdf,
+      'demo:1701087641238:7cabd9240300000000cc6498ca682ccb348b8ee6884fe7451c55afb779',
+    )
+      .then(() => {
+        fs.readFile(
+          path.resolve(__dirname, '../../src/template-material/output.pdf'),
+          (err: any, data) => {
+            console.log(err)
+          },
+        )
+      })
+      .catch((err) => {
+        console.log(err)
+      })
 
-    return 'Create Success'
+    return `https://learnery-cdn.orasci.site/output.pdf`
   }
-
-  async createQuestion() {
-    const questionsData = [
-      {
-        id: "com.scorm.golfsamples.interactions.playing_1",
-        text: "The rules of golf are maintained by:'?",
-        type: "choice",
-        answers: ["The UN", "USGA and Royal and Ancient", "The PGA", "Each course has it's own rules"],
-        correctAnswer: "USGA and Royal and Ancient",
-        objectiveId: "obj_playing"
-      },
-      {
-        id: "com.scorm.golfsamples.interactions.playing_1",
-        text: "The rules of golf are maintained by:'?",
-        type: "choice",
-        answers: ["The UN", "USGA and Royal and Ancient", "The PGA", "Each course has it's own rules"],
-        correctAnswer: "USGA and Royal and Ancient",
-        objectiveId: "obj_playing"
-      },
-      {
-        id: "com.scorm.golfsamples.interactions.playing_1",
-        text: "The rules of golf are maintained by:'?",
-        type: "choice",
-        answers: ["The UN", "USGA and Royal and Ancient", "The PGA", "Each course has it's own rules"],
-        correctAnswer: "USGA and Royal and Ancient",
-        objectiveId: "obj_playing"
-      },
-      // Các câu hỏi khác từ database
-    ];
-
-    // Tạo nội dung cho file questions.js
-    const jsCode = `
-  ${questionsData.map(question => `
-  test.AddQuestion(new Question("${question.id}",
-                                  "${question.text}",
-                                  "${question.type}",
-                                  ${JSON.stringify(question.answers)},
-                                  "${question.correctAnswer}",
-                                  "${question.objectiveId}")
-                  );
-  `).join('')}
-  `;
-
-    // Ghi nội dung vào file questions.js
-    fs.writeFileSync('/home/bach/Work-Project/api.creator.learnery/src/public/material/questions.js', jsCode);
-  }
-
 }
-
-
