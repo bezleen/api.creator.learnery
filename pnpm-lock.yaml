@@ -44,9 +44,6 @@ dependencies:
   '@nestjs/platform-express':
     specifier: ^10.2.6
     version: 10.2.6(@nestjs/common@10.2.6)(@nestjs/core@10.2.6)
-  '@pdftron/pdfnet-node':
-    specifier: ^10.5.0
-    version: 10.5.0
   '@pinecone-database/pinecone':
     specifier: ^1.1.0
     version: 1.1.0
@@ -3211,20 +3208,6 @@ packages:
       '@opencensus/core': 0.0.8
       uuid: 3.4.0
     dev: false
-
-  /@pdftron/pdfnet-node@10.5.0:
-    resolution: {integrity: sha512-rnmq7fJ8CtXMcv6hBwoP8Ji9BHxcmJrKEW2VAY9WCk/504fWWrxTRcyIZzLGTWPsBI5ry2FzPSp/iz5DUqHWlw==}
-    engines: {node: '>=8 <19'}
-    requiresBuild: true
-    dependencies:
-      '@mapbox/node-pre-gyp': 1.0.11
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: false
-    bundledDependencies:
-      - underscore
-      - xhr2
 
   /@peculiar/asn1-schema@2.3.6:
     resolution: {integrity: sha512-izNRxPoaeJeg/AyH8hER6s+H7p4itk+03QCa4sbxI3lNdseQYCuxzgsuNK8bTXChtLTjpJz6NmXKA73qLa3rCA==}
