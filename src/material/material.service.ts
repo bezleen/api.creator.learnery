@@ -309,16 +309,16 @@ export class MaterialService {
       compression: 'DEFLATE',
     })
 
-    fs.writeFileSync(path.resolve(__dirname, '../../src/static/output.docx'), buf)
+    fs.writeFileSync(path.resolve(__dirname, '../../src/static/${id}.docx'), buf)
 
     const convertToPdf = async () => {
       const doc = await PDFNet.PDFDoc.create()
       await PDFNet.Convert.toPdf(
         doc,
-        path.resolve(__dirname, '../../src/static/output.docx'),
+        path.resolve(__dirname, '../../src/static/${id}.docx'),
       )
       await doc.save(
-        path.resolve(__dirname, '../../src/static/output.pdf'),
+        path.resolve(__dirname, '../../src/static/${id}.pdf'),
         PDFNet.SDFDoc.SaveOptions.e_linearized,
       )
     }
@@ -329,7 +329,7 @@ export class MaterialService {
     )
       .then(() => {
         fs.readFile(
-          path.resolve(__dirname, '../../src/static/output.pdf'),
+          path.resolve(__dirname, '../../src/static/${id}.pdf'),
           (err: any, data) => {
             console.log(err)
           },
@@ -339,6 +339,6 @@ export class MaterialService {
         console.log(err)
       })
 
-    return `https://learnery-cdn.orasci.site/output.pdf`
+    return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 }
