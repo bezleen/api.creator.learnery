@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - /var/www/cdn/learnery-cdn/static:/app/static/outputPDF
+      - /var/www/cdn/learnery-cdn/static:/app/dist/static/outputPDF
     ports:
       - '7008:${PORT}'
     healthcheck:

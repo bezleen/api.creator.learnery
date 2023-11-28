@@ -15,7 +15,7 @@
     ],
     "assets": [
       {
-        "include": "/static",
+        "include": "../static/**",
         "outDir": "dist/static",
         "watchAssets": true
       }
