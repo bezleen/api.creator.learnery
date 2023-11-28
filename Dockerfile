@@ -66,6 +66,4 @@ EXPOSE $PORT
 
 COPY --from=builder /app ./
 
-COPY ./static /app/dist/static
-
 ENTRYPOINT ["npm", "run", "start:prod"]

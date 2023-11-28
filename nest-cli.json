@@ -12,6 +12,13 @@
           "introspectComments": true
         }
       }
+    ],
+    "assets": [
+      {
+        "include": "/static",
+        "outDir": "dist/static",
+        "watchAssets": true
+      }
     ]
   }
 }
