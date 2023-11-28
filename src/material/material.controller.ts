@@ -25,4 +25,13 @@ export class MaterialController {
       pdfURL: response,
     })
   }
+
+  @Get('/list-performance-task-pdf/')
+  async getListPDF(@Res() res: Response) {
+    const response = await this.materialService.getListPDF()
+
+    return res.status(200).json({
+      listPDF: response,
+    })
+  }
 }
