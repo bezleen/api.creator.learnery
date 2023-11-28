@@ -17,12 +17,12 @@ export class MaterialController {
   //     })
   // }
 
-  @Get('/pdf/:id')
+  @Get('/performance-task-pdf/:id')
   async getPDF(@Param('id') id: string, @Res() res: Response) {
     const response = await this.materialService.getPDF(id, res)
 
     return res.status(200).json({
-      fileURL: response,
+      pdfURL: response,
     })
   }
 }

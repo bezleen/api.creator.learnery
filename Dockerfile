@@ -53,10 +53,7 @@ RUN sed -i '/provider = "prisma-client-js"/a \ \ binaryTargets = ["native", "lin
 
 RUN npm install -g pnpm
 
-RUN pnpm install @pdftron/pdfnet-node
-
 RUN pnpm install
-
 
 RUN #npm run build already post-install
 

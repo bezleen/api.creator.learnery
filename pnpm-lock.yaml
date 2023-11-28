@@ -98,6 +98,9 @@ dependencies:
   langchain:
     specifier: ^0.0.145
     version: 0.0.145(@pinecone-database/pinecone@1.1.0)(axios@1.5.1)(mongodb@5.8.0)
+  libreoffice-convert:
+    specifier: ^1.5.0
+    version: 1.5.0
   marked:
     specifier: ^9.1.5
     version: 9.1.5
@@ -8993,6 +8996,14 @@ packages:
   /libphonenumber-js@1.10.37:
     resolution: {integrity: sha512-Z10PCaOCiAxbUxLyR31DNeeNugSVP6iv/m7UrSKS5JHziEMApJtgku4e9Q69pzzSC9LnQiM09sqsGf2ticZnMw==}
 
+  /libreoffice-convert@1.5.0:
+    resolution: {integrity: sha512-VlS2nqRnhXje61WKkeEfmDmwI8iY+RsQNI8JVEJmTYRoT12dN6dxKsDy3sBmIfkRFPpPtWHELNzLB+ybe/eaPA==}
+    engines: {node: '>=6'}
+    dependencies:
+      async: 3.2.4
+      tmp: 0.2.1
+    dev: false
+
   /lightcookie@1.0.25:
     resolution: {integrity: sha512-SrY/+eBPaKAMnsn7mCsoOMZzoQyCyHHHZlFCu2fjo28XxSyCLjlooKiTxyrXTg8NPaHp1YzWi0lcGG1gDi6KHw==}
     dev: true
@@ -11672,6 +11683,13 @@ packages:
     engines: {node: '>=0.6.0'}
     dependencies:
       os-tmpdir: 1.0.2
+
+  /tmp@0.2.1:
+    resolution: {integrity: sha512-76SUhtfqR2Ijn+xllcI5P1oyannHNHByD80W1q447gU3mp9G9PSpGdWmjUOHRDPiHYacIk66W7ubDTuPF3BEtQ==}
+    engines: {node: '>=8.17.0'}
+    dependencies:
+      rimraf: 3.0.2
+    dev: false
 
   /tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}

@@ -14,8 +14,8 @@ import * as fs from 'fs'
 import scopackager from 'simple-scorm-packager'
 import PizZip from 'pizzip'
 import Docxtemplater from 'docxtemplater'
-import { PDFNet } from '@pdftron/pdfnet-node'
 import { Response } from 'express'
+import * as libre from 'libreoffice-convert'
 
 @Injectable()
 export class MaterialService {
@@ -275,10 +275,7 @@ export class MaterialService {
     const materialRequest: any = material.request
 
     const content = fs.readFileSync(
-      path.resolve(
-        __dirname,
-        '../../src/template-material/performance_task_template.docx',
-      ),
+      path.resolve(__dirname, '../../static/templatePDF/performance_task_template.docx'),
       'binary',
     )
 
@@ -309,35 +306,19 @@ export class MaterialService {
       compression: 'DEFLATE',
     })
 
-    fs.writeFileSync(path.resolve(__dirname, `../../src/static/${id}.docx`), buf)
+    fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.docx`), buf)
 
-    const convertToPdf = async () => {
-      const doc = await PDFNet.PDFDoc.create()
-      await PDFNet.Convert.toPdf(
-        doc,
-        path.resolve(__dirname, `../../src/static/${id}.docx`),
-      )
-      await doc.save(
-        path.resolve(__dirname, `../../src/static/${id}.pdf`),
-        PDFNet.SDFDoc.SaveOptions.e_linearized,
-      )
-    }
-
-    PDFNet.runWithCleanup(
-      convertToPdf,
-      'demo:1701087641238:7cabd9240300000000cc6498ca682ccb348b8ee6884fe7451c55afb779',
+    const file = fs.readFileSync(
+      path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
     )
-      .then(() => {
-        fs.readFile(
-          path.resolve(__dirname, `../../src/static/${id}.pdf`),
-          (err: any, data) => {
-            console.log(err)
-          },
-        )
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+
+    libre.convert(file, '.pdf', undefined, (err: any, done) => {
+      if (err) {
+        throw new Error(`Error converting file: ${err}`)
+      }
+
+      fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+    })
 
     return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
