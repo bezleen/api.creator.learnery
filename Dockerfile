@@ -57,6 +57,11 @@ RUN pnpm install
 
 RUN #npm run build already post-install
 
+# Deploy stage
+FROM node:19-alpine
+
+WORKDIR /app
+
 RUN apk update && apk add libreoffice
 RUN apk add --no-cache msttcorefonts-installer fontconfig
 RUN update-ms-fonts
@@ -67,11 +72,6 @@ RUN mkdir -p /usr/share/fonts/truetype/google-fonts
 RUN find $PWD/fonts-master/ -name "*.ttf" -exec install -m644 {} /usr/share/fonts/truetype/google-fonts/ \; || return 1
 RUN rm -f gf.tar.gz
 RUN fc-cache -f && rm -rf /var/cache/*
-
-# Deploy stage
-FROM node:19-alpine
-
-WORKDIR /app
 
 EXPOSE $PORT
 
