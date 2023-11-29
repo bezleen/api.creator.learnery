@@ -324,11 +324,11 @@ export class MaterialService {
     return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 
-  async getListPDF() {
+  async getListPDF(type: MaterialType) {
     const materials = await this.prisma.material.findMany({
       where: {
         userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
-        type: 'PERFORMANCE_TASK',
+        type: type,
       },
       select: {
         id: true,

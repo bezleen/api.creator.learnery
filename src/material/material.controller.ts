@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Injectable, Param, Post, Res } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Injectable,
+  Param,
+  Post,
+  Query,
+  Res,
+} from '@nestjs/common'
 import { MaterialService } from './material.service'
 import { Response } from 'express'
 import path from 'path'
+import { MaterialType } from '@prisma/client'
 
 @Injectable()
 @Controller('material')
@@ -35,9 +45,9 @@ export class MaterialController {
     })
   }
 
-  @Get('/list-performance-task-pdf/')
-  async getListPDF(@Res() res: Response) {
-    const response = await this.materialService.getListPDF()
+  @Get('/list-pdf/')
+  async getListPDF(@Query('type') type: MaterialType, @Res() res: Response) {
+    const response = await this.materialService.getListPDF(type)
 
     return res.status(200).json({
       listPDF: response,
