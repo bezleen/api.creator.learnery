@@ -20,7 +20,7 @@ import { execSync } from 'child_process'
 
 @Injectable()
 export class MaterialService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createQuiz(data: CreateQuizInputDTO) {
     if (Object.keys(data.questionTypes).length > 3) {
@@ -326,6 +326,9 @@ export class MaterialService {
       }
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+      setTimeout(() => {
+        console.log('set timeout for pdf')
+      }, 5000)
       return `https://learnery-cdn.orasci.site/${id}.pdf`
     })
 
@@ -423,9 +426,11 @@ export class MaterialService {
       }
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+
+      setTimeout(() => {
+        console.log('set timeout for pdf')
+      }, 5000)
       return `https://learnery-cdn.orasci.site/${id}.pdf`
     })
-
-
   }
 }
