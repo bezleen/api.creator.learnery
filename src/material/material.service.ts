@@ -16,6 +16,7 @@ import PizZip from 'pizzip'
 import Docxtemplater from 'docxtemplater'
 import { Response } from 'express'
 import * as libre from 'libreoffice-convert'
+import { execSync } from 'child_process'
 
 @Injectable()
 export class MaterialService {
@@ -264,6 +265,10 @@ export class MaterialService {
   //   fs.writeFileSync('/home/bach/Work-Project/api.creator.learnery/src/public/material/questions.js', jsCode);
   // }
 
+  doc2Pdf(docxPath, pdfPath) {
+    execSync(`soffice --headless --convert-to pdf ${docxPath} --outdir ${pdfPath}`)
+  }
+
   async getPerformanceTaskPDF(id: string, res: Response) {
     const material = await this.prisma.material.findUnique({
       where: {
@@ -315,15 +320,16 @@ export class MaterialService {
       path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
     )
 
-    libre.convert(file, '.pdf', undefined, (err: any, done) => {
+    await libre.convert(file, '.pdf', undefined, (err: any, done) => {
       if (err) {
         throw new Error(`Error converting file: ${err}`)
       }
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+      return `https://learnery-cdn.orasci.site/${id}.pdf`
     })
 
-    return `https://learnery-cdn.orasci.site/${id}.pdf`
+    // return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 
   async getListPDF(type: MaterialType) {
