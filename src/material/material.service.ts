@@ -373,15 +373,15 @@ export class MaterialService {
       ESSAY: 'Essay',
     }
 
-    const typeOfQuestions = materialResult.quiz.result.key_answers.content
+    const typeOfQuestions = materialResult.worksheet.result.key_answers.content
     const keyAnswersType = Object.keys(typeOfQuestions)
 
     doc.render({
       subject: materialRequest.worksheet.objectives,
       level: materialRequest.worksheet.audience.level,
       startDate: new Date(material.startDate).toLocaleDateString(),
-      learningObjectives: materialResult.quiz.result.chapter_1.content,
-      questionTypes: materialResult.quiz.result.chapter_2.content,
+      learningObjectives: materialResult.worksheet.result.chapter_1.content,
+      questionTypes: materialResult.worksheet.result.chapter_2.content,
       questionTypeName: (scope) => {
         return `${scope.part_name.match(/[^#\s].*$/g)}`
       },
