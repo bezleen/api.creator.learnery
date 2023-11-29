@@ -18,8 +18,17 @@ export class MaterialController {
   // }
 
   @Get('/performance-task-pdf/:id')
-  async getPDF(@Param('id') id: string, @Res() res: Response) {
-    const response = await this.materialService.getPDF(id, res)
+  async getPerformanceTaskPDF(@Param('id') id: string, @Res() res: Response) {
+    const response = await this.materialService.getPerformanceTaskPDF(id, res)
+
+    return res.status(200).json({
+      pdfURL: response,
+    })
+  }
+
+  @Get('/quiz-pdf/:id')
+  async getWorksheetPDF(@Param('id') id: string, @Res() res: Response) {
+    const response = await this.materialService.getWorksheetPDF(id, res)
 
     return res.status(200).json({
       pdfURL: response,

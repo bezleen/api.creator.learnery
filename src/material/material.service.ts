@@ -264,10 +264,11 @@ export class MaterialService {
   //   fs.writeFileSync('/home/bach/Work-Project/api.creator.learnery/src/public/material/questions.js', jsCode);
   // }
 
-  async getPDF(id: string, res: Response) {
+  async getPerformanceTaskPDF(id: string, res: Response) {
     const material = await this.prisma.material.findUnique({
       where: {
         id,
+        type: 'PERFORMANCE_TASK',
       },
     })
 
@@ -338,5 +339,80 @@ export class MaterialService {
     })
 
     return materials
+  }
+
+  async getWorksheetPDF(id: string, res: Response) {
+    const material = await this.prisma.material.findUnique({
+      where: {
+        id,
+        type: 'WORKSHEET',
+      },
+    })
+
+    const materialResult: any = material.result
+    const materialRequest: any = material.request
+
+    const content = fs.readFileSync(
+      path.resolve(__dirname, '../../static/templatePDF/worksheet_template.docx'),
+      'binary',
+    )
+
+    const zip = new PizZip(content)
+
+    const doc = new Docxtemplater(zip, {
+      paragraphLoop: true,
+      linebreaks: true,
+    })
+
+    const displayQuestionType = {
+      MATCHING: 'Matching',
+      TRUE_FALSE: 'True/False',
+      MULTIPLE_CHOICE: 'Multiple choice',
+      FILL_IN_THE_BLANK_WITH_OPTIONS: 'Fill in the blank (with options)',
+      FILL_IN_THE_BLANK_FREE_TEXT: 'Fill in the blank (free text)',
+      ESSAY: 'Essay',
+    }
+
+    const typeOfQuestions = materialResult.quiz.result.key_answers.content
+    const keyAnswersType = Object.keys(typeOfQuestions)
+
+    doc.render({
+      subject: materialRequest.worksheet.objectives,
+      level: materialRequest.worksheet.audience.level,
+      startDate: new Date(material.startDate).toLocaleDateString(),
+      learningObjectives: materialResult.quiz.result.chapter_1.content,
+      questionTypes: materialResult.quiz.result.chapter_2.content,
+      questionTypeName: (scope) => {
+        return `${scope.part_name.match(/[^#\s].*$/g)}`
+      },
+      keyAnswers: keyAnswersType,
+      keyAnswersType: (scope) => {
+        return displayQuestionType[scope]
+      },
+      answersContent: (scope) => {
+        return typeOfQuestions[scope]
+      },
+    })
+
+    const buf = doc.getZip().generate({
+      type: 'nodebuffer',
+      compression: 'DEFLATE',
+    })
+
+    fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.docx`), buf)
+
+    const file = fs.readFileSync(
+      path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
+    )
+
+    libre.convert(file, '.pdf', undefined, (err: any, done) => {
+      if (err) {
+        throw new Error(`Error converting file: ${err}`)
+      }
+
+      fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+    })
+
+    return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 }
