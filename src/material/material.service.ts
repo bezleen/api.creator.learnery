@@ -19,7 +19,7 @@ import * as libre from 'libreoffice-convert'
 
 @Injectable()
 export class MaterialService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async createQuiz(data: CreateQuizInputDTO) {
     if (Object.keys(data.questionTypes).length > 3) {
@@ -411,14 +411,15 @@ export class MaterialService {
       path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
     )
 
-    libre.convert(file, '.pdf', undefined, (err: any, done) => {
+    await libre.convert(file, '.pdf', undefined, (err: any, done) => {
       if (err) {
         throw new Error(`Error converting file: ${err}`)
       }
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+      return `https://learnery-cdn.orasci.site/${id}.pdf`
     })
 
-    return `https://learnery-cdn.orasci.site/${id}.pdf`
+
   }
 }
