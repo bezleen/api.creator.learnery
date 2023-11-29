@@ -272,6 +272,8 @@ export class MaterialService {
       },
     })
 
+    if (!material) throw new Error(`Can not find any performance task with id: ${id}`)
+
     const materialResult: any = material.result
     const materialRequest: any = material.request
 
@@ -338,6 +340,8 @@ export class MaterialService {
       },
     })
 
+    if (!materials) throw new Error(`can not find any material with type ${type}`)
+
     return materials
   }
 
@@ -348,6 +352,8 @@ export class MaterialService {
         type: 'WORKSHEET',
       },
     })
+
+    if (!material) throw new Error(`Can not find any worksheet with id: ${id}`)
 
     const materialResult: any = material.result
     const materialRequest: any = material.request
