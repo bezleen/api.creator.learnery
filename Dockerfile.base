@@ -18,5 +18,7 @@ RUN wget https://github.com/google/fonts/archive/main.tar.gz -O gf.tar.gz && \
     fc-cache -f
 
 # 1. docker build -t orasci/learnery-soffice:latest -f ./Dockerfile.base .
+# AMD64:
+#   docker buildx build --platform linux/amd64 -t orasci/learnery-soffice:latest -f ./Dockerfile.base .
 # 2. docker login -u orasci -> enter access_token                                                                                                                                
 # 3. docker push orasci/learnery-soffice:latest
