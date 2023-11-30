@@ -16,7 +16,7 @@ import PizZip from 'pizzip'
 import Docxtemplater from 'docxtemplater'
 import { Response } from 'express'
 import * as libre from 'libreoffice-convert'
-import { execSync } from 'child_process'
+// import { execSync } from 'child_process'
 
 @Injectable()
 export class MaterialService {
@@ -265,9 +265,9 @@ export class MaterialService {
   //   fs.writeFileSync('/home/bach/Work-Project/api.creator.learnery/src/public/material/questions.js', jsCode);
   // }
 
-  doc2Pdf(docxPath, pdfPath) {
-    execSync(`soffice --headless --convert-to pdf ${docxPath} --outdir ${pdfPath}`)
-  }
+  // doc2Pdf(docxPath, pdfPath) {
+  //   execSync(`soffice --headless --convert-to pdf ${docxPath} --outdir ${pdfPath}`)
+  // }
 
   async getPerformanceTaskPDF(id: string, res: Response) {
     const material = await this.prisma.material.findUnique({
@@ -326,9 +326,9 @@ export class MaterialService {
       }
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
-      setTimeout(() => {
-        console.log('set timeout for pdf')
-      }, 5000)
+      // setTimeout(() => {
+      //   console.log('set timeout for pdf')
+      // }, 5000)
       return `https://learnery-cdn.orasci.site/${id}.pdf`
     })
 
@@ -427,9 +427,9 @@ export class MaterialService {
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
 
-      setTimeout(() => {
-        console.log('set timeout for pdf')
-      }, 5000)
+      // setTimeout(() => {
+      //   console.log('set timeout for pdf')
+      // }, 5000)
       return `https://learnery-cdn.orasci.site/${id}.pdf`
     })
   }
