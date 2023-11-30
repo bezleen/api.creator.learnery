@@ -20,7 +20,7 @@ import * as libre from 'libreoffice-convert'
 
 @Injectable()
 export class MaterialService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async createQuiz(data: CreateQuizInputDTO) {
     if (Object.keys(data.questionTypes).length > 3) {
@@ -329,10 +329,10 @@ export class MaterialService {
       // setTimeout(() => {
       //   console.log('set timeout for pdf')
       // }, 5000)
-      return `https://learnery-cdn.orasci.site/${id}.pdf`
+      // return `https://learnery-cdn.orasci.site/${id}.pdf`
     })
 
-    // return `https://learnery-cdn.orasci.site/${id}.pdf`
+    return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 
   async getListPDF(type: MaterialType) {
@@ -430,7 +430,8 @@ export class MaterialService {
       // setTimeout(() => {
       //   console.log('set timeout for pdf')
       // }, 5000)
-      return `https://learnery-cdn.orasci.site/${id}.pdf`
+
     })
+    return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 }
