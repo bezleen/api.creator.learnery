@@ -20,7 +20,7 @@ import * as libre from 'libreoffice-convert'
 
 @Injectable()
 export class MaterialService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createQuiz(data: CreateQuizInputDTO) {
     if (Object.keys(data.questionTypes).length > 3) {
@@ -326,10 +326,6 @@ export class MaterialService {
       }
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
-      // setTimeout(() => {
-      //   console.log('set timeout for pdf')
-      // }, 5000)
-      // return `https://learnery-cdn.orasci.site/${id}.pdf`
     })
 
     return `https://learnery-cdn.orasci.site/${id}.pdf`
@@ -426,11 +422,79 @@ export class MaterialService {
       }
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+    })
+    return `https://learnery-cdn.orasci.site/${id}.pdf`
+  }
 
-      // setTimeout(() => {
-      //   console.log('set timeout for pdf')
-      // }, 5000)
+  async getQuizPDF(id: string, res: Response) {
+    const material = await this.prisma.material.findUnique({
+      where: {
+        id,
+        type: 'QUIZ',
+      },
+    })
 
+    if (!material) throw new Error(`Can not find any quiz with id: ${id}`)
+
+    const materialResult: any = material.result
+    const materialRequest: any = material.request
+
+    const content = fs.readFileSync(
+      path.resolve(__dirname, '../../static/templatePDF/quiz_template.docx'),
+      'binary',
+    )
+
+    const zip = new PizZip(content)
+
+    const doc = new Docxtemplater(zip, {
+      paragraphLoop: true,
+      linebreaks: true,
+    })
+
+    const displayQuestionType = {
+      MATCHING: 'Matching',
+      TRUE_FALSE: 'True/False',
+      MULTIPLE_CHOICE: 'Multiple choice',
+      FILL_IN_THE_BLANK_WITH_OPTIONS: 'Fill in the blank (with options)',
+      FILL_IN_THE_BLANK_FREE_TEXT: 'Fill in the blank (free text)',
+      ESSAY: 'Essay',
+    }
+
+    const typeOfQuestions = materialResult.quiz.result.key_answers.content
+    const keyAnswersType = Object.keys(typeOfQuestions)
+
+    doc.render({
+      subject: materialRequest.quiz.objectives,
+      questionTypes: materialResult.quiz.result.chapter_1.content,
+      questionTypeName: (scope) => {
+        return `${scope.part_name.match(/[^#\s].*$/g)}`
+      },
+      keyAnswers: keyAnswersType,
+      keyAnswersType: (scope) => {
+        return displayQuestionType[scope]
+      },
+      answersContent: (scope) => {
+        return typeOfQuestions[scope]
+      },
+    })
+
+    const buf = doc.getZip().generate({
+      type: 'nodebuffer',
+      compression: 'DEFLATE',
+    })
+
+    fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.docx`), buf)
+
+    const file = fs.readFileSync(
+      path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
+    )
+
+    await libre.convert(file, '.pdf', undefined, (err: any, done) => {
+      if (err) {
+        throw new Error(`Error converting file: ${err}`)
+      }
+
+      fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
     })
     return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
