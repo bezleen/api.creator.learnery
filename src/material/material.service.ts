@@ -346,6 +346,7 @@ export class MaterialService {
       where: {
         userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
         type: type,
+        isGeneratedPDF: true,
       },
       select: {
         id: true,
