@@ -159,15 +159,14 @@ enum Difficulty {
 }
 
 type DifficultyDistribution {
-  difficulty Difficulty
+  difficulty        Difficulty
   numberOfQuestions Int
 }
 
 type TypeQuestion {
-  type QuestionType
+  type           QuestionType
   totalQuestions Int
-  bloomTaxonomy  DifficultyDistribution[] 
-
+  bloomTaxonomy  DifficultyDistribution[]
 }
 
 type Worksheet {
@@ -177,8 +176,8 @@ type Worksheet {
   tone        String  @default("Friendly")
   modality    String  @default("Hybrid")
 
-  audience       Audience
-  questionTypes  TypeQuestion[]
+  audience      Audience
+  questionTypes TypeQuestion[]
 }
 
 type Quiz {
@@ -188,8 +187,8 @@ type Quiz {
   tone        String  @default("Friendly")
   modality    String  @default("Hybrid")
 
-  audience       Audience
-  questionTypes  TypeQuestion[]
+  audience      Audience
+  questionTypes TypeQuestion[]
 }
 
 enum ProgressStatus {
@@ -206,17 +205,17 @@ enum MaterialType {
   PERFORMANCE_TASK
 }
 
-type RequestType{
-  quiz Quiz?
-  worksheet Worksheet?
+type RequestType {
+  quiz            Quiz?
+  worksheet       Worksheet?
   performanceTask PerformanceTask?
 }
 
 model Material {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String?        @map("userId") 
+  userId          String?        @map("userId")
   type            MaterialType
-  request         RequestType?   
+  request         RequestType?
   rawResult       String?
   result          Json?
   startDate       DateTime?
@@ -227,6 +226,7 @@ model Material {
   updatedDate     DateTime       @updatedAt @map("updatedDate")
   progressPercent Int?           @default(0)
   progressStatus  ProgressStatus @default(PENDING)
+  isGeneratedPDF  Boolean        @default(false)
 
   @@map("material")
 }

@@ -53,13 +53,4 @@ export class MaterialController {
       pdfURL: response,
     })
   }
-
-  @Get('/list-pdf/')
-  async getListPDF(@Query('type') type: MaterialType, @Res() res: Response) {
-    const response = await this.materialService.getListPDF(type)
-
-    return res.status(200).json({
-      listPDF: response,
-    })
-  }
 }

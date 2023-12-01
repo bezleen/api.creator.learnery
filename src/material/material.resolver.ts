@@ -1,6 +1,11 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { MaterialService } from './material.service';
-import { CreateQuizInputDTO, CreatePerformanceTaskInputDTO, CreateWorksheetInputDTO } from './dto/create-material.input';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql'
+import { MaterialService } from './material.service'
+import {
+  CreateQuizInputDTO,
+  CreatePerformanceTaskInputDTO,
+  CreateWorksheetInputDTO,
+} from './dto/create-material.input'
+import { MaterialType } from '@prisma/client'
 
 @Resolver('Material')
 export class MaterialResolver {
@@ -8,31 +13,38 @@ export class MaterialResolver {
 
   @Mutation('createMaterialQuiz')
   createQuiz(@Args('data') createMaterialQuizInput: CreateQuizInputDTO) {
-    return this.materialService.createQuiz(createMaterialQuizInput);
+    return this.materialService.createQuiz(createMaterialQuizInput)
   }
 
   @Mutation('createMaterialPerformanceTask')
-  createPerformanceTask(@Args('data') createMaterialPerformanceTaskInput: CreatePerformanceTaskInputDTO) {
-    return this.materialService.createPerformanceTask(createMaterialPerformanceTaskInput);
+  createPerformanceTask(
+    @Args('data') createMaterialPerformanceTaskInput: CreatePerformanceTaskInputDTO,
+  ) {
+    return this.materialService.createPerformanceTask(createMaterialPerformanceTaskInput)
   }
 
   @Mutation('createMaterialWorksheet')
   createWorksheet(@Args('data') createMaterialWorksheetInput: CreateWorksheetInputDTO) {
-    return this.materialService.createWorksheet(createMaterialWorksheetInput);
+    return this.materialService.createWorksheet(createMaterialWorksheetInput)
   }
 
   @Query('materials')
   findAll() {
-    return this.materialService.findAll();
+    return this.materialService.findAll()
   }
 
   @Query('material')
   findOne(@Args('id') id: string) {
-    return this.materialService.findOne({id});
+    return this.materialService.findOne({ id })
   }
 
   @Mutation('removeMaterial')
   remove(@Args('id') id: string) {
-    return this.materialService.remove({id});
+    return this.materialService.remove({ id })
+  }
+
+  @Query('materialsIsGeneratedPDF')
+  findAllMaterialIsGeneratedPDF(@Args('type') type: MaterialType) {
+    return this.materialService.findAllMaterialIsGeneratedPDF(type)
   }
 }

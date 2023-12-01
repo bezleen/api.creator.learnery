@@ -328,10 +328,20 @@ export class MaterialService {
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
     })
 
+    await this.prisma.material.update({
+      where: {
+        id,
+        type: 'PERFORMANCE_TASK',
+      },
+      data: {
+        isGeneratedPDF: true,
+      },
+    })
+
     return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 
-  async getListPDF(type: MaterialType) {
+  async findAllMaterialIsGeneratedPDF(type: MaterialType) {
     const materials = await this.prisma.material.findMany({
       where: {
         userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
@@ -423,6 +433,17 @@ export class MaterialService {
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
     })
+
+    await this.prisma.material.update({
+      where: {
+        id,
+        type: 'WORKSHEET',
+      },
+      data: {
+        isGeneratedPDF: true,
+      },
+    })
+
     return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 
@@ -496,6 +517,17 @@ export class MaterialService {
 
       fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
     })
+
+    await this.prisma.material.update({
+      where: {
+        id,
+        type: 'QUIZ',
+      },
+      data: {
+        isGeneratedPDF: true,
+      },
+    })
+
     return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 }
