@@ -222,8 +222,8 @@ model Material {
   endDate         DateTime?
   runDuration     Int?           @default(0)
   waitDuration    Int?           @default(0)
-  createdDate     DateTime       @default(now()) @map("createdDate")
-  updatedDate     DateTime       @updatedAt @map("updatedDate")
+  createdDate     DateTime?      @default(now()) @map("createdDate")
+  updatedDate     DateTime?      @updatedAt @map("updatedDate")
   progressPercent Int?           @default(0)
   progressStatus  ProgressStatus @default(PENDING)
   isGeneratedPDF  Boolean        @default(false)
