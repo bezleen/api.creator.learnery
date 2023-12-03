@@ -218,12 +218,12 @@ model Material {
   request         RequestType?
   rawResult       String?
   result          Json?
-  startDate       DateTime?      @db.Date
-  endDate         DateTime?      @db.Date
+  startDate       DateTime?      @db.Timestamp
+  endDate         DateTime?      @db.Timestamp
   runDuration     Int?           @default(0)
   waitDuration    Int?           @default(0)
-  createdDate     DateTime       @default(now()) @map("createdDate") @db.Date
-  updatedDate     DateTime       @updatedAt @map("updatedDate") @db.Date
+  createdDate     DateTime       @default(now()) @map("createdDate") @db.Timestamp
+  updatedDate     DateTime       @updatedAt @map("updatedDate") @db.Timestamp
   progressPercent Int?           @default(0)
   progressStatus  ProgressStatus @default(PENDING)
   isGeneratedPDF  Boolean        @default(false)

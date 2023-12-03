@@ -348,9 +348,6 @@ export class MaterialService {
         type: type,
         isGeneratedPDF: true,
       },
-      select: {
-        id: true,
-      },
       orderBy: {
         id: 'desc',
       },
