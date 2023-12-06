@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { PrismaClientExceptionFilter } from './app/exceptions/prisma-client-exception.filter'
 import session from 'express-session'
+import passport from 'passport'
 import requestIp from 'request-ip'
 import compression from 'compression'
 
@@ -70,13 +71,13 @@ export async function initApp(app: INestApplication) {
       // 'https://vercel.app',
       // 'https://learnery-material.orasci.site/',
       // /\.vercel\.app$/,
-      "*"
+      '*',
     ],
     credentials: true,
     // optionsSuccessStatus: 200,
     // preflightContinue: true,
   })
-  
+
   app.useGlobalFilters(new PrismaClientExceptionFilter())
   app.enableVersioning({
     type: VersioningType.HEADER,
@@ -87,19 +88,23 @@ export async function initApp(app: INestApplication) {
       // genid: function(req) { //TODO:
       //   return genuuid()  // use UUIDs for session IDs
       // },
-      cookie: {
-        path: '/apiLearnery',
-        httpOnly: true,
-        secure: true,
-        maxAge: null,
-        sameSite: 'none',
-      },
+      // cookie: {
+      //   path: '/apiLearnery',
+      //   httpOnly: true,
+      //   secure: true,
+      //   maxAge: null,
+      //   sameSite: 'none',
+      // },
       secret: config.get('JWT_SECRET'),
-      resave: true, //TODO:
+      resave: false, //TODO:
       rolling: true, //TODO
-      saveUninitialized: true,
+      saveUninitialized: false,
     }),
   )
+
+  app.use(passport.initialize())
+  app.use(passport.session())
+
   app.use(requestIp.mw())
 
   app.use(

@@ -3,15 +3,19 @@ import { IsNotEmpty, IsString } from 'class-validator'
 export class AuthDto {
   @IsString()
   @IsNotEmpty()
-  clientToken: string
+  id: string
 
   @IsString()
   @IsNotEmpty()
-  sessionId: string
+  email: string
 }
 
-export interface CookieJWT {
+export class JwtDto {
+  @IsString()
+  @IsNotEmpty()
   sub: string
-  sessionId: string
-  clientId: string
+
+  @IsString()
+  @IsNotEmpty()
+  email: string
 }

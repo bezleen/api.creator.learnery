@@ -7,93 +7,109 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// model User {
+//   id String @id @default(auto()) @map("_id") @db.ObjectId
+
+//   clerkId String @unique
+
+//   createdAt DateTime @default(now()) @db.Timestamp
+//   updatedAt DateTime @updatedAt @db.Timestamp
+//   Course    Course[]
+
+//   @@map("users")
+// }
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  clerkId String @unique
+  // clerkId String @unique
 
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
-  Course    Course[]
+  // createdAt DateTime @default(now()) @db.Timestamp
+  // updatedAt DateTime @updatedAt @db.Timestamp
+  // Course    Course[]
+
+  email     String  @unique
+  firstName String
+  lastName  String?
 
   @@map("users")
 }
 
-model Course {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  title          String?
-  objective      String[] @default([])
-  description    String?  @default("")
-  language       String?  @default("English")
-  category       String
-  tone           String   @default("Friendly")
-  modality       String   @default("Hybrid")
-  classSize      String
-  topics         String[] @default([])
-  duration       Int // Course Length In hours
-  durationLesson Int // Lesson Duration In minutes
+// model Course {
+//   id             String   @id @default(auto()) @map("_id") @db.ObjectId
+//   title          String?
+//   objective      String[] @default([])
+//   description    String?  @default("")
+//   language       String?  @default("English")
+//   category       String
+//   tone           String   @default("Friendly")
+//   modality       String   @default("Hybrid")
+//   classSize      String
+//   topics         String[] @default([])
+//   duration       Int // Course Length In hours
+//   durationLesson Int // Lesson Duration In minutes
 
-  creatorId String // clerkUserId
-  Creator   User?    @relation(fields: [creatorId], references: [clerkId])
-  audience  Audience
+//   creatorId String // clerkUserId
+//   Creator   User?    @relation(fields: [creatorId], references: [clerkId])
+//   audience  Audience
 
-  outline         CourseOutline? // Graphql type is enough
-  detailedOutline CourseDetailedOutline? // Graphql ...
+//   outline         CourseOutline? // Graphql type is enough
+//   detailedOutline CourseDetailedOutline? // Graphql ...
 
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
+//   createdAt DateTime @default(now()) @db.Timestamp
+//   updatedAt DateTime @updatedAt @db.Timestamp
 
-  lessonOrder String[] @default([]) // Array of lesson Object IDs representing the order
+//   lessonOrder String[] @default([]) // Array of lesson Object IDs representing the order
 
-  Lesson Lesson[]
+//   Lesson Lesson[]
 
-  @@map("courses")
-}
+//   @@map("courses")
+// }
 
-type CourseOutline {
-  courseDuration String
-  inScope        CourseTopic[]
-  outOfScope     CourseTopic[]
-  explanation    String?
-}
+// type CourseOutline {
+//   courseDuration String
+//   inScope        CourseTopic[]
+//   outOfScope     CourseTopic[]
+//   explanation    String?
+// }
 
-type CourseDetailedOutline {
-  sections                  DetailedOutlineSection[]
-  objectiveTopicConnections DetailedOutlineObjectiveTopicConnection[]
-  summary                   CourseDetailedSummary
-  rationale                 String
-}
+// type CourseDetailedOutline {
+//   sections                  DetailedOutlineSection[]
+//   objectiveTopicConnections DetailedOutlineObjectiveTopicConnection[]
+//   summary                   CourseDetailedSummary
+//   rationale                 String
+// }
 
-type CourseDetailedSummary {
-  totalSections Int
-  totalTopics   Int
-  courseHours   Int
-}
+// type CourseDetailedSummary {
+//   totalSections Int
+//   totalTopics   Int
+//   courseHours   Int
+// }
 
-type DetailedOutlineSection {
-  title  String
-  topics DetailedOutlineSectionTopic[]
-}
+// type DetailedOutlineSection {
+//   title  String
+//   topics DetailedOutlineSectionTopic[]
+// }
 
-type DetailedOutlineSectionTopic {
-  title            String?
-  onScreenContent  String?
-  topicDescription String?
-  detailedCoverage String?
-  resources        String?
-  timingMins       Int
-  connection       String[]
-}
+// type DetailedOutlineSectionTopic {
+//   title            String?
+//   onScreenContent  String?
+//   topicDescription String?
+//   detailedCoverage String?
+//   resources        String?
+//   timingMins       Int
+//   connection       String[]
+// }
 
-type DetailedOutlineObjectiveTopicConnection {
-  objective String
-  topics    String[]
-}
+// type DetailedOutlineObjectiveTopicConnection {
+//   objective String
+//   topics    String[]
+// }
 
-type CourseTopic {
-  topic     String
-  subtopics String[]
-}
+// type CourseTopic {
+//   topic     String
+//   subtopics String[]
+// }
 
 type Audience {
   ageStart Int
@@ -102,34 +118,34 @@ type Audience {
   desc     String?
 }
 
-model Lesson {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  // FIXME: discuss on how to store lesson order
-  courseId String    @db.ObjectId
-  title    String
-  sections Section[]
+// model Lesson {
+//   id       String    @id @default(auto()) @map("_id") @db.ObjectId
+//   // FIXME: discuss on how to store lesson order
+//   courseId String    @db.ObjectId
+//   title    String
+//   sections Section[]
 
-  Course Course? @relation(fields: [courseId], references: [id])
+//   Course Course? @relation(fields: [courseId], references: [id])
 
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
+//   createdAt DateTime @default(now()) @db.Timestamp
+//   updatedAt DateTime @updatedAt @db.Timestamp
 
-  @@map("lessons")
-}
+//   @@map("lessons")
+// }
 
-type Section {
-  title  String
-  topics Topic[]
-}
+// type Section {
+//   title  String
+//   topics Topic[]
+// }
 
-type Topic {
-  title            String
-  onScreenContent  String
-  description      String
-  detailedCoverage String
-  resource         String?
-  timing           String?
-}
+// type Topic {
+//   title            String
+//   onScreenContent  String
+//   description      String
+//   detailedCoverage String
+//   resource         String?
+//   timing           String?
+// }
 
 type PerformanceTask {
   objectives   String  @default("")
@@ -158,15 +174,14 @@ enum Difficulty {
 }
 
 type DifficultyDistribution {
-  difficulty Difficulty
+  difficulty        Difficulty
   numberOfQuestions Int
 }
 
 type TypeQuestion {
-  type QuestionType
+  type           QuestionType
   totalQuestions Int
-  bloomTaxonomy  DifficultyDistribution[] 
-
+  bloomTaxonomy  DifficultyDistribution[]
 }
 
 type Worksheet {
@@ -176,8 +191,8 @@ type Worksheet {
   tone        String  @default("Friendly")
   modality    String  @default("Hybrid")
 
-  audience       Audience
-  questionTypes  TypeQuestion[]
+  audience      Audience
+  questionTypes TypeQuestion[]
 }
 
 type Quiz {
@@ -187,8 +202,8 @@ type Quiz {
   tone        String  @default("Friendly")
   modality    String  @default("Hybrid")
 
-  audience       Audience
-  questionTypes  TypeQuestion[]
+  audience      Audience
+  questionTypes TypeQuestion[]
 }
 
 enum ProgressStatus {
@@ -205,17 +220,17 @@ enum MaterialType {
   PERFORMANCE_TASK
 }
 
-type RequestType{
-  quiz Quiz?
-  worksheet Worksheet?
+type RequestType {
+  quiz            Quiz?
+  worksheet       Worksheet?
   performanceTask PerformanceTask?
 }
 
 model Material {
   id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String?        @map("userId") 
+  userId          String?        @map("userId") @db.ObjectId
   type            MaterialType
-  request         RequestType?   
+  request         RequestType?
   rawResult       String?
   result          Json?
   startDate       DateTime?
