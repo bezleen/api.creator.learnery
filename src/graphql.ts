@@ -37,11 +37,6 @@ export enum MaterialType {
     PERFORMANCE_TASK = "PERFORMANCE_TASK"
 }
 
-export class AuthInput {
-    clientToken: string;
-    sessionId: string;
-}
-
 export class CreateAudienceInput {
     ageStart: number;
     ageEnd: number;
@@ -89,22 +84,6 @@ export class CreatePerformanceTaskInput {
     audience: CreateAudienceInput;
     classSize?: Nullable<number>;
     timeActivity?: Nullable<string>;
-}
-
-export class AuthPayload {
-    accessToken: string;
-}
-
-export abstract class IMutation {
-    abstract signIn(data: AuthInput): AuthPayload | Promise<AuthPayload>;
-
-    abstract createMaterialQuiz(data: CreateQuizInput): Material | Promise<Material>;
-
-    abstract createMaterialPerformanceTask(data: CreatePerformanceTaskInput): Material | Promise<Material>;
-
-    abstract createMaterialWorksheet(data: CreateWorksheetInput): Material | Promise<Material>;
-
-    abstract removeMaterial(id: string): Nullable<Material> | Promise<Nullable<Material>>;
 }
 
 export abstract class IQuery {
@@ -193,6 +172,26 @@ export class Material {
     isGeneratedPDF?: Nullable<boolean>;
 }
 
+export abstract class IMutation {
+    abstract createMaterialQuiz(data: CreateQuizInput): Material | Promise<Material>;
+
+    abstract createMaterialPerformanceTask(data: CreatePerformanceTaskInput): Material | Promise<Material>;
+
+    abstract createMaterialWorksheet(data: CreateWorksheetInput): Material | Promise<Material>;
+
+    abstract removeMaterial(id: string): Nullable<Material> | Promise<Nullable<Material>>;
+}
+
+export abstract class IMutation {
+    abstract createMaterialQuiz(data: CreateQuizInput): Material | Promise<Material>;
+
+    abstract createMaterialPerformanceTask(data: CreatePerformanceTaskInput): Material | Promise<Material>;
+
+    abstract createMaterialWorksheet(data: CreateWorksheetInput): Material | Promise<Material>;
+
+    abstract removeMaterial(id: string): Nullable<Material> | Promise<Nullable<Material>>;
+}
+
 export class User {
     id: string;
     email?: Nullable<string>;
@@ -200,6 +199,6 @@ export class User {
     lastName?: Nullable<string>;
 }
 
-export type DateTime = any;
 export type JSON = any;
+export type DateTime = any;
 type Nullable<T> = T | null;

@@ -1,72 +1,62 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
-import { PrismaService } from '../prisma/prisma.service'
-import { AuthDto, CookieJWT } from './dto'
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { UserService } from '@/user/user.service'
+import { PrismaService } from '@/prisma/prisma.service'
+import { Prisma } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
-import { ClerkService } from '../clerk/clerk.service'
-import { UserService } from '../user/user.service'
 
 @Injectable()
 export class AuthService {
-  private clerk
   constructor(
+    private jwtService: JwtService,
+    private userService: UserService,
     private readonly prisma: PrismaService,
-    private readonly jwt: JwtService,
-    private readonly config: ConfigService,
-    private readonly clerkService: ClerkService, // private userService: UserService,
-    private readonly userService: UserService,
-  ) {
-    this.clerk = clerkService.clerk
+    private configService: ConfigService,
+  ) {}
+
+  async signIn(data: any) {
+    if (!data) {
+      throw new BadRequestException('Unauthenticated')
+    }
+
+    const userExists = await this.prisma.user.findUnique({ where: { email: data.email } })
+
+    if (!userExists) {
+      return this.registerUser(data)
+    }
+
+    return await this.jwtService.signAsync(
+      {
+        sub: userExists.id,
+        email: userExists.email,
+      },
+      {
+        expiresIn: this.configService.get('JWT_MAX_AGE'),
+        secret: this.configService.get('JWT_SECRET'),
+      },
+    )
   }
 
-  /*  async validateUser(userId: string, sessionId: string): Promise<any> {
-      const user = await this.userService.findOne(userId)
-      const session = await this.clerkService.clerk.sessions.getSession(sessionId)
+  async registerUser(data: Prisma.UserCreateInput) {
+    try {
+      const newUser = await this.userService.create(data)
 
-      if (!user) throw new UnauthorizedException('invalid user')
-
-      if (!session) throw new UnauthorizedException('invalid session')
-
-      if (user.id!=session.userId){
-        return null
-      }
-
-      return session
-    }*/
-
-  async signin(dto: AuthDto) {
-    const client = await this.clerkService.verifyClient(dto.clientToken)
-
-    if (!client) throw new ForbiddenException('invalid user')
-
-    let session = client.sessions.find(({ id }) => {
-      return id === dto.sessionId
-    })
-    if (this.config.get('mode') == 'prod') throw new ForbiddenException('invalid session')
-
-    if (!session) {
-      throw new ForbiddenException('invalid session')
-    }
-    return this.signToken(session.userId, session.id, client.id)
-  }
-
-  private async signToken(userId, sessionId, clientId: string) {
-    const payload: CookieJWT = {
-      sub: userId,
-      sessionId,
-      clientId,
-    }
-    const secret = this.config.get('JWT_SECRET')
-
-    return {
-      access_token: await this.jwt.signAsync(payload, {
-        expiresIn: this.config.get('JWT_MAX_AGE'),
-        secret: secret,
-      }),
+      return await this.jwtService.signAsync(
+        {
+          sub: newUser.id,
+          email: newUser.email,
+        },
+        {
+          expiresIn: this.configService.get('JWT_MAX_AGE'),
+          secret: this.configService.get('JWT_SECRET'),
+        },
+      )
+    } catch (error) {
+      throw new InternalServerErrorException()
     }
   }
 }
-
-/*//expiresIn: "20d" // it will be expired after 20 days
-        //expiresIn: 120 // it will be expired after 120ms
-        //expiresIn: "120s" // it will be expired after 120*/

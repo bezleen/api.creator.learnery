@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common'
 import { AppService } from './app.service'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { AuthModule } from '../auth/auth.module'
+// import { AuthModule } from '../oldAuth/auth.module'
 import Joi from 'joi'
 import { CacheModule } from '@nestjs/cache-manager'
 import { GraphQLModule } from '@nestjs/graphql'
@@ -22,13 +22,13 @@ import { CategoryController } from '../category/category.controller'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { CategoryModule } from '../category/category.module'
 import { UserController } from '../user/user.controller'
-import { AuthController } from '../auth/auth.controller'
+// import { AuthController } from '../oldAuth/auth.controller'
 import { CategoryService } from '../category/category.service'
 import { UserService } from '../user/user.service'
-import { AuthService } from '../auth/auth.service'
+// import { AuthService } from '../oldAuth/auth.service'
 import { JwtService } from '@nestjs/jwt'
-import { ClerkModule } from '../clerk/clerk.module'
-import { ClerkService } from '../clerk/clerk.service'
+// import { ClerkModule } from '../clerk/clerk.module'
+// import { ClerkService } from '../clerk/clerk.service'
 // import { CourseModule } from '../course/course.module'
 import { HttpLoggerMiddleware } from './middlewares/http-logger.middleware'
 import { AiModule } from '../ai/ai.module'
@@ -37,6 +37,8 @@ import { PineconeService } from '@src/ai/pinecone/pinecone.service'
 import { OpenAIService } from '@src/ai/openai/openAIService'
 import { join } from 'path'
 import { MaterialModule } from '@/material/material.module'
+import { AuthService } from '@/auth/auth.service'
+import { AuthModule } from '@/auth/auth.module'
 
 let mode = process.env.MODE
 let envFile: string
@@ -119,9 +121,9 @@ console.debug({ mode, envFile })
       driver: ApolloDriver,
       plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
       typePaths: ['./**/*.graphql'],
-      definitions:{
+      definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
-        outputAs: 'class'
+        outputAs: 'class',
       },
       resolvers: { DateTime: GraphQLDateTime },
       subscriptions: {
@@ -146,9 +148,9 @@ console.debug({ mode, envFile })
       },
     }),
     PrismaModule,
-    MaterialModule
-    // AuthModule,
-    // UserModule,
+    MaterialModule,
+    AuthModule,
+    UserModule,
     // CategoryModule,
     // ClerkModule,
     // CourseModule,
@@ -163,9 +165,9 @@ console.debug({ mode, envFile })
     },*/
     AppService,
     // CategoryService,
-    // UserService,
-    // AuthService,
-    // JwtService,
+    UserService,
+    AuthService,
+    JwtService,
     // ClerkService,
     // OpenAIService,
     // PineconeService,
@@ -192,8 +194,18 @@ export class AppModule implements OnModuleInit, NestModule {
       .setDescription('apis to crud courses')
       .setVersion('1.0')
       .addTag('learnery-creator')
-      .addBearerAuth()
-      .addCookieAuth(cookieName)
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'Bearer',
+          bearerFormat: 'Bearer',
+          name: 'Authorization',
+          description: 'Enter JWT token',
+          in: 'Header',
+        },
+        'JWT-auth',
+      )
+      // .addCookieAuth(cookieName)
       .build()
     return SwaggerModule.createDocument(app, options)
   }

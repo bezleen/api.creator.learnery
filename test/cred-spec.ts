@@ -1,4 +1,4 @@
-import { AuthDto } from '@src/auth/dto'
+import { AuthDto } from '@/oldAuth/dto'
 
 export const dto: AuthDto = {
   clientToken:
