@@ -16,11 +16,15 @@ import PizZip from 'pizzip'
 import Docxtemplater from 'docxtemplater'
 import { Response } from 'express'
 import * as libre from 'libreoffice-convert'
+import { ConfigService } from '@nestjs/config'
 // import { execSync } from 'child_process'
 
 @Injectable()
 export class MaterialService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async createQuiz(data: CreateQuizInputDTO) {
     if (Object.keys(data.questionTypes).length > 3) {
@@ -49,7 +53,7 @@ export class MaterialService {
 
     try {
       const response = await axios.post(
-        'https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/quiz',
+        `${this.configService.get('DAEMON_GATEWAY_URL')}/v1/api/internal/material/quiz`,
         payload_ai,
       )
 
@@ -93,7 +97,9 @@ export class MaterialService {
 
     try {
       const response = await axios.post(
-        'https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/performance-task',
+        `${this.configService.get(
+          'DAEMON_GATEWAY_URL',
+        )}/v1/api/internal/material/performance-task`,
         payload_ai,
       )
 
@@ -134,7 +140,9 @@ export class MaterialService {
 
     try {
       const response = await axios.post(
-        'https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/worksheet',
+        `${this.configService.get(
+          'DAEMON_GATEWAY_URL',
+        )}/v1/api/internal/material/worksheet`,
         payload_ai,
       )
 
@@ -338,7 +346,7 @@ export class MaterialService {
       },
     })
 
-    return `https://learnery-cdn.orasci.site/${id}.pdf`
+    return `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`
   }
 
   async findAllMaterialIsGeneratedPDF(type: MaterialType) {
@@ -442,7 +450,7 @@ export class MaterialService {
       },
     })
 
-    return `https://learnery-cdn.orasci.site/${id}.pdf`
+    return `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`
   }
 
   async getQuizPDF(id: string, res: Response) {
@@ -529,6 +537,6 @@ export class MaterialService {
       },
     })
 
-    return `https://learnery-cdn.orasci.site/${id}.pdf`
+    return `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`
   }
 }
