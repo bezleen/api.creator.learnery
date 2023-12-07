@@ -22,7 +22,10 @@ import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class MaterialService {
-  constructor(private readonly prisma: PrismaService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async createQuiz(data: CreateQuizInputDTO, userId: string) {
     if (Object.keys(data.questionTypes).length > 3) {
@@ -65,11 +68,7 @@ export class MaterialService {
     return createdQuiz
   }
 
-<<<<<<< HEAD
-  async createPerformanceTask(data: CreatePerformanceTaskInputDTO) {
-=======
   async createPerformanceTask(data: CreatePerformanceTaskInputDTO, userId: string) {
->>>>>>> feature/authenticate
     // const regex = /^\s*(\d+)\s*.*/
 
     // if (!regex.test(data.timeActivity) ){
@@ -82,12 +81,7 @@ export class MaterialService {
 
     const createdPerformanceTask = await this.prisma.material.create({
       data: {
-<<<<<<< HEAD
-        // userId: data?.userId,
-        userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
-=======
         userId: userId,
->>>>>>> feature/authenticate
         type: MaterialType.PERFORMANCE_TASK,
         request: {
           performanceTask: data,
@@ -103,13 +97,9 @@ export class MaterialService {
 
     try {
       const response = await axios.post(
-<<<<<<< HEAD
         `${this.configService.get(
           'DAEMON_GATEWAY_URL',
         )}/v1/api/internal/material/performance-task`,
-=======
-        'https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/performance-task',
->>>>>>> feature/authenticate
         payload_ai,
       )
 
@@ -123,26 +113,17 @@ export class MaterialService {
     return createdPerformanceTask
   }
 
-<<<<<<< HEAD
-  async createWorksheet(data: CreateWorksheetInputDTO) {
+  async createWorksheet(data: CreateWorksheetInputDTO, userId: string) {
     if (data.audience.ageStart >= data.audience.ageEnd) {
       throw new Error('ageStart cannot be greater or equal than ageEnd')
     }
-
-=======
-  async createWorksheet(data: CreateWorksheetInputDTO, userId: string) {
->>>>>>> feature/authenticate
     if (Object.keys(data.questionTypes).length > 3) {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
     const createdWorksheet = await this.prisma.material.create({
       data: {
-<<<<<<< HEAD
-        userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
-=======
         userId: userId,
->>>>>>> feature/authenticate
         type: MaterialType.WORKSHEET,
         request: {
           worksheet: data,
@@ -158,13 +139,9 @@ export class MaterialService {
 
     try {
       const response = await axios.post(
-<<<<<<< HEAD
         `${this.configService.get(
           'DAEMON_GATEWAY_URL',
         )}/v1/api/internal/material/worksheet`,
-=======
-        'https://learnery-daemon-gateway.orasci.site/v1/api/internal/material/worksheet',
->>>>>>> feature/authenticate
         payload_ai,
       )
 
@@ -301,15 +278,6 @@ export class MaterialService {
   //   execSync(`soffice --headless --convert-to pdf ${docxPath} --outdir ${pdfPath}`)
   // }
 
-<<<<<<< HEAD
-  async getPerformanceTaskPDF(id: string, res: Response) {
-    const material = await this.prisma.material.findUnique({
-      where: {
-        id,
-        type: 'PERFORMANCE_TASK',
-      },
-    })
-=======
   async getPerformanceTaskPDF(id: string, res: Response, userId: string) {
     const material = await this.prisma.material
       .findUnique({
@@ -322,7 +290,6 @@ export class MaterialService {
       .catch((error: any) => {
         throw new Error(`Can not find any performance task with id: ${id}`)
       })
->>>>>>> feature/authenticate
 
     if (!material) throw new Error(`Can not find any performance task with id: ${id}`)
 
@@ -385,23 +352,13 @@ export class MaterialService {
       },
     })
 
-<<<<<<< HEAD
     return `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`
-  }
-
-  async findAllMaterialIsGeneratedPDF(type: MaterialType) {
-    const materials = await this.prisma.material.findMany({
-      where: {
-        userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
-=======
-    return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 
   async findAllMaterialIsGeneratedPDF(type: MaterialType, userId: string) {
     const materials = await this.prisma.material.findMany({
       where: {
         userId: userId,
->>>>>>> feature/authenticate
         type: type,
         isGeneratedPDF: true,
       },
@@ -415,15 +372,6 @@ export class MaterialService {
     return materials
   }
 
-<<<<<<< HEAD
-  async getWorksheetPDF(id: string, res: Response) {
-    const material = await this.prisma.material.findUnique({
-      where: {
-        id,
-        type: 'WORKSHEET',
-      },
-    })
-=======
   async getWorksheetPDF(id: string, res: Response, userId: string) {
     const material = await this.prisma.material
       .findUnique({
@@ -436,7 +384,6 @@ export class MaterialService {
       .catch((error: any) => {
         throw new Error(`Can not find any worksheet with id: ${id}`)
       })
->>>>>>> feature/authenticate
 
     if (!material) throw new Error(`Can not find any worksheet with id: ${id}`)
 
@@ -496,11 +443,7 @@ export class MaterialService {
       path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
     )
 
-<<<<<<< HEAD
     await libre.convert(file, '.pdf', undefined, (err: any, done) => {
-=======
-    libre.convert(file, '.pdf', undefined, (err: any, done) => {
->>>>>>> feature/authenticate
       if (err) {
         throw new Error(`Error converting file: ${err}`)
       }
@@ -518,19 +461,7 @@ export class MaterialService {
       },
     })
 
-<<<<<<< HEAD
     return `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`
-  }
-
-  async getQuizPDF(id: string, res: Response) {
-    const material = await this.prisma.material.findUnique({
-      where: {
-        id,
-        type: 'QUIZ',
-      },
-    })
-=======
-    return `https://learnery-cdn.orasci.site/${id}.pdf`
   }
 
   async getQuizPDF(id: string, res: Response, userId: string) {
@@ -545,7 +476,6 @@ export class MaterialService {
       .catch((error: any) => {
         throw new Error(`Can not find any quiz with id: ${id}`)
       })
->>>>>>> feature/authenticate
 
     if (!material) throw new Error(`Can not find any quiz with id: ${id}`)
 
@@ -580,14 +510,10 @@ export class MaterialService {
       subject: materialRequest.quiz.objectives,
       questionTypes: materialResult.quiz.result.chapter_1.content,
       questionTypeName: (scope) => {
-<<<<<<< HEAD
         return `${scope.part_name.match(/[^#_*]+/g)}`
       },
       regexPartContent: (scope) => {
         return `${scope.part_content.match(/[^#_*]+/g)}`
-=======
-        return `${scope.part_name.match(/[^#\s].*$/g)}`
->>>>>>> feature/authenticate
       },
       keyAnswers: keyAnswersType,
       keyAnswersType: (scope) => {
@@ -627,10 +553,6 @@ export class MaterialService {
       },
     })
 
-<<<<<<< HEAD
     return `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`
-=======
-    return `https://learnery-cdn.orasci.site/${id}.pdf`
->>>>>>> feature/authenticate
   }
 }

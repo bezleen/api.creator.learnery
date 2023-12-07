@@ -182,16 +182,6 @@ export abstract class IMutation {
     abstract removeMaterial(id: string): Nullable<Material> | Promise<Nullable<Material>>;
 }
 
-export abstract class IMutation {
-    abstract createMaterialQuiz(data: CreateQuizInput): Material | Promise<Material>;
-
-    abstract createMaterialPerformanceTask(data: CreatePerformanceTaskInput): Material | Promise<Material>;
-
-    abstract createMaterialWorksheet(data: CreateWorksheetInput): Material | Promise<Material>;
-
-    abstract removeMaterial(id: string): Nullable<Material> | Promise<Nullable<Material>>;
-}
-
 export class User {
     id: string;
     email?: Nullable<string>;
