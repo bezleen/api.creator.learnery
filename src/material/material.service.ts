@@ -122,22 +122,6 @@ export class MaterialService {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
-    data.questionTypes.map((item) => {
-      if (!item.bloomTaxonomy) {
-        item.bloomTaxonomy = this.getDefaultBloomTaxonomy(item.totalQuestions)
-      }
-
-      const calculatedTotalQuestions = item.bloomTaxonomy.reduce(
-        (total, level) => total + level.numberOfQuestions,
-        0,
-      )
-      if (calculatedTotalQuestions !== item.totalQuestions) {
-        throw new Error('The total number of questions is incorrect!')
-      }
-
-      return item
-    })
-
     const createdWorksheet = await this.prisma.material.create({
       data: {
         userId: 'user_2U2EbVpMtK3doTltzvdoTNIa7ru',
