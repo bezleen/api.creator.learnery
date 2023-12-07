@@ -486,7 +486,10 @@ export class MaterialService {
       subject: materialRequest.quiz.objectives,
       questionTypes: materialResult.quiz.result.chapter_1.content,
       questionTypeName: (scope) => {
-        return `${scope.part_name.match(/[^#\s].*$/g)}`
+        return `${scope.part_name.match(/[^#_*]+/g)}`
+      },
+      regexPartContent: (scope) => {
+        return `${scope.part_content.match(/[^#_*]+/g)}`
       },
       keyAnswers: keyAnswersType,
       keyAnswersType: (scope) => {
