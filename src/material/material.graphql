@@ -114,13 +114,13 @@ type Material {
   updatedDate: DateTime
   progressPercent: Int
   progressStatus: ProgressStatus!
+  isGeneratedPDF: Boolean
 }
 
 input TypeQuestionInput {
   type: QuestionType!
   totalQuestions: Int!
   bloomTaxonomy: [DifficultyDistributionInput!]
-
 }
 
 input CreateQuizInput {
@@ -158,6 +158,8 @@ type Query {
   materials: [Material]!
 
   material(id: String!): Material!
+
+  materialsIsGeneratedPDF(type: MaterialType!): [Material]!
 }
 
 type Mutation {

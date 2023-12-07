@@ -114,6 +114,8 @@ export abstract class IQuery {
 
     abstract material(id: string): Material | Promise<Material>;
 
+    abstract materialsIsGeneratedPDF(type: MaterialType): Nullable<Material>[] | Promise<Nullable<Material>[]>;
+
     abstract me(): User | Promise<User>;
 }
 
@@ -188,6 +190,7 @@ export class Material {
     updatedDate?: Nullable<DateTime>;
     progressPercent?: Nullable<number>;
     progressStatus: ProgressStatus;
+    isGeneratedPDF?: Nullable<boolean>;
 }
 
 export class User {

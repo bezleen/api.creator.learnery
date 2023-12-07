@@ -62,6 +62,7 @@
     "class-validator": "^0.14.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
+    "docxtemplater": "^3.42.2",
     "express-session": "^1.17.3",
     "graphql": "16.8.1",
     "graphql-iso-date": "^3.6.1",
@@ -70,6 +71,8 @@
     "joi": "^17.10.2",
     "kleur": "^4.1.5",
     "langchain": "^0.0.145",
+    "libreoffice-convert": "^1.5.0",
+    "marked": "^9.1.5",
     "mongo-query-format": "^0.1.4",
     "mongodb": "^5.8.0",
     "node-cache": "^5.1.2",
@@ -77,11 +80,13 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-oauth2": "^1.7.0",
+    "pizzip": "^3.1.4",
     "pm2": "^5.3.0",
     "prisma-nestjs-graphql": "^19.2.0",
     "reflect-metadata": "^0.1.13",
     "request-ip": "^3.3.0",
-    "rxjs": "7.8.1"
+    "rxjs": "7.8.1",
+    "simple-scorm-packager": "^0.2.7"
   },
   "devDependencies": {
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
