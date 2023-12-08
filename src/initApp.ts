@@ -11,6 +11,8 @@ import session from 'express-session'
 import passport from 'passport'
 import requestIp from 'request-ip'
 import compression from 'compression'
+import * as Sentry from '@sentry/node'
+import { SentryInterceptor } from './interceptors/sentry.interceptor'
 
 export async function initApp(app: INestApplication) {
   app.useGlobalPipes(new ValidationPipe({ whitelist: false })) //whitelist: true FAILS cuz graphql generated classes has no class validator decorators hence returns a empty {}
@@ -112,4 +114,10 @@ export async function initApp(app: INestApplication) {
       threshold: 512, // only responses exceeding 512 bytes will be compressed
     }),
   )
+
+  Sentry.init({
+    dsn: config.get('SENTRY_DNS'),
+  })
+
+  app.useGlobalInterceptors(new SentryInterceptor())
 }

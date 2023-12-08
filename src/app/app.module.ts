@@ -39,6 +39,7 @@ import { join } from 'path'
 import { MaterialModule } from '@/material/material.module'
 import { AuthService } from '@/auth/auth.service'
 import { AuthModule } from '@/auth/auth.module'
+import { SentryInterceptor } from '@/interceptors/sentry.interceptor'
 
 let mode = process.env.MODE
 let envFile: string
@@ -172,6 +173,7 @@ console.debug({ mode, envFile })
     // OpenAIService,
     // PineconeService,
     // AiService,
+    SentryInterceptor,
   ],
 })
 export class AppModule implements OnModuleInit, NestModule {
