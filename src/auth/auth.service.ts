@@ -9,6 +9,7 @@ import { PrismaService } from '@/prisma/prisma.service'
 import { Prisma } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { OAuth2Client } from 'google-auth-library'
+import { AuthDto } from './dto/auth.dto'
 
 @Injectable()
 export class AuthService {
@@ -65,10 +66,10 @@ export class AuthService {
     }
   }
 
-  async verifyGoogleToken(tokenId: string): Promise<any> {
+  async verifyGoogleToken(data: AuthDto): Promise<any> {
     try {
       const ticket = await this.client.verifyIdToken({
-        idToken: tokenId,
+        idToken: data.tokenId,
         audience: this.configService.get('GOOGLE_CLIENT_ID'),
       })
 

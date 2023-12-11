@@ -17,6 +17,7 @@ import { GoogleAuthGuard } from './guard/auth.guard'
 import { Request, Response } from 'express'
 import { Prisma, User } from '@prisma/client'
 import { string } from 'joi'
+import { AuthDto } from './dto/auth.dto'
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -42,10 +43,10 @@ export class AuthController {
   }
 
   @Post('login')
-  @ApiBody({ description: 'tokenId for authentication', type: string })
-  async login(@Body('tokenId') tokenId: string, @Res() res: Response): Promise<any> {
+  @ApiBody({ description: 'tokenId for authentication', type: AuthDto })
+  async login(@Body('tokenId') data: AuthDto, @Res() res: Response): Promise<any> {
     try {
-      const token = await this.authService.verifyGoogleToken(tokenId)
+      const token = await this.authService.verifyGoogleToken(data)
       return res.status(200).json({
         accessToken: token,
       })
