@@ -61,8 +61,8 @@ export class MaterialService {
       if (response.status !== 200) {
         throw new Error('Fail to call api from daemon server')
       }
-    } catch (error) {
-      throw new Error('Fail to call api from daemon server')
+    } catch (error: any) {
+      throw new Error(error.message)
     }
 
     return createdQuiz
@@ -106,8 +106,8 @@ export class MaterialService {
       if (response.status !== 200) {
         throw new Error('Fail to call api from daemon server')
       }
-    } catch (error) {
-      throw new Error('Fail to call api from daemon server')
+    } catch (error: any) {
+      throw new Error(error.message)
     }
 
     return createdPerformanceTask
@@ -148,8 +148,8 @@ export class MaterialService {
       if (response.status !== 200) {
         throw new Error('Fail to call api from daemon server')
       }
-    } catch (error) {
-      throw new Error('Fail to call api from daemon server')
+    } catch (error: any) {
+      throw new Error(error.message)
     }
 
     return createdWorksheet
