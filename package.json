@@ -66,6 +66,7 @@
     "cookie-parser": "^1.4.6",
     "docxtemplater": "^3.42.2",
     "express-session": "^1.17.3",
+    "google-auth-library": "^9.4.1",
     "graphql": "16.8.1",
     "graphql-iso-date": "^3.6.1",
     "graphql-subscriptions": "2.0.0",

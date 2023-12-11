@@ -11,11 +11,12 @@ import {
   Res,
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from '@nestjs/passport'
 import { GoogleAuthGuard } from './guard/auth.guard'
 import { Request, Response } from 'express'
 import { Prisma, User } from '@prisma/client'
+import { string } from 'joi'
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -32,6 +33,19 @@ export class AuthController {
     try {
       const token = await this.authService.signIn(req.user)
 
+      return res.status(200).json({
+        accessToken: token,
+      })
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  @Post('login')
+  @ApiBody({ description: 'tokenId for authentication', type: string })
+  async login(@Body('tokenId') tokenId: string, @Res() res: Response): Promise<any> {
+    try {
+      const token = await this.authService.verifyGoogleToken(tokenId)
       return res.status(200).json({
         accessToken: token,
       })

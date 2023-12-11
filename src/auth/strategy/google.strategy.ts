@@ -34,7 +34,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         email: emails[0].value,
         firstName: name.givenName,
         lastName: name.familyName,
-        // accessToken,
       }
       done(null, user)
     } catch (error: any) {
