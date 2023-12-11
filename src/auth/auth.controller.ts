@@ -44,7 +44,7 @@ export class AuthController {
 
   @Post('login')
   @ApiBody({ description: 'tokenId for authentication', type: AuthDto })
-  async login(@Body('tokenId') data: AuthDto, @Res() res: Response): Promise<any> {
+  async login(@Body() data: AuthDto, @Res() res: Response): Promise<any> {
     try {
       const token = await this.authService.verifyGoogleToken(data)
       return res.status(200).json({
