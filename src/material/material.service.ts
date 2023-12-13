@@ -309,9 +309,10 @@ export class MaterialService {
     })
 
     doc.render({
-      subject: materialRequest.performanceTask.objectives,
+      // subject: materialRequest.performanceTask.objectives,
+      subject: 'Performance Task Objectives',
       level: materialRequest.performanceTask.audience.level,
-      startDate: new Date(material.startDate).toLocaleDateString(),
+      knowledgeKnot: 'Knowledge Knot',
       activityTitle: materialResult.performanceTask.result[0].content,
       goal: materialResult.performanceTask.result[1].content,
       role: materialResult.performanceTask.result[2].content,
@@ -415,13 +416,22 @@ export class MaterialService {
     const keyAnswersType = Object.keys(typeOfQuestions)
 
     doc.render({
-      subject: materialRequest.worksheet.objectives,
+      // subject: materialRequest.worksheet.objectives,
+      subject: 'Worksheet Objectives',
       level: materialRequest.worksheet.audience.level,
-      startDate: new Date(material.startDate).toLocaleDateString(),
-      learningObjectives: materialResult.worksheet.result.chapter_1.content,
+      learningObjectives: materialResult.worksheet.result.chapter_1.content.replace(
+        /[-#@!_\d]+$/g,
+        '',
+      ),
       questionTypes: materialResult.worksheet.result.chapter_2.content,
       questionTypeName: (scope) => {
-        return `${scope.part_name.match(/[^#\s].*$/g)}`
+        return `${scope.part_name.replace(/[=_*#]/gi, '')}`
+      },
+      regexPartContent: (scope) => {
+        return `${scope.part_content.replace(
+          /\s([(*.\s*:](Recall & Understanding|Evaluation|Application)[)*.\s*:])|[*#]|[-#@!_\d]+$|(True[or/\s,]False)[:. ]\s/gi,
+          '',
+        )}`
       },
       keyAnswers: keyAnswersType,
       keyAnswersType: (scope) => {
@@ -507,13 +517,18 @@ export class MaterialService {
     const keyAnswersType = Object.keys(typeOfQuestions)
 
     doc.render({
-      subject: materialRequest.quiz.objectives,
+      // subject: materialRequest.quiz.objectives,
+      subject: 'Quiz Objectives',
+      grade: 'Quiz Grade',
       questionTypes: materialResult.quiz.result.chapter_1.content,
       questionTypeName: (scope) => {
-        return `${scope.part_name.match(/[^#_*]+/g)}`
+        return `${scope.part_name.replace(/[=_*#]/gi, '')}`
       },
       regexPartContent: (scope) => {
-        return `${scope.part_content.match(/[^#_*]+/g)}`
+        return `${scope.part_content.replace(
+          /\s([(*.\s*:](Recall & Understanding|Evaluation|Application)[)*.\s*:])|[*#]/gi,
+          '',
+        )}`
       },
       keyAnswers: keyAnswersType,
       keyAnswersType: (scope) => {
