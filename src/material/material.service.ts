@@ -321,7 +321,6 @@ export class MaterialService {
       productPerformanceAndPurpose: materialResult.performanceTask.result[5]?.content,
       table: materialResult.performanceTask.result[6]?.content?.table,
       suggestedSampleAnswer: materialResult.performanceTask.result[7]?.content,
-      suggestedScore: materialResult.performanceTask?.result[8]?.content,
     })
 
     const buf = doc.getZip().generate({
