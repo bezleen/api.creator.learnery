@@ -352,7 +352,10 @@ export class MaterialService {
       },
     })
 
-    return `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`
+    return {
+      pdf: `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`,
+      docx: `${this.configService.get('CDN_GATEWAY_URL')}/${id}.docx`,
+    }
   }
 
   async findAllMaterialIsGeneratedPDF(type: MaterialType, userId: string) {
@@ -470,7 +473,10 @@ export class MaterialService {
       },
     })
 
-    return `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`
+    return {
+      pdf: `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`,
+      docx: `${this.configService.get('CDN_GATEWAY_URL')}/${id}.docx`,
+    }
   }
 
   async getQuizPDF(id: string, res: Response, userId: string) {
@@ -515,19 +521,76 @@ export class MaterialService {
     const typeOfQuestions = materialResult.quiz.result.key_answers.content
     const keyAnswersType = Object.keys(typeOfQuestions)
 
+    // doc.render({
+    //   // subject: materialRequest.quiz.objectives,
+    //   subject: 'Quiz Objectives',
+    //   grade: 'Quiz Grade',
+    //   questionTypes: materialResult.quiz.result.chapter_1.content,
+    //   questionTypeName: (scope) => {
+    //     return `${scope.part_name.replace(/[=_*#]/gi, '')}`
+    //   },
+    //   regexPartContent: (scope) => {
+    //     return `${scope.part_content.replace(
+    //       /\s([(*.\s*:](Recall & Understanding|Evaluation|Application)[)*.\s*:])|[*#]/gi,
+    //       '',
+    //     )}`
+    //   },
+    //   keyAnswers: keyAnswersType,
+    //   keyAnswersType: (scope) => {
+    //     return displayQuestionType[scope]
+    //   },
+    //   answersContent: (scope) => {
+    //     return typeOfQuestions[scope]
+    //   },
+    // })
+
     doc.render({
       // subject: materialRequest.quiz.objectives,
       subject: 'Quiz Objectives',
       grade: 'Quiz Grade',
+      level: materialRequest.quiz.audience.level,
       questionTypes: materialResult.quiz.result.chapter_1.content,
       questionTypeName: (scope) => {
         return `${scope.part_name.replace(/[=_*#]/gi, '')}`
       },
-      regexPartContent: (scope) => {
-        return `${scope.part_content.replace(
-          /\s([(*.\s*:](Recall & Understanding|Evaluation|Application)[)*.\s*:])|[*#]/gi,
-          '',
-        )}`
+      instruction: (scope) => {
+        return `${scope.part_content_json.instruction}`
+      },
+      content: (scope) => {
+        return scope.part_content_json.content
+      },
+      questionBloomTaxonomyIndex: (scope) => {
+        return `${scope.question.question_index}`
+      },
+      questionBloomTaxonomy: (scope) => {
+        return `${scope.question.question_bloom_taxonomy}`
+      },
+      questionContent: (scope) => {
+        return `${scope.question.question_content}`
+      },
+      options: (scope) => {
+        return scope.options
+      },
+      optionContent: (scope) => {
+        let resultOptionContent = []
+        for (const [key, value] of Object.entries(scope)) {
+          resultOptionContent.push(`${key.toUpperCase()}. ${value}`)
+        }
+        return resultOptionContent
+      },
+      promptsColumnMatching: (scope) => {
+        let resultPromptsColumnMatching = []
+        for (const [key, value] of Object.entries(scope.prompts_column)) {
+          resultPromptsColumnMatching.push(`${key.toUpperCase()}. ${value}`)
+        }
+        return resultPromptsColumnMatching
+      },
+      answersColumnMatching: (scope) => {
+        let resultAnswersColumnMatching = []
+        for (const [key, value] of Object.entries(scope.answers_column)) {
+          resultAnswersColumnMatching.push(`${key.toUpperCase()}. ${value}`)
+        }
+        return resultAnswersColumnMatching
       },
       keyAnswers: keyAnswersType,
       keyAnswersType: (scope) => {
@@ -567,6 +630,9 @@ export class MaterialService {
       },
     })
 
-    return `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`
+    return {
+      pdf: `${this.configService.get('CDN_GATEWAY_URL')}/${id}.pdf`,
+      docx: `${this.configService.get('CDN_GATEWAY_URL')}/${id}.docx`,
+    }
   }
 }
