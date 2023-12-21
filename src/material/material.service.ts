@@ -521,29 +521,6 @@ export class MaterialService {
     const typeOfQuestions = materialResult.quiz.result.key_answers.content
     const keyAnswersType = Object.keys(typeOfQuestions)
 
-    // doc.render({
-    //   // subject: materialRequest.quiz.objectives,
-    //   subject: 'Quiz Objectives',
-    //   grade: 'Quiz Grade',
-    //   questionTypes: materialResult.quiz.result.chapter_1.content,
-    //   questionTypeName: (scope) => {
-    //     return `${scope.part_name.replace(/[=_*#]/gi, '')}`
-    //   },
-    //   regexPartContent: (scope) => {
-    //     return `${scope.part_content.replace(
-    //       /\s([(*.\s*:](Recall & Understanding|Evaluation|Application)[)*.\s*:])|[*#]/gi,
-    //       '',
-    //     )}`
-    //   },
-    //   keyAnswers: keyAnswersType,
-    //   keyAnswersType: (scope) => {
-    //     return displayQuestionType[scope]
-    //   },
-    //   answersContent: (scope) => {
-    //     return typeOfQuestions[scope]
-    //   },
-    // })
-
     doc.render({
       // subject: materialRequest.quiz.objectives,
       subject: 'Quiz Objectives',
@@ -560,15 +537,24 @@ export class MaterialService {
         return scope.part_content_json.content
       },
       questionBloomTaxonomyIndex: (scope) => {
-        return `${scope.question.question_index}`
+        return scope?.question?.question_index
+          ? scope.question.question_index
+          : scope.question_index
       },
       questionBloomTaxonomy: (scope) => {
-        return `${scope.question.question_bloom_taxonomy}`
+        return scope?.question?.question_bloom_taxonomy
+          ? scope.question.question_bloom_taxonomy
+          : scope.question_bloom_taxonomy
       },
       questionContent: (scope) => {
-        return `${scope.question.question_content}`
+        return scope?.question?.question_content
+          ? scope.question.question_content
+          : scope.question_content
       },
       options: (scope) => {
+        if ((!scope?.prompts_column || !scope?.answers_column) && !scope?.options) {
+          return {}
+        }
         return scope.options
       },
       optionContent: (scope) => {

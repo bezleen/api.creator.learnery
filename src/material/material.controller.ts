@@ -43,7 +43,7 @@ export class MaterialController {
       const response = await this.materialService.getPerformanceTaskPDF(id, res, userId)
 
       return res.status(200).json({
-        pdfURL: response,
+        data: response,
       })
     } catch (error: any) {
       res.status(400).json({
@@ -63,7 +63,7 @@ export class MaterialController {
       const response = await this.materialService.getWorksheetPDF(id, res, userId)
 
       return res.status(200).json({
-        pdfURL: response,
+        data: response,
       })
     } catch (error: any) {
       res.status(400).json({
@@ -83,7 +83,7 @@ export class MaterialController {
       const response = await this.materialService.getQuizPDF(id, res, userId)
 
       return res.status(200).json({
-        pdfURL: response,
+        data: response,
       })
     } catch (error: any) {
       res.status(400).json({
