@@ -91,4 +91,10 @@ export class MaterialController {
       })
     }
   }
+
+  @ApiBearerAuth('JWT-auth')
+  @Get('/stop-stream/:id')
+  async stopStreaming(@Res() res: Response) {
+    return res.status(200)
+  }
 }

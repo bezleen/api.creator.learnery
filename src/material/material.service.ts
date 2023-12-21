@@ -549,9 +549,10 @@ export class MaterialService {
           : scope.question_index
       },
       questionBloomTaxonomy: (scope) => {
-        return scope?.question?.question_bloom_taxonomy
-          ? scope.question.question_bloom_taxonomy
-          : scope?.question_bloom_taxonomy && ' '
+        if (scope?.question?.question_bloom_taxonomy)
+          return scope.question.question_bloom_taxonomy
+        if (scope?.question_bloom_taxonomy) return scope.question_bloom_taxonomy
+        return ''
       },
       questionContent: (scope) => {
         return scope?.question?.question_content
