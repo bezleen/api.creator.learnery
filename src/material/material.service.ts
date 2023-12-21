@@ -551,7 +551,7 @@ export class MaterialService {
       questionBloomTaxonomy: (scope) => {
         return scope?.question?.question_bloom_taxonomy
           ? scope.question.question_bloom_taxonomy
-          : scope.question_bloom_taxonomy
+          : scope?.question_bloom_taxonomy && ' '
       },
       questionContent: (scope) => {
         return scope?.question?.question_content
