@@ -520,6 +520,7 @@ export class MaterialService {
 
     const typeOfQuestions = materialResult.quiz.result.key_answers.content
     const keyAnswersType = Object.keys(typeOfQuestions)
+    let isEssayType = false
 
     doc.render({
       // subject: materialRequest.quiz.objectives,
@@ -528,6 +529,12 @@ export class MaterialService {
       level: materialRequest.quiz.audience.level,
       questionTypes: materialResult.quiz.result.chapter_1.content,
       questionTypeName: (scope) => {
+        if (scope.part_type === 'ESSAY') {
+          console.log('oke')
+          isEssayType = true
+        } else {
+          isEssayType = false
+        }
         return `${scope.part_name.replace(/[=_*#]/gi, '')}`
       },
       instruction: (scope) => {
@@ -550,6 +557,9 @@ export class MaterialService {
         return scope?.question?.question_content
           ? scope.question.question_content
           : scope.question_content
+      },
+      hasTextArea: () => {
+        return isEssayType
       },
       options: (scope) => {
         if ((!scope?.prompts_column || !scope?.answers_column) && !scope?.options) {
