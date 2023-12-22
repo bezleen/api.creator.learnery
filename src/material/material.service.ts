@@ -320,6 +320,9 @@ export class MaterialService {
       situation: materialResult.performanceTask.result[4]?.content,
       productPerformanceAndPurpose: materialResult.performanceTask.result[5]?.content,
       table: materialResult.performanceTask.result[6]?.content?.table,
+      CriteriaName: (scope) => {
+        return scope['Criteria Name'] || scope['Criteria name']
+      },
       suggestedSampleAnswer: materialResult.performanceTask.result[7]?.content,
     })
 
