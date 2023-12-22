@@ -428,9 +428,12 @@ export class MaterialService {
         '',
       ),
       questionTypes: materialResult.worksheet.result.chapter_2.content,
+      isSingleQuestionType: () => {
+        if (materialResult.worksheet.result.chapter_2.content.length <= 1) return true
+        return false
+      },
       questionTypeName: (scope) => {
         if (scope.part_type === 'ESSAY') {
-          console.log('oke')
           isEssayType = true
         } else {
           isEssayType = false
@@ -455,9 +458,9 @@ export class MaterialService {
         return ''
       },
       questionContent: (scope) => {
-        return scope?.question?.question_content
-          ? scope.question.question_content
-          : scope.question_content
+        if (scope?.question?.question_content) return scope.question.question_content
+        if (scope?.question_content) return scope.question_content
+        return
       },
       hasTextArea: () => {
         return isEssayType
@@ -576,9 +579,12 @@ export class MaterialService {
       grade: 'Quiz Grade',
       level: materialRequest.quiz.audience.level,
       questionTypes: materialResult.quiz.result.chapter_1.content,
+      isSingleQuestionType: () => {
+        if (materialResult.worksheet.result.chapter_2.content.length <= 1) return true
+        return false
+      },
       questionTypeName: (scope) => {
         if (scope.part_type === 'ESSAY') {
-          console.log('oke')
           isEssayType = true
         } else {
           isEssayType = false
@@ -603,9 +609,9 @@ export class MaterialService {
         return ''
       },
       questionContent: (scope) => {
-        return scope?.question?.question_content
-          ? scope.question.question_content
-          : scope.question_content
+        if (scope?.question?.question_content) return scope.question.question_content
+        if (scope?.question_content) return scope.question_content
+        return
       },
       hasTextArea: () => {
         return isEssayType
