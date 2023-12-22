@@ -580,7 +580,7 @@ export class MaterialService {
       level: materialRequest.quiz.audience.level,
       questionTypes: materialResult.quiz.result.chapter_1.content,
       isSingleQuestionType: () => {
-        if (materialResult.worksheet.result.chapter_2.content.length <= 1) return true
+        if (materialResult.quiz.result.chapter_1.content.length <= 1) return true
         return false
       },
       questionTypeName: (scope) => {
