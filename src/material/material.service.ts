@@ -460,7 +460,7 @@ export class MaterialService {
       questionContent: (scope) => {
         if (scope?.question?.question_content) return scope.question.question_content
         if (scope?.question_content) return scope.question_content
-        return
+        return ''
       },
       hasTextArea: () => {
         return isEssayType
@@ -611,7 +611,7 @@ export class MaterialService {
       questionContent: (scope) => {
         if (scope?.question?.question_content) return scope.question.question_content
         if (scope?.question_content) return scope.question_content
-        return
+        return ''
       },
       hasTextArea: () => {
         return isEssayType
