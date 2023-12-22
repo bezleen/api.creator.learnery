@@ -416,10 +416,12 @@ export class MaterialService {
 
     const typeOfQuestions = materialResult.worksheet.result.key_answers.content
     const keyAnswersType = Object.keys(typeOfQuestions)
+    let isEssayType = false
 
     doc.render({
       // subject: materialRequest.worksheet.objectives,
       subject: 'Worksheet Objectives',
+      lesson: 'Worksheet Lesson',
       level: materialRequest.worksheet.audience.level,
       learningObjectives: materialResult.worksheet.result.chapter_1.content.replace(
         /[-#@!_\d]+$/g,
@@ -427,13 +429,59 @@ export class MaterialService {
       ),
       questionTypes: materialResult.worksheet.result.chapter_2.content,
       questionTypeName: (scope) => {
+        if (scope.part_type === 'ESSAY') {
+          console.log('oke')
+          isEssayType = true
+        } else {
+          isEssayType = false
+        }
         return `${scope.part_name.replace(/[=_*#]/gi, '')}`
       },
-      regexPartContent: (scope) => {
-        return `${scope.part_content.replace(
-          /\s([(*.\s*:](Recall & Understanding|Evaluation|Application)[)*.\s*:])|[*#]|[-#@!_\d]+$|(True[or/\s,]False)[:. ]\s/gi,
-          '',
-        )}`
+      instruction: (scope) => {
+        return `${scope.part_content_json.instruction}`
+      },
+      content: (scope) => {
+        return scope.part_content_json.content
+      },
+      questionBloomTaxonomyIndex: (scope) => {
+        return scope?.question?.question_index
+          ? scope.question.question_index
+          : scope.question_index
+      },
+      questionBloomTaxonomy: (scope) => {
+        if (scope?.question?.question_bloom_taxonomy)
+          return scope.question.question_bloom_taxonomy
+        if (scope?.question_bloom_taxonomy) return scope.question_bloom_taxonomy
+        return ''
+      },
+      questionContent: (scope) => {
+        return scope?.question?.question_content
+          ? scope.question.question_content
+          : scope.question_content
+      },
+      hasTextArea: () => {
+        return isEssayType
+      },
+      optionContent: (scope) => {
+        let resultOptionContent = []
+        for (const [key, value] of Object.entries(scope)) {
+          resultOptionContent.push(`${key.toUpperCase()}. ${value}`)
+        }
+        return resultOptionContent
+      },
+      promptsColumnMatching: (scope) => {
+        let resultPromptsColumnMatching = []
+        for (const [key, value] of Object.entries(scope.prompts_column)) {
+          resultPromptsColumnMatching.push(`${key.toUpperCase()}. ${value}`)
+        }
+        return resultPromptsColumnMatching
+      },
+      answersColumnMatching: (scope) => {
+        let resultAnswersColumnMatching = []
+        for (const [key, value] of Object.entries(scope.answers_column)) {
+          resultAnswersColumnMatching.push(`${key.toUpperCase()}. ${value}`)
+        }
+        return resultAnswersColumnMatching
       },
       keyAnswers: keyAnswersType,
       keyAnswersType: (scope) => {
