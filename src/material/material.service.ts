@@ -420,6 +420,8 @@ export class MaterialService {
     const typeOfQuestions = materialResult.worksheet.result.key_answers.content
     const keyAnswersType = Object.keys(typeOfQuestions)
     let isEssayType = false
+    let answersContentArray = []
+    let currentType = ''
 
     doc.render({
       // subject: materialRequest.worksheet.objectives,
@@ -444,9 +446,11 @@ export class MaterialService {
         return `${scope.part_name.replace(/[=_*#]/gi, '')}`
       },
       instruction: (scope) => {
-        return `${scope.part_content_json.instruction}`
+        if (scope.part_content_json.instruction.length <= 10) return ''
+        return `${scope.part_content_json.instruction.replace(/[=_*#]/gi, '')}`
       },
       content: (scope) => {
+        currentType = scope.part_type
         return scope.part_content_json.content
       },
       questionBloomTaxonomyIndex: (scope) => {
@@ -486,6 +490,12 @@ export class MaterialService {
         return isEssayType
       },
       options: (scope) => {
+        if (currentType === 'TRUE_FALSE') {
+          return {
+            a: 'True',
+            b: 'False',
+          }
+        }
         if ((!scope?.prompts_column || !scope?.answers_column) && !scope?.options) {
           return {}
         }
@@ -493,6 +503,7 @@ export class MaterialService {
       },
       optionContent: (scope) => {
         try {
+          answersContentArray.push({ [currentType]: scope })
           let resultOptionContent = []
           for (const [key, value] of Object.entries(scope)) {
             resultOptionContent.push(`${key.toUpperCase()}. ${value}`)
@@ -506,6 +517,7 @@ export class MaterialService {
       },
       promptsColumnMatching: (scope) => {
         try {
+          // answersContentArray.push({ [currentType]: scope })
           let resultPromptsColumnMatching = []
           for (const [key, value] of Object.entries(scope?.prompts_column)) {
             resultPromptsColumnMatching.push(`${key.toUpperCase()}. ${value}`)
@@ -517,6 +529,7 @@ export class MaterialService {
       },
       answersColumnMatching: (scope) => {
         try {
+          // answersContentArray.push({ [currentType]: scope })
           let resultAnswersColumnMatching = []
           for (const [key, value] of Object.entries(scope?.answers_column)) {
             resultAnswersColumnMatching.push(`${key.toUpperCase()}. ${value}`)
@@ -526,12 +539,57 @@ export class MaterialService {
           throw new Error(error.message)
         }
       },
-      keyAnswers: keyAnswersType,
+      keyAnswers: () => {
+        answersContentArray = answersContentArray.reduce((accumulator, currentValue) => {
+          const [key] = Object.keys(currentValue)
+          if (!accumulator[key]) {
+            accumulator[key] = []
+          }
+          accumulator[key].push(currentValue[key])
+          return accumulator
+        }, {})
+        return Object.entries(materialResult.worksheet.result.key_answers.content_json)
+      },
       keyAnswersType: (scope) => {
-        return displayQuestionType[scope]
+        return displayQuestionType[scope[0]]
       },
       answersContent: (scope) => {
-        return typeOfQuestions[scope]
+        let resultAnswersContent = []
+        const currentAnswersContentArray = answersContentArray[scope[0]]
+
+        for (const [key, value] of Object.entries(scope[1])) {
+          if (
+            scope[0] === 'MULTIPLE_CHOICE' ||
+            scope[0] === 'FILL_IN_THE_BLANK_WITH_OPTIONS'
+          ) {
+            const rightAnswer = currentAnswersContentArray[Number(key) - 1]
+
+            resultAnswersContent.push(
+              `${key}. ${value.toString().toUpperCase()}) ${
+                rightAnswer[value.toString()]
+              }`,
+            )
+          }
+          if (scope[0] === 'ESSAY' || scope[0] === 'FILL_IN_THE_BLANK_FREE_TEXT') {
+            resultAnswersContent.push(`${key}. ${value.toString()}`)
+          }
+          if (scope[0] === 'MATCHING') {
+            let result = Object.entries(value)
+              .map(([key, value]) => `${value.toString().toUpperCase()} - ${key}`)
+              .join(', ')
+            resultAnswersContent.push(`${key}. ${result}`)
+          }
+          if (scope[0] === 'TRUE_FALSE') {
+            const lowerStr = value.toString().toLowerCase()
+            if (lowerStr.startsWith('t')) {
+              resultAnswersContent.push(`${key}. A) True`)
+            }
+            if (lowerStr.startsWith('f')) {
+              resultAnswersContent.push(`${key}. B) False`)
+            }
+          }
+        }
+        return resultAnswersContent
       },
     })
 
@@ -612,6 +670,8 @@ export class MaterialService {
     const typeOfQuestions = materialResult.quiz.result.key_answers.content
     const keyAnswersType = Object.keys(typeOfQuestions)
     let isEssayType = false
+    let answersContentArray = []
+    let currentType = ''
 
     doc.render({
       // subject: materialRequest.quiz.objectives,
@@ -632,9 +692,11 @@ export class MaterialService {
         return `${scope.part_name.replace(/[=_*#]/gi, '')}`
       },
       instruction: (scope) => {
-        return `${scope.part_content_json.instruction}`
+        if (scope.part_content_json.instruction.length <= 10) return ''
+        return `${scope.part_content_json.instruction.replace(/[=_*#]/gi, '')}`
       },
       content: (scope) => {
+        currentType = scope.part_type
         return scope.part_content_json.content
       },
       questionBloomTaxonomyIndex: (scope) => {
@@ -657,12 +719,19 @@ export class MaterialService {
         return isEssayType
       },
       options: (scope) => {
+        if (currentType === 'TRUE_FALSE') {
+          return {
+            a: 'True',
+            b: 'False',
+          }
+        }
         if ((!scope?.prompts_column || !scope?.answers_column) && !scope?.options) {
           return {}
         }
         return scope.options
       },
       optionContent: (scope) => {
+        answersContentArray.push({ [currentType]: scope })
         let resultOptionContent = []
         for (const [key, value] of Object.entries(scope)) {
           resultOptionContent.push(`${key.toUpperCase()}. ${value}`)
@@ -670,6 +739,7 @@ export class MaterialService {
         return resultOptionContent
       },
       promptsColumnMatching: (scope) => {
+        // answersContentArray.push({ [currentType]: scope })
         let resultPromptsColumnMatching = []
         for (const [key, value] of Object.entries(scope.prompts_column)) {
           resultPromptsColumnMatching.push(`${key.toUpperCase()}. ${value}`)
@@ -677,18 +747,65 @@ export class MaterialService {
         return resultPromptsColumnMatching
       },
       answersColumnMatching: (scope) => {
+        // answersContentArray.push({ [currentType]: scope })
         let resultAnswersColumnMatching = []
         for (const [key, value] of Object.entries(scope.answers_column)) {
           resultAnswersColumnMatching.push(`${key.toUpperCase()}. ${value}`)
         }
         return resultAnswersColumnMatching
       },
-      keyAnswers: keyAnswersType,
+      keyAnswers: () => {
+        answersContentArray = answersContentArray.reduce((accumulator, currentValue) => {
+          const [key] = Object.keys(currentValue)
+          if (!accumulator[key]) {
+            accumulator[key] = []
+          }
+          accumulator[key].push(currentValue[key])
+          return accumulator
+        }, {})
+
+        return Object.entries(materialResult.quiz.result.key_answers.content_json)
+      },
       keyAnswersType: (scope) => {
-        return displayQuestionType[scope]
+        return displayQuestionType[scope[0]]
       },
       answersContent: (scope) => {
-        return typeOfQuestions[scope]
+        let resultAnswersContent = []
+        const currentAnswersContentArray = answersContentArray[scope[0]]
+
+        for (const [key, value] of Object.entries(scope[1])) {
+          if (
+            scope[0] === 'MULTIPLE_CHOICE' ||
+            scope[0] === 'FILL_IN_THE_BLANK_WITH_OPTIONS'
+          ) {
+            const rightAnswer = currentAnswersContentArray[Number(key) - 1]
+
+            resultAnswersContent.push(
+              `${key}. ${value.toString().toUpperCase()}) ${
+                rightAnswer[value.toString()]
+              }`,
+            )
+          }
+          if (scope[0] === 'ESSAY' || scope[0] === 'FILL_IN_THE_BLANK_FREE_TEXT') {
+            resultAnswersContent.push(`${key}. ${value.toString()}`)
+          }
+          if (scope[0] === 'MATCHING') {
+            let result = Object.entries(value)
+              .map(([key, value]) => `${value.toString().toUpperCase()} - ${key}`)
+              .join(', ')
+            resultAnswersContent.push(`${key}. ${result}`)
+          }
+          if (scope[0] === 'TRUE_FALSE') {
+            const lowerStr = value.toString().toLowerCase()
+            if (lowerStr.startsWith('t')) {
+              resultAnswersContent.push(`${key}. A) True`)
+            }
+            if (lowerStr.startsWith('f')) {
+              resultAnswersContent.push(`${key}. B) False`)
+            }
+          }
+        }
+        return resultAnswersContent
       },
     })
 
