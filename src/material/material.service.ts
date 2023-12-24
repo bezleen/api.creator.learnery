@@ -450,44 +450,81 @@ export class MaterialService {
         return scope.part_content_json.content
       },
       questionBloomTaxonomyIndex: (scope) => {
-        return scope?.question?.question_index
-          ? scope.question.question_index
-          : scope.question_index
+        try {
+          return scope?.question?.question_index
+            ? scope.question.question_index
+            : scope.question_index
+        } catch (error: any) {
+          console.log('oke')
+
+          throw new Error(error.message)
+        }
       },
       questionBloomTaxonomy: (scope) => {
-        if (scope?.question?.question_bloom_taxonomy)
-          return scope.question.question_bloom_taxonomy
-        if (scope?.question_bloom_taxonomy) return scope.question_bloom_taxonomy
-        return ''
+        try {
+          if (scope?.question?.question_bloom_taxonomy)
+            return scope.question.question_bloom_taxonomy
+          if (scope?.question_bloom_taxonomy) return scope.question_bloom_taxonomy
+          return ''
+        } catch (error: any) {
+          console.log('oke')
+          throw new Error(error.message)
+        }
       },
       questionContent: (scope) => {
-        if (scope?.question?.question_content) return scope.question.question_content
-        if (scope?.question_content) return scope.question_content
-        return ''
+        try {
+          if (scope?.question?.question_content) return scope.question.question_content
+          if (scope?.question_content) return scope.question_content
+          return ''
+        } catch (error: any) {
+          console.log('oke')
+
+          throw new Error(error.message)
+        }
       },
       hasTextArea: () => {
         return isEssayType
       },
-      optionContent: (scope) => {
-        let resultOptionContent = []
-        for (const [key, value] of Object.entries(scope)) {
-          resultOptionContent.push(`${key.toUpperCase()}. ${value}`)
+      options: (scope) => {
+        if ((!scope?.prompts_column || !scope?.answers_column) && !scope?.options) {
+          return {}
         }
-        return resultOptionContent
+        return scope.options
+      },
+      optionContent: (scope) => {
+        try {
+          let resultOptionContent = []
+          for (const [key, value] of Object.entries(scope)) {
+            resultOptionContent.push(`${key.toUpperCase()}. ${value}`)
+          }
+          return resultOptionContent
+        } catch (error: any) {
+          console.log('oke')
+
+          throw new Error(error.message)
+        }
       },
       promptsColumnMatching: (scope) => {
-        let resultPromptsColumnMatching = []
-        for (const [key, value] of Object.entries(scope.prompts_column)) {
-          resultPromptsColumnMatching.push(`${key.toUpperCase()}. ${value}`)
+        try {
+          let resultPromptsColumnMatching = []
+          for (const [key, value] of Object.entries(scope?.prompts_column)) {
+            resultPromptsColumnMatching.push(`${key.toUpperCase()}. ${value}`)
+          }
+          return resultPromptsColumnMatching
+        } catch (error: any) {
+          throw new Error(error.message)
         }
-        return resultPromptsColumnMatching
       },
       answersColumnMatching: (scope) => {
-        let resultAnswersColumnMatching = []
-        for (const [key, value] of Object.entries(scope.answers_column)) {
-          resultAnswersColumnMatching.push(`${key.toUpperCase()}. ${value}`)
+        try {
+          let resultAnswersColumnMatching = []
+          for (const [key, value] of Object.entries(scope?.answers_column)) {
+            resultAnswersColumnMatching.push(`${key.toUpperCase()}. ${value}`)
+          }
+          return resultAnswersColumnMatching
+        } catch (error: any) {
+          throw new Error(error.message)
         }
-        return resultAnswersColumnMatching
       },
       keyAnswers: keyAnswersType,
       keyAnswersType: (scope) => {
