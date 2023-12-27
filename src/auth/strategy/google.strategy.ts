@@ -27,13 +27,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done: VerifyCallback,
   ) {
     try {
-      const { id, name, emails } = profile
+      const { id, name, emails, photos } = profile
       const user = {
         // provider: 'google',
         // providerId: id,
         email: emails[0].value,
         firstName: name.givenName,
         lastName: name.familyName,
+        avatar: photos[0].value,
       }
       done(null, user)
     } catch (error: any) {

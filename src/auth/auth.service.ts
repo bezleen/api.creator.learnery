@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common'
@@ -10,6 +11,7 @@ import { Prisma } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { OAuth2Client } from 'google-auth-library'
 import { AuthDto } from './dto/auth.dto'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class AuthService {
@@ -35,32 +37,30 @@ export class AuthService {
       return this.registerUser(data)
     }
 
-    return await this.jwtService.signAsync(
-      {
-        sub: userExists.id,
-        email: userExists.email,
+    const tokens = await this.getToken(userExists.id, userExists.email)
+
+    const saltRounds = 10
+    const hash = await bcrypt.hash(tokens.refreshToken, saltRounds)
+
+    await this.prisma.user.update({
+      where: {
+        id: userExists.id,
       },
-      {
-        expiresIn: this.configService.get('JWT_MAX_AGE'),
-        secret: this.configService.get('JWT_SECRET'),
+      data: {
+        refreshToken: hash,
       },
-    )
+    })
+
+    return tokens
   }
 
   async registerUser(data: Prisma.UserCreateInput) {
     try {
       const newUser = await this.userService.create(data)
 
-      return await this.jwtService.signAsync(
-        {
-          sub: newUser.id,
-          email: newUser.email,
-        },
-        {
-          expiresIn: this.configService.get('JWT_MAX_AGE'),
-          secret: this.configService.get('JWT_SECRET'),
-        },
-      )
+      const tokens = await this.getToken(newUser.id, newUser.email)
+
+      return tokens
     } catch (error: any) {
       throw new InternalServerErrorException()
     }
@@ -89,21 +89,87 @@ export class AuthService {
           email: email,
           firstName: payload?.given_name,
           lastName: payload?.family_name,
+          avatar: payload?.picture,
         })
       }
 
-      return await this.jwtService.signAsync(
-        {
-          sub: userExists.id,
-          email: userExists.email,
-        },
-        {
-          expiresIn: this.configService.get('JWT_MAX_AGE'),
-          secret: this.configService.get('JWT_SECRET'),
-        },
-      )
+      const tokens = await this.getToken(userExists.id, userExists.email)
+
+      return tokens
     } catch (error) {
       throw new Error('Invalid Google token')
     }
+  }
+
+  async getToken(userId: string, email: string) {
+    const accessToken = await this.jwtService.signAsync(
+      {
+        sub: userId,
+        email,
+      },
+      {
+        expiresIn: this.configService.get('JWT_MAX_AGE'),
+        secret: this.configService.get('JWT_SECRET'),
+      },
+    )
+
+    const refreshToken = await this.jwtService.signAsync(
+      {
+        sub: userId,
+        email,
+      },
+      {
+        expiresIn: this.configService.get('JWT_REFRESH_MAX_AGE'),
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
+      },
+    )
+
+    const saltRounds = 10
+    const hash = await bcrypt.hash(refreshToken, saltRounds)
+
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        refreshToken: hash,
+      },
+    })
+
+    return {
+      accessToken,
+      refreshToken,
+    }
+  }
+
+  async refreshTokens(userId: string, refreshToken: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    })
+
+    if (!user || !user.refreshToken) throw new ForbiddenException('Access Denied')
+
+    const refreshTokenMatches = await bcrypt.compare(refreshToken, user.refreshToken)
+    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied')
+
+    const tokens = await this.getToken(user.id, user.email)
+
+    return tokens
+  }
+
+  async logout(userId: string) {
+    const user = await this.prisma.user.updateMany({
+      where: {
+        id: userId,
+        refreshToken: { not: null },
+      },
+      data: {
+        refreshToken: null,
+      },
+    })
+
+    return user
   }
 }

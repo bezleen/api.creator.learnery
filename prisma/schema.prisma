@@ -24,13 +24,14 @@ model User {
 
   // clerkId String @unique
 
-  // createdAt DateTime @default(now()) @db.Timestamp
-  // updatedAt DateTime @updatedAt @db.Timestamp
+  createdDate  DateTime? @default(now()) @map("createdDate")
+  updatedDate  DateTime? @updatedAt @map("updatedDate")
   // Course    Course[]
-
-  email     String  @unique
-  firstName String
-  lastName  String?
+  refreshToken String?
+  email        String    @unique
+  firstName    String
+  lastName     String?
+  avatar       String?
 
   @@map("users")
 }

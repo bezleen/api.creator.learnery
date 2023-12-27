@@ -9,32 +9,28 @@ import {
 } from '@nestjs/common'
 // import { JwtGuard } from '../oldAuth/guard'
 // import { GetUser } from '../oldAuth/decorator'
-// import { EditUserDto } from './dto'
+import { EditUserDto } from './dto'
 import { UserService } from './user.service'
+import { GetUser } from '@/auth/decorator/get-user.decorator'
+import { JwtAuthGuard } from '@/auth/guard/jwt.guard'
+import { GetUserId } from '@/auth/decorator/get-user-id.decorator'
+import { ApiBearerAuth } from '@nestjs/swagger'
 
 @Injectable()
-// @UseGuards(JwtGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  // @Get('me')
-  // getMe(@GetUser('userId') userId: string) {
-  //   return this.userService.findOne(userId)
-  // }
+  @ApiBearerAuth('JWT-auth')
+  @Get('me')
+  async getMe(@GetUser('id') userId: string) {
+    return await this.userService.findOne(userId)
+  }
 
-  // @UseGuards(JwtGuard)
-  // @Patch()
-  // editUser(@GetUser('userId') userId: string, @Body() dto: EditUserDto) {
-  //   return this.userService.editUser(userId, dto)
-  // }
-
-  // @UseGuards(JwtGuard)
-  // @Delete()
-  // async deleteUser(@GetUser('userId') userId: string) {
-  //   return {
-  //     message: 'user deleted',
-  //     user: await this.userService.deleteUser(userId),
-  //   }
-  // }
+  @ApiBearerAuth('JWT-auth')
+  @Patch()
+  async editUser(@GetUser('id') userId: string, @Body() dto: EditUserDto) {
+    return await this.userService.editUser(userId, dto)
+  }
 }

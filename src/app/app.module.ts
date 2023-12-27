@@ -207,6 +207,17 @@ export class AppModule implements OnModuleInit, NestModule {
         },
         'JWT-auth',
       )
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'Bearer',
+          bearerFormat: 'Bearer',
+          name: 'Authorization',
+          description: 'Enter JWT Refresh token',
+          in: 'Header',
+        },
+        'JWT-Refresh-auth',
+      )
       // .addCookieAuth(cookieName)
       .build()
     return SwaggerModule.createDocument(app, options)

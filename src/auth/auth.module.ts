@@ -8,10 +8,18 @@ import { UserService } from '@/user/user.service'
 import { JwtModule } from '@nestjs/jwt'
 import { AuthSerializer } from './serializer/auth.serializer'
 import { PassportModule } from '@nestjs/passport'
+import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy'
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, JwtStrategy, UserService, AuthSerializer],
+  providers: [
+    AuthService,
+    GoogleStrategy,
+    JwtStrategy,
+    UserService,
+    AuthSerializer,
+    JwtRefreshStrategy,
+  ],
   imports: [JwtModule, PrismaModule, PassportModule],
 })
 export class AuthModule {}

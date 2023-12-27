@@ -11,13 +11,16 @@ import {
   Res,
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { ApiBody, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from '@nestjs/passport'
 import { GoogleAuthGuard } from './guard/auth.guard'
 import { Request, Response } from 'express'
 import { Prisma, User } from '@prisma/client'
 import { string } from 'joi'
 import { AuthDto } from './dto/auth.dto'
+import { GetUser } from './decorator/get-user.decorator'
+import { JwtRefreshGuard } from './guard/jwt-refresh.guard'
+import { GetUserId } from './decorator/get-user-id.decorator'
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -35,7 +38,7 @@ export class AuthController {
       const token = await this.authService.signIn(req.user)
 
       return res.status(200).json({
-        accessToken: token,
+        ...token,
       })
     } catch (error: any) {
       throw new Error(error)
@@ -48,7 +51,38 @@ export class AuthController {
     try {
       const token = await this.authService.verifyGoogleToken(data)
       return res.status(200).json({
-        accessToken: token,
+        ...token,
+      })
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  @ApiBearerAuth('JWT-Refresh-auth')
+  @Post('refresh')
+  @UseGuards(JwtRefreshGuard)
+  async refreshTokens(
+    @GetUserId() userId: string,
+    @GetUser('refreshToken') refreshToken: string,
+    @Res() res: Response,
+  ) {
+    try {
+      const token = await this.authService.refreshTokens(userId, refreshToken)
+      return res.status(200).json({
+        ...token,
+      })
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @Post('logout')
+  async logout(@GetUserId() userId: string, @Res() res: Response) {
+    try {
+      await this.authService.logout(userId)
+      return res.status(200).json({
+        message: 'Logout successfully',
       })
     } catch (error: any) {
       throw new Error(error)

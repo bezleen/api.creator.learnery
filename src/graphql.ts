@@ -187,6 +187,10 @@ export class User {
     email?: Nullable<string>;
     firstName?: Nullable<string>;
     lastName?: Nullable<string>;
+    avatar?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export type JSON = any;
