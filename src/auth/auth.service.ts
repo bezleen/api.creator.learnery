@@ -39,18 +39,6 @@ export class AuthService {
 
     const tokens = await this.getToken(userExists.id, userExists.email)
 
-    const saltRounds = 10
-    const hash = await bcrypt.hash(tokens.refreshToken, saltRounds)
-
-    await this.prisma.user.update({
-      where: {
-        id: userExists.id,
-      },
-      data: {
-        refreshToken: hash,
-      },
-    })
-
     return tokens
   }
 
