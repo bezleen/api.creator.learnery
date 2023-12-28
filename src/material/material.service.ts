@@ -478,9 +478,9 @@ export class MaterialService {
       questionContent: (scope) => {
         try {
           if (scope?.question?.question_content)
-            return scope.question.question_content.replace(/[:=_*#]/gi, '').trim()
+            return scope.question.question_content.replace(/[:=*#]/gi, '').trim()
           if (scope?.question_content)
-            return scope.question_content.replace(/[:=_*#]/gi, '').trim()
+            return scope.question_content.replace(/[:=*#]/gi, '').trim()
           return ''
         } catch (error: any) {
           console.log('oke')
@@ -714,9 +714,9 @@ export class MaterialService {
       },
       questionContent: (scope) => {
         if (scope?.question?.question_content)
-          return scope.question.question_content.replace(/[:=_*#]/gi, '').trim()
+          return scope.question.question_content.replace(/[:=*#]/gi, '').trim()
         if (scope?.question_content)
-          return scope.question_content.replace(/[:=_*#]/gi, '').trim()
+          return scope.question_content.replace(/[:=*#]/gi, '').trim()
         return ''
       },
       hasTextArea: () => {
