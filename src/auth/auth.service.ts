@@ -36,8 +36,11 @@ export class AuthService {
     if (!userExists) {
       return this.registerUser(data)
     }
+    console.log('break point 8')
 
     const tokens = await this.getToken(userExists.id, userExists.email)
+
+    console.log('break point 13')
 
     return tokens
   }
@@ -100,6 +103,7 @@ export class AuthService {
         secret: this.configService.get('JWT_SECRET'),
       },
     )
+    console.log('break point 9')
 
     const refreshToken = await this.jwtService.signAsync(
       {
@@ -111,9 +115,12 @@ export class AuthService {
         secret: this.configService.get('JWT_REFRESH_SECRET'),
       },
     )
+    console.log('break point 10')
 
     const saltRounds = 10
     const hash = await bcrypt.hash(refreshToken, saltRounds)
+
+    console.log('break point 11')
 
     await this.prisma.user.update({
       where: {
@@ -123,6 +130,8 @@ export class AuthService {
         refreshToken: hash,
       },
     })
+
+    console.log('break point 12')
 
     return {
       accessToken,
