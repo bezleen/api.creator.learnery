@@ -25,22 +25,25 @@ import { GetUserId } from './decorator/get-user-id.decorator'
 @Controller('auth')
 @ApiTags('Authentication')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Get('google')
   @UseGuards(GoogleAuthGuard)
-  async googleAuth() {}
+  async googleAuth() { }
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
     try {
+      console.log('break point 5')
       const token = await this.authService.signIn(req.user)
-
+      console.log('break point 6')
       return res.status(200).json({
         ...token,
       })
     } catch (error: any) {
+      console.log(error)
+      console.log('break point 7')
       throw new Error(error)
     }
   }
