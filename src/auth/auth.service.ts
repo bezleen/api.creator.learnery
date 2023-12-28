@@ -11,7 +11,7 @@ import { Prisma } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { OAuth2Client } from 'google-auth-library'
 import { AuthDto } from './dto/auth.dto'
-import * as bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 @Injectable()
 export class AuthService {
