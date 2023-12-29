@@ -425,8 +425,8 @@ export class MaterialService {
 
     doc.render({
       // subject: materialRequest.worksheet.objectives,
-      subject: 'Worksheet Objectives',
-      lesson: 'Worksheet Lesson',
+      subject: '[Worksheet Title]',
+      lesson: '',
       level: materialRequest.worksheet.audience.level,
       learningObjectives: materialResult.worksheet.result.chapter_1.content.replace(
         /[-#@!_\d]+$/g,
@@ -677,8 +677,8 @@ export class MaterialService {
 
     doc.render({
       // subject: materialRequest.quiz.objectives,
-      subject: 'Quiz Objectives',
-      grade: 'Quiz Grade',
+      subject: '[Quiz Title]',
+      grade: '',
       level: materialRequest.quiz.audience.level,
       questionTypes: materialResult.quiz.result.chapter_1.content,
       isSingleQuestionType: () => {
