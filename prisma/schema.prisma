@@ -32,6 +32,7 @@ model User {
   firstName    String
   lastName     String?
   avatar       String?
+  password     String?
 
   @@map("users")
 }
@@ -149,6 +150,7 @@ type Audience {
 // }
 
 type PerformanceTask {
+  title        String? @default("")
   objectives   String  @default("")
   description  String? @default("")
   language     String? @default("English")
@@ -187,6 +189,7 @@ type TypeQuestion {
 }
 
 type Worksheet {
+  title       String? @default("")
   objectives  String  @default("")
   description String? @default("")
   language    String? @default("English")
@@ -198,6 +201,7 @@ type Worksheet {
 }
 
 type Quiz {
+  title       String? @default("")
   objectives  String  @default("")
   description String? @default("")
   language    String? @default("English")

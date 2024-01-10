@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { AuthSerializer } from './serializer/auth.serializer'
 import { PassportModule } from '@nestjs/passport'
 import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy'
+import { LocalStrategy } from './strategy/local.strategy'
 
 @Module({
   controllers: [AuthController],
@@ -19,6 +20,7 @@ import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy'
     UserService,
     AuthSerializer,
     JwtRefreshStrategy,
+    LocalStrategy,
   ],
   imports: [JwtModule, PrismaModule, PassportModule],
 })

@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  NotAcceptableException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { UserService } from '@/user/user.service'
@@ -26,7 +27,7 @@ export class AuthService {
     this.client = new OAuth2Client(configService.get('GOOGLE_CLIENT_ID'))
   }
 
-  async signIn(data: any) {
+  async googleSignIn(data: any) {
     if (!data) {
       throw new BadRequestException('Unauthenticated')
     }
@@ -36,13 +37,53 @@ export class AuthService {
     if (!userExists) {
       return this.registerUser(data)
     }
-    console.log('break point 8')
 
     const tokens = await this.getToken(userExists.id, userExists.email)
 
-    console.log('break point 13')
+    return tokens
+  }
+
+  async localSignIn(data: any) {
+    if (!data) {
+      throw new BadRequestException('Unauthenticated')
+    }
+
+    const userExists = await this.prisma.user.findUnique({ where: { email: data.email } })
+
+    if (!userExists) {
+      throw new BadRequestException('Wrong credentials!')
+    }
+
+    const isMatchPassword = await this.comparePassword(data.password, userExists.password)
+
+    if (!isMatchPassword) {
+      throw new BadRequestException('Wrong credentials!')
+    }
+
+    const tokens = await this.getToken(userExists.id, userExists.email)
 
     return tokens
+  }
+
+  async comparePassword(password: string, hashedPassword: string) {
+    return await bcrypt.compare(password, hashedPassword)
+  }
+
+  async localRegisterUser(data: Prisma.UserCreateInput) {
+    try {
+      const saltRounds = 10
+      const hashedPassword = await bcrypt.hash(data.password, saltRounds)
+
+      const newUser = await this.userService.create({ ...data, password: hashedPassword })
+
+      console.log(newUser.id)
+
+      const tokens = await this.getToken(newUser.id, newUser.email)
+
+      return tokens
+    } catch (error: any) {
+      throw new InternalServerErrorException()
+    }
   }
 
   async registerUser(data: Prisma.UserCreateInput) {
@@ -103,7 +144,6 @@ export class AuthService {
         secret: this.configService.get('JWT_SECRET'),
       },
     )
-    console.log('break point 9')
 
     const refreshToken = await this.jwtService.signAsync(
       {
@@ -115,12 +155,9 @@ export class AuthService {
         secret: this.configService.get('JWT_REFRESH_SECRET'),
       },
     )
-    console.log('break point 10')
 
     const saltRounds = 10
     const hash = await bcrypt.hash(refreshToken, saltRounds)
-
-    console.log('break point 11')
 
     await this.prisma.user.update({
       where: {
@@ -130,8 +167,6 @@ export class AuthService {
         refreshToken: hash,
       },
     })
-
-    console.log('break point 12')
 
     return {
       accessToken,
@@ -168,5 +203,21 @@ export class AuthService {
     })
 
     return user
+  }
+
+  async validateUser(email: string, password: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    })
+
+    if (!user) throw new NotAcceptableException('could not find the user')
+
+    const passwordValid = await bcrypt.compare(password, user.password)
+
+    if (user && passwordValid) return user
+
+    return null
   }
 }

@@ -9,6 +9,7 @@ type User {
   refreshToken: String
   createdAt: DateTime
   updatedAt: DateTime
+  password: String
 }
 
 type Query {

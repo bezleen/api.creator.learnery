@@ -56,6 +56,7 @@ export class TypeQuestionInput {
 }
 
 export class CreateQuizInput {
+    title?: Nullable<string>;
     objectives: string;
     description?: Nullable<string>;
     tone: string;
@@ -66,6 +67,7 @@ export class CreateQuizInput {
 }
 
 export class CreateWorksheetInput {
+    title?: Nullable<string>;
     objectives: string;
     description?: Nullable<string>;
     tone: string;
@@ -76,6 +78,7 @@ export class CreateWorksheetInput {
 }
 
 export class CreatePerformanceTaskInput {
+    title?: Nullable<string>;
     objectives: string;
     description?: Nullable<string>;
     tone: string;
@@ -191,6 +194,7 @@ export class User {
     refreshToken?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
     updatedAt?: Nullable<DateTime>;
+    password?: Nullable<string>;
 }
 
 export type JSON = any;

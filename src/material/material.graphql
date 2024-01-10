@@ -124,6 +124,7 @@ input TypeQuestionInput {
 }
 
 input CreateQuizInput {
+  title: String
   objectives: String!
   description: String
   tone: String!
@@ -134,6 +135,7 @@ input CreateQuizInput {
 }
 
 input CreateWorksheetInput {
+  title: String
   objectives: String!
   description: String
   tone: String!
@@ -144,6 +146,7 @@ input CreateWorksheetInput {
 }
 
 input CreatePerformanceTaskInput {
+  title: String
   objectives: String!
   description: String
   tone: String!

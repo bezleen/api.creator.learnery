@@ -310,7 +310,7 @@ export class MaterialService {
 
     doc.render({
       // subject: materialRequest.performanceTask.objectives,
-      subject: 'Performance Task Objectives',
+      subject: materialRequest.performanceTask?.title,
       level: materialRequest.performanceTask.audience.level,
       knowledgeKnot: 'Knowledge Knot',
       activityTitle: materialResult.performanceTask.result[0]?.content,
@@ -425,13 +425,16 @@ export class MaterialService {
 
     doc.render({
       // subject: materialRequest.worksheet.objectives,
-      subject: '[Worksheet Title]',
+      subject: materialRequest.worksheet?.title,
       lesson: '',
       level: materialRequest.worksheet.audience.level,
-      learningObjectives: materialResult.worksheet.result.chapter_1.content.replace(
-        /[-#@!_\d]+$/g,
-        '',
-      ),
+      learningObjectives: () => {
+        let learningObjectivesContent =
+          materialResult.worksheet.result.chapter_1.content.replace(/[-#@!_\d]+$/g, '')
+        learningObjectivesContent = learningObjectivesContent.split('\n')
+        console.log(learningObjectivesContent)
+        return learningObjectivesContent
+      },
       questionTypes: materialResult.worksheet.result.chapter_2.content,
       isSingleQuestionType: () => {
         if (materialResult.worksheet.result.chapter_2.content.length <= 1) return true
@@ -478,9 +481,9 @@ export class MaterialService {
       questionContent: (scope) => {
         try {
           if (scope?.question?.question_content)
-            return scope.question.question_content.replace(/[:=*#]/gi, '').trim()
+            return scope.question.question_content.replace(/[:=*.#]/gi, '').trim()
           if (scope?.question_content)
-            return scope.question_content.replace(/[:=*#]/gi, '').trim()
+            return scope.question_content.replace(/[:=*.#]/gi, '').trim()
           return ''
         } catch (error: any) {
           console.log('oke')
@@ -677,7 +680,7 @@ export class MaterialService {
 
     doc.render({
       // subject: materialRequest.quiz.objectives,
-      subject: '[Quiz Title]',
+      subject: materialRequest.quiz?.title,
       grade: '',
       level: materialRequest.quiz.audience.level,
       questionTypes: materialResult.quiz.result.chapter_1.content,
@@ -714,9 +717,9 @@ export class MaterialService {
       },
       questionContent: (scope) => {
         if (scope?.question?.question_content)
-          return scope.question.question_content.replace(/[:=*#]/gi, '').trim()
+          return scope.question.question_content.replace(/[:=*#.]/gi, '').trim()
         if (scope?.question_content)
-          return scope.question_content.replace(/[:=*#]/gi, '').trim()
+          return scope.question_content.replace(/[:=*#.]/gi, '').trim()
         return ''
       },
       hasTextArea: () => {

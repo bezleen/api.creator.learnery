@@ -17,7 +17,7 @@ import { GoogleAuthGuard } from './guard/auth.guard'
 import { Request, Response } from 'express'
 import { Prisma, User } from '@prisma/client'
 import { string } from 'joi'
-import { AuthDto } from './dto/auth.dto'
+import { AuthDto, localAuthDto, registerDto } from './dto/auth.dto'
 import { GetUser } from './decorator/get-user.decorator'
 import { JwtRefreshGuard } from './guard/jwt-refresh.guard'
 import { GetUserId } from './decorator/get-user-id.decorator'
@@ -35,29 +35,59 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
     try {
-      console.log('break point 5')
-      const token = await this.authService.signIn(req.user)
-      console.log('break point 6')
+      const token = await this.authService.googleSignIn(req.user)
       return res.status(200).json({
         ...token,
       })
     } catch (error: any) {
-      console.log(error)
-      console.log('break point 7')
-      throw new Error(error)
+      return res.status(400).json({
+        message: error.message,
+      })
     }
   }
 
-  @Post('login')
+  @Post('google/login')
   @ApiBody({ description: 'tokenId for authentication', type: AuthDto })
-  async login(@Body() data: AuthDto, @Res() res: Response): Promise<any> {
+  async googleLogin(@Body() data: AuthDto, @Res() res: Response): Promise<any> {
     try {
       const token = await this.authService.verifyGoogleToken(data)
       return res.status(200).json({
         ...token,
       })
     } catch (error: any) {
-      throw new Error(error)
+      return res.status(400).json({
+        message: error.message,
+      })
+    }
+  }
+
+  @Post('login')
+  @ApiBody({ description: 'email and password for authentication', type: localAuthDto })
+  async login(@Body() data: localAuthDto, @Res() res: Response): Promise<any> {
+    try {
+      const token = await this.authService.localSignIn(data)
+      return res.status(200).json({
+        ...token,
+      })
+    } catch (error: any) {
+      return res.status(400).json({
+        message: error.message,
+      })
+    }
+  }
+
+  @Post('signup')
+  @ApiBody({ description: 'register new user', type: registerDto })
+  async signUp(@Body() data: registerDto, @Res() res: Response): Promise<any> {
+    try {
+      const token = await this.authService.localRegisterUser(data)
+      return res.status(200).json({
+        ...token,
+      })
+    } catch (error: any) {
+      return res.status(400).json({
+        message: error.message,
+      })
     }
   }
 
@@ -75,7 +105,9 @@ export class AuthController {
         ...token,
       })
     } catch (error: any) {
-      throw new Error(error)
+      return res.status(400).json({
+        message: error.message,
+      })
     }
   }
 
@@ -88,7 +120,9 @@ export class AuthController {
         message: 'Logout successfully',
       })
     } catch (error: any) {
-      throw new Error(error)
+      return res.status(400).json({
+        message: error.message,
+      })
     }
   }
 }
