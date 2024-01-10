@@ -120,6 +120,7 @@ export class TypeQuestion {
 }
 
 export class Quiz {
+    title: string;
     objectives: string;
     description?: Nullable<string>;
     tone: string;
@@ -130,6 +131,7 @@ export class Quiz {
 }
 
 export class Worksheet {
+    title: string;
     objectives: string;
     description?: Nullable<string>;
     tone: string;
@@ -140,6 +142,7 @@ export class Worksheet {
 }
 
 export class PerformanceTask {
+    title: string;
     objectives: string;
     description?: Nullable<string>;
     tone: string;
