@@ -60,7 +60,7 @@ type TypeQuestion {
 }
 
 type Quiz {
-  title: String!
+  title: String
   objectives: String!
   description: String
   tone: String!
@@ -71,7 +71,7 @@ type Quiz {
 }
 
 type Worksheet {
-  title: String!
+  title: String
   objectives: String!
   description: String
   tone: String!
@@ -82,7 +82,7 @@ type Worksheet {
 }
 
 type PerformanceTask {
-  title: String!
+  title: String
   objectives: String!
   description: String
   tone: String!
