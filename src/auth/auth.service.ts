@@ -44,45 +44,66 @@ export class AuthService {
   }
 
   async localSignIn(data: any) {
-    if (!data) {
-      throw new BadRequestException('Unauthenticated')
+    try {
+      if (!data) {
+        throw new BadRequestException('Unauthenticated')
+      }
+
+      const userExists = await this.prisma.user.findUnique({
+        where: { email: data.email },
+      })
+
+      if (!userExists) {
+        throw new BadRequestException('Wrong credentials!')
+      }
+
+      const isMatchPassword = await this.comparePassword(
+        data.password,
+        userExists.password,
+      )
+
+      if (!isMatchPassword) {
+        throw new BadRequestException('Wrong credentials!')
+      }
+
+      const tokens = await this.getToken(userExists.id, userExists.email)
+
+      return tokens
+    } catch (error: any) {
+      throw new Error(error.message)
     }
-
-    const userExists = await this.prisma.user.findUnique({ where: { email: data.email } })
-
-    if (!userExists) {
-      throw new BadRequestException('Wrong credentials!')
-    }
-
-    const isMatchPassword = await this.comparePassword(data.password, userExists.password)
-
-    if (!isMatchPassword) {
-      throw new BadRequestException('Wrong credentials!')
-    }
-
-    const tokens = await this.getToken(userExists.id, userExists.email)
-
-    return tokens
   }
 
   async comparePassword(password: string, hashedPassword: string) {
-    return await bcrypt.compare(password, hashedPassword)
+    try {
+      return await bcrypt.compare(password, hashedPassword)
+    } catch (error: any) {
+      throw new BadRequestException('Wrong credentials!')
+    }
   }
 
   async localRegisterUser(data: Prisma.UserCreateInput) {
     try {
+      const userExists = await this.prisma.user.findUnique({
+        where: { email: data.email },
+      })
+
+      if (userExists) {
+        throw new Error('This email has been use!')
+      }
+
       const saltRounds = 10
       const hashedPassword = await bcrypt.hash(data.password, saltRounds)
 
-      const newUser = await this.userService.create({ ...data, password: hashedPassword })
-
-      console.log(newUser.id)
+      const newUser = await this.prisma.user.create({
+        data: { ...data, password: hashedPassword },
+      })
 
       const tokens = await this.getToken(newUser.id, newUser.email)
 
       return tokens
     } catch (error: any) {
-      throw new InternalServerErrorException()
+      throw new Error(error.message)
     }
   }
 
@@ -94,7 +115,7 @@ export class AuthService {
 
       return tokens
     } catch (error: any) {
-      throw new InternalServerErrorException()
+      throw new Error(error.message)
     }
   }
 
@@ -134,43 +155,48 @@ export class AuthService {
   }
 
   async getToken(userId: string, email: string) {
-    const accessToken = await this.jwtService.signAsync(
-      {
-        sub: userId,
-        email,
-      },
-      {
-        expiresIn: this.configService.get('JWT_MAX_AGE'),
-        secret: this.configService.get('JWT_SECRET'),
-      },
-    )
+    try {
+      const accessToken = await this.jwtService.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          expiresIn: this.configService.get('JWT_MAX_AGE'),
+          secret: this.configService.get('JWT_SECRET'),
+        },
+      )
 
-    const refreshToken = await this.jwtService.signAsync(
-      {
-        sub: userId,
-        email,
-      },
-      {
-        expiresIn: this.configService.get('JWT_REFRESH_MAX_AGE'),
-        secret: this.configService.get('JWT_REFRESH_SECRET'),
-      },
-    )
+      const refreshToken = await this.jwtService.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          expiresIn: this.configService.get('JWT_REFRESH_MAX_AGE'),
+          secret: this.configService.get('JWT_REFRESH_SECRET'),
+        },
+      )
 
-    const saltRounds = 10
-    const hash = await bcrypt.hash(refreshToken, saltRounds)
+      const saltRounds = 10
+      const hash = await bcrypt.hash(refreshToken, saltRounds)
 
-    await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        refreshToken: hash,
-      },
-    })
+      await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          refreshToken: hash,
+        },
+      })
 
-    return {
-      accessToken,
-      refreshToken,
+      return {
+        accessToken,
+        refreshToken,
+      }
+    } catch (error: any) {
+      console.error(error)
+      throw new Error(error.message)
     }
   }
 
