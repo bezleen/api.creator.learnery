@@ -89,18 +89,6 @@ export class CreatePerformanceTaskInput {
     timeActivity?: Nullable<string>;
 }
 
-export abstract class IQuery {
-    abstract categories(): string[] | Promise<string[]>;
-
-    abstract materials(): Nullable<Material>[] | Promise<Nullable<Material>[]>;
-
-    abstract material(id: string): Material | Promise<Material>;
-
-    abstract materialsIsGeneratedPDF(type: MaterialType): Nullable<Material>[] | Promise<Nullable<Material>[]>;
-
-    abstract me(): User | Promise<User>;
-}
-
 export class DifficultyDistribution {
     difficulty: Difficulty;
     numberOfQuestions: number;
@@ -176,6 +164,16 @@ export class Material {
     progressPercent?: Nullable<number>;
     progressStatus: ProgressStatus;
     isGeneratedPDF?: Nullable<boolean>;
+}
+
+export abstract class IQuery {
+    abstract materials(): Nullable<Material>[] | Promise<Nullable<Material>[]>;
+
+    abstract material(id: string): Material | Promise<Material>;
+
+    abstract materialsIsGeneratedPDF(type: MaterialType): Nullable<Material>[] | Promise<Nullable<Material>[]>;
+
+    abstract me(): User | Promise<User>;
 }
 
 export abstract class IMutation {

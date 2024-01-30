@@ -18,23 +18,10 @@ import { AppController } from './app.controller'
 import { GraphqlContext } from './dto/request.dto'
 import { UserModule } from '../user/user.module'
 import { PrismaModule } from '../prisma/prisma.module'
-import { CategoryController } from '../category/category.controller'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { CategoryModule } from '../category/category.module'
-import { UserController } from '../user/user.controller'
-// import { AuthController } from '../oldAuth/auth.controller'
-import { CategoryService } from '../category/category.service'
 import { UserService } from '../user/user.service'
-// import { AuthService } from '../oldAuth/auth.service'
 import { JwtService } from '@nestjs/jwt'
-// import { ClerkModule } from '../clerk/clerk.module'
-// import { ClerkService } from '../clerk/clerk.service'
-// import { CourseModule } from '../course/course.module'
 import { HttpLoggerMiddleware } from './middlewares/http-logger.middleware'
-import { AiModule } from '../ai/ai.module'
-import { AiService } from '../ai/ai.service'
-import { PineconeService } from '@src/ai/pinecone/pinecone.service'
-import { OpenAIService } from '@src/ai/openai/openAIService'
 import { join } from 'path'
 import { MaterialModule } from '@/material/material.module'
 import { AuthService } from '@/auth/auth.service'
@@ -152,10 +139,6 @@ console.debug({ mode, envFile })
     MaterialModule,
     AuthModule,
     UserModule,
-    // CategoryModule,
-    // ClerkModule,
-    // CourseModule,
-    // AiModule,
   ],
   // controllers: [AppController, CategoryController, UserController, AuthController],
   controllers: [AppController],
@@ -165,14 +148,9 @@ console.debug({ mode, envFile })
       useClass: GlobalExceptionFilter,
     },*/
     AppService,
-    // CategoryService,
     UserService,
     AuthService,
     JwtService,
-    // ClerkService,
-    // OpenAIService,
-    // PineconeService,
-    // AiService,
     SentryInterceptor,
   ],
 })
