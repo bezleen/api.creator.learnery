@@ -10,89 +10,16 @@ generator client {
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  clerkId String @unique
-
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
-  Course    Course[]
+  createdDate  DateTime? @default(now()) @map("createdDate")
+  updatedDate  DateTime? @updatedAt @map("updatedDate")
+  refreshToken String?
+  email        String    @unique
+  firstName    String
+  lastName     String?
+  avatar       String?
+  password     String?
 
   @@map("users")
-}
-
-model Course {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  title          String?
-  objective      String[] @default([])
-  description    String?  @default("")
-  language       String?  @default("English")
-  category       String
-  tone           String   @default("Friendly")
-  modality       String   @default("Hybrid")
-  classSize      String
-  topics         String[] @default([])
-  duration       Int // Course Length In hours
-  durationLesson Int // Lesson Duration In minutes
-
-  creatorId String // clerkUserId
-  Creator   User?    @relation(fields: [creatorId], references: [clerkId])
-  audience  Audience
-
-  outline         CourseOutline? // Graphql type is enough
-  detailedOutline CourseDetailedOutline? // Graphql ...
-
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
-
-  lessonOrder String[] @default([]) // Array of lesson Object IDs representing the order
-
-  Lesson Lesson[]
-
-  @@map("courses")
-}
-
-type CourseOutline {
-  courseDuration String
-  inScope        CourseTopic[]
-  outOfScope     CourseTopic[]
-  explanation    String?
-}
-
-type CourseDetailedOutline {
-  sections                  DetailedOutlineSection[]
-  objectiveTopicConnections DetailedOutlineObjectiveTopicConnection[]
-  summary                   CourseDetailedSummary
-  rationale                 String
-}
-
-type CourseDetailedSummary {
-  totalSections Int
-  totalTopics   Int
-  courseHours   Int
-}
-
-type DetailedOutlineSection {
-  title  String
-  topics DetailedOutlineSectionTopic[]
-}
-
-type DetailedOutlineSectionTopic {
-  title            String?
-  onScreenContent  String?
-  topicDescription String?
-  detailedCoverage String?
-  resources        String?
-  timingMins       Int
-  connection       String[]
-}
-
-type DetailedOutlineObjectiveTopicConnection {
-  objective String
-  topics    String[]
-}
-
-type CourseTopic {
-  topic     String
-  subtopics String[]
 }
 
 type Audience {
@@ -102,31 +29,105 @@ type Audience {
   desc     String?
 }
 
-model Lesson {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  // FIXME: discuss on how to store lesson order
-  courseId String    @db.ObjectId
-  title    String
-  sections Section[]
+type PerformanceTask {
+  title        String? @default("")
+  objectives   String  @default("")
+  description  String? @default("")
+  language     String? @default("English")
+  tone         String  @default("Friendly")
+  modality     String  @default("Hybrid")
+  timeActivity String? @default("30 minutes")
+  classSize    Int?    @default(10)
 
-  Course Course? @relation(fields: [courseId], references: [id])
-
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
-
-  @@map("lessons")
+  audience Audience
 }
 
-type Section {
-  title  String
-  topics Topic[]
+enum QuestionType {
+  MULTIPLE_CHOICE
+  FILL_IN_THE_BLANK_WITH_OPTIONS
+  TRUE_FALSE
+  FILL_IN_THE_BLANK_FREE_TEXT
+  ESSAY
+  MATCHING
 }
 
-type Topic {
-  title            String
-  onScreenContent  String
-  description      String
-  detailedCoverage String
-  resource         String?
-  timing           String?
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+type DifficultyDistribution {
+  difficulty        Difficulty
+  numberOfQuestions Int
+}
+
+type TypeQuestion {
+  type           QuestionType
+  totalQuestions Int
+  bloomTaxonomy  DifficultyDistribution[]
+}
+
+type Worksheet {
+  title       String? @default("")
+  objectives  String  @default("")
+  description String? @default("")
+  language    String? @default("English")
+  tone        String  @default("Friendly")
+  modality    String  @default("Hybrid")
+
+  audience      Audience
+  questionTypes TypeQuestion[]
+}
+
+type Quiz {
+  title       String? @default("")
+  objectives  String  @default("")
+  description String? @default("")
+  language    String? @default("English")
+  tone        String  @default("Friendly")
+  modality    String  @default("Hybrid")
+
+  audience      Audience
+  questionTypes TypeQuestion[]
+}
+
+enum ProgressStatus {
+  RETRY
+  FAIL
+  COMPLETED
+  PENDING
+  STARTED
+}
+
+enum MaterialType {
+  QUIZ
+  WORKSHEET
+  PERFORMANCE_TASK
+}
+
+type RequestType {
+  quiz            Quiz?
+  worksheet       Worksheet?
+  performanceTask PerformanceTask?
+}
+
+model Material {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?        @map("userId") @db.ObjectId
+  type            MaterialType
+  request         RequestType?
+  rawResult       String?
+  result          Json?
+  startDate       DateTime?
+  endDate         DateTime?
+  runDuration     Int?           @default(0)
+  waitDuration    Int?           @default(0)
+  createdDate     DateTime?      @default(now()) @map("createdDate")
+  updatedDate     DateTime?      @updatedAt @map("updatedDate")
+  progressPercent Int?           @default(0)
+  progressStatus  ProgressStatus @default(PENDING)
+  isGeneratedPDF  Boolean        @default(false)
+
+  @@map("material")
 }

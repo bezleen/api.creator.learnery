@@ -1,3 +1,4 @@
+
 /*
  * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
@@ -7,236 +8,196 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export class AuthInput {
-  clientToken: string
-  sessionId: string
+export enum QuestionType {
+    MULTIPLE_CHOICE = "MULTIPLE_CHOICE",
+    FILL_IN_THE_BLANK_WITH_OPTIONS = "FILL_IN_THE_BLANK_WITH_OPTIONS",
+    TRUE_FALSE = "TRUE_FALSE",
+    FILL_IN_THE_BLANK_FREE_TEXT = "FILL_IN_THE_BLANK_FREE_TEXT",
+    ESSAY = "ESSAY",
+    MATCHING = "MATCHING"
+}
+
+export enum Difficulty {
+    EASY = "EASY",
+    MEDIUM = "MEDIUM",
+    HARD = "HARD"
+}
+
+export enum ProgressStatus {
+    RETRY = "RETRY",
+    FAIL = "FAIL",
+    COMPLETED = "COMPLETED",
+    PENDING = "PENDING",
+    STARTED = "STARTED"
+}
+
+export enum MaterialType {
+    QUIZ = "QUIZ",
+    WORKSHEET = "WORKSHEET",
+    PERFORMANCE_TASK = "PERFORMANCE_TASK"
 }
 
 export class CreateAudienceInput {
-  ageStart: number
-  ageEnd: number
-  level: string
-  desc?: Nullable<string>
+    ageStart: number;
+    ageEnd: number;
+    level: string;
+    desc?: Nullable<string>;
 }
 
-export class CreateCourse {
-  description: string
-  language?: Nullable<string>
-  category: string
-  tone: string
-  modality: string
-  classSize: string
-  topics?: Nullable<Nullable<string>[]>
-  duration: number
-  durationLesson: number
-  audience: CreateAudienceInput
+export class DifficultyDistributionInput {
+    difficulty: Difficulty;
+    numberOfQuestions: number;
 }
 
-export class UpdateCourse {
-  title?: Nullable<string>
-  objective?: Nullable<string[]>
-  description?: Nullable<string>
-  language?: Nullable<string>
-  category?: Nullable<string>
-  tone?: Nullable<string>
-  modality?: Nullable<string>
-  classSize?: Nullable<string>
-  topics?: Nullable<string[]>
-  duration?: Nullable<number>
-  durationLesson?: Nullable<number>
-  audience?: Nullable<CreateAudienceInput>
-  outline?: Nullable<UpdateCourseOutline>
-  detailedOutline?: Nullable<UpdateCourseDetailedOutline>
+export class TypeQuestionInput {
+    type: QuestionType;
+    totalQuestions: number;
+    bloomTaxonomy?: Nullable<DifficultyDistributionInput[]>;
 }
 
-export class CreateCourseTitle {
-  courseId: string
+export class CreateQuizInput {
+    title?: Nullable<string>;
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: CreateAudienceInput;
+    questionTypes: TypeQuestionInput[];
 }
 
-export class CreateCourseObjective {
-  courseId: string
+export class CreateWorksheetInput {
+    title?: Nullable<string>;
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: CreateAudienceInput;
+    questionTypes: TypeQuestionInput[];
 }
 
-export class CreateCourseOutline {
-  courseId: string
+export class CreatePerformanceTaskInput {
+    title?: Nullable<string>;
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: CreateAudienceInput;
+    classSize?: Nullable<number>;
+    timeActivity?: Nullable<string>;
 }
 
-export class UpdateCourseOutline {
-  courseDuration: string
-  inScope: InputTopic[]
-  outOfScope: InputTopic[]
-  explanation?: Nullable<string>
-}
-
-export class UpdateCourseDetailedOutline {
-  sections: UpdateDetailedOutlineSectionInput[]
-  objectiveTopicConnections: UpdateDetailedOutlineObjectiveInput[]
-  summary: CourseDetailedSummaryInput
-  rationale: string
-}
-
-export class DetailedOutlineTopicInput {
-  title: string
-  onScreenContent: string
-  topicDescription: string
-  detailedCoverage: string
-  resources: string
-  connection: string[]
-  timingMins: number
-}
-
-export class UpdateDetailedOutlineSectionInput {
-  title: string
-  topics?: Nullable<DetailedOutlineTopicInput[]>
-}
-
-export class UpdateDetailedOutlineObjectiveInput {
-  objective: string
-  topics?: Nullable<string[]>
-}
-
-export class CourseDetailedSummaryInput {
-  totalSections: number
-  totalTopics: number
-  courseHours: number
-}
-
-export class InputTopic {
-  topic: string
-  subtopics: Nullable<string>[]
-}
-
-export class AuthPayload {
-  accessToken: string
-}
-
-export abstract class IMutation {
-  abstract signIn(data: AuthInput): AuthPayload | Promise<AuthPayload>
-
-  abstract createCourse(data: CreateCourse): Nullable<Course> | Promise<Nullable<Course>>
-
-  abstract updateCourse(id: string, data: UpdateCourse): Course | Promise<Course>
-
-  abstract deleteCourse(id: string): Nullable<Course> | Promise<Nullable<Course>>
-
-  abstract createCourseTitle(
-    courseId: string,
-  ): Nullable<GeneratedCourseTitle>[] | Promise<Nullable<GeneratedCourseTitle>[]>
-
-  abstract createCourseObjective(
-    courseId: string,
-  ): Nullable<GeneratedCourseObjective>[] | Promise<Nullable<GeneratedCourseObjective>[]>
-
-  abstract createCourseOutline(courseId: string): CourseOutline | Promise<CourseOutline>
-
-  abstract createCourseDetailedOutline(
-    courseId: string,
-  ): CourseDetailedOutline | Promise<CourseDetailedOutline>
-}
-
-export abstract class IQuery {
-  abstract categories(): string[] | Promise<string[]>
-
-  abstract courses(): Nullable<Course>[] | Promise<Nullable<Course>[]>
-
-  abstract course(id: string): Course | Promise<Course>
-
-  abstract me(): User | Promise<User>
-}
-
-export class Course {
-  id?: Nullable<string>
-  title?: Nullable<string>
-  objective?: Nullable<string[]>
-  description: string
-  language?: Nullable<string>
-  category: string
-  tone: string
-  modality: string
-  classSize: string
-  topics?: Nullable<string[]>
-  duration: number
-  durationLesson: number
-  creatorId: string
-  outline?: Nullable<CourseOutline>
-  detailedOutline?: Nullable<CourseDetailedOutline>
-  createdAt: DateTime
-  updatedAt: DateTime
-  audience: Audience
+export class DifficultyDistribution {
+    difficulty: Difficulty;
+    numberOfQuestions: number;
 }
 
 export class Audience {
-  ageStart: number
-  ageEnd: number
-  level: string
-  desc?: Nullable<string>
+    ageStart: number;
+    ageEnd: number;
+    level: string;
+    desc?: Nullable<string>;
 }
 
-export class GeneratedCourseTitle {
-  title: string
-  reason?: Nullable<string>
+export class TypeQuestion {
+    type: QuestionType;
+    totalQuestions: number;
+    bloomTaxonomy?: Nullable<DifficultyDistribution[]>;
 }
 
-export class GeneratedCourseObjective {
-  objective: string
-  outcome?: Nullable<string>
+export class Quiz {
+    title?: Nullable<string>;
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: Audience;
+    questionTypes: TypeQuestion[];
 }
 
-export class CourseOutline {
-  courseDuration: string
-  inScope: Topic[]
-  outOfScope: Topic[]
-  explanation?: Nullable<string>
+export class Worksheet {
+    title?: Nullable<string>;
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: Audience;
+    questionTypes: TypeQuestion[];
 }
 
-export class CourseDetailedOutline {
-  sections: DetailedOutlineSection[]
-  objectiveTopicConnections: DetailedOutlineObjective[]
-  summary: CourseDetailedSummary
-  rationale: string
+export class PerformanceTask {
+    title?: Nullable<string>;
+    objectives: string;
+    description?: Nullable<string>;
+    tone: string;
+    modality: string;
+    language?: Nullable<string>;
+    audience: Audience;
+    numberOfQuestions: number;
+    classSize: number;
+    timeActivity: string;
 }
 
-export class DetailedOutlineSection {
-  title: string
-  topics: Nullable<DetailedOutlineTopic>[]
+export class RequestType {
+    quiz?: Nullable<Quiz>;
+    performanceTask?: Nullable<PerformanceTask>;
+    worksheet?: Nullable<Worksheet>;
 }
 
-export class DetailedOutlineTopic {
-  title: string
-  onScreenContent: string
-  topicDescription: string
-  detailedCoverage: string
-  resources: string
-  connection: string[]
-  timingMins: number
+export class Material {
+    id: string;
+    userId?: Nullable<string>;
+    type?: Nullable<MaterialType>;
+    request?: Nullable<RequestType>;
+    rawResult?: Nullable<string>;
+    result?: Nullable<JSON>;
+    startDate?: Nullable<DateTime>;
+    endDate?: Nullable<DateTime>;
+    runDuration?: Nullable<number>;
+    waitDuration?: Nullable<number>;
+    createdDate?: Nullable<DateTime>;
+    updatedDate?: Nullable<DateTime>;
+    progressPercent?: Nullable<number>;
+    progressStatus: ProgressStatus;
+    isGeneratedPDF?: Nullable<boolean>;
 }
 
-export class DetailedOutlineObjective {
-  objective: string
-  topics?: Nullable<string[]>
+export abstract class IQuery {
+    abstract materials(): Nullable<Material>[] | Promise<Nullable<Material>[]>;
+
+    abstract material(id: string): Material | Promise<Material>;
+
+    abstract materialsIsGeneratedPDF(type: MaterialType): Nullable<Material>[] | Promise<Nullable<Material>[]>;
+
+    abstract me(): User | Promise<User>;
 }
 
-export class CourseDetailedSummary {
-  totalSections: number
-  totalTopics: number
-  courseHours: number
-}
+export abstract class IMutation {
+    abstract createMaterialQuiz(data: CreateQuizInput): Material | Promise<Material>;
 
-export class Topic {
-  topic: string
-  subtopics: string[]
-}
+    abstract createMaterialPerformanceTask(data: CreatePerformanceTaskInput): Material | Promise<Material>;
 
-export abstract class ISubscription {
-  abstract courseUpdated(courseId: string): Course | Promise<Course>
+    abstract createMaterialWorksheet(data: CreateWorksheetInput): Material | Promise<Material>;
+
+    abstract removeMaterial(id: string): Nullable<Material> | Promise<Nullable<Material>>;
 }
 
 export class User {
-  id: string
-  email?: Nullable<string>
-  firstName?: Nullable<string>
-  lastName?: Nullable<string>
+    id: string;
+    email?: Nullable<string>;
+    firstName?: Nullable<string>;
+    lastName?: Nullable<string>;
+    avatar?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    updatedAt?: Nullable<DateTime>;
+    password?: Nullable<string>;
 }
 
-export type DateTime = any
-type Nullable<T> = T | null
+export type JSON = any;
+export type DateTime = any;
+type Nullable<T> = T | null;

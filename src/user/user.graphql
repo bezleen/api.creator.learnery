@@ -5,6 +5,11 @@ type User {
   email: String
   firstName: String
   lastName: String
+  avatar: String
+  refreshToken: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  password: String
 }
 
 type Query {

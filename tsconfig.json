@@ -20,7 +20,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@/*": ["src/*"],
-      "@auth/*": ["src/auth/*"],
+      "@auth/*": ["src/oldAuth/*"],
       "@app/*": ["src/app/*"],
       "@decorators/*": ["src/app/decorators/*"],
       "@utils/*": ["utils/*"],

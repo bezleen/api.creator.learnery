@@ -1,72 +1,249 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
-import { PrismaService } from '../prisma/prisma.service'
-import { AuthDto, CookieJWT } from './dto'
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NotAcceptableException,
+} from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { UserService } from '@/user/user.service'
+import { PrismaService } from '@/prisma/prisma.service'
+import { Prisma } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
-import { ClerkService } from '../clerk/clerk.service'
-import { UserService } from '../user/user.service'
+import { OAuth2Client } from 'google-auth-library'
+import { AuthDto } from './dto/auth.dto'
+import bcrypt from 'bcryptjs'
 
 @Injectable()
 export class AuthService {
-  private clerk
+  private readonly client: OAuth2Client
+
   constructor(
+    private jwtService: JwtService,
+    private userService: UserService,
     private readonly prisma: PrismaService,
-    private readonly jwt: JwtService,
-    private readonly config: ConfigService,
-    private readonly clerkService: ClerkService, // private userService: UserService,
-    private readonly userService: UserService,
+    private configService: ConfigService,
   ) {
-    this.clerk = clerkService.clerk
+    this.client = new OAuth2Client(configService.get('GOOGLE_CLIENT_ID'))
   }
 
-  /*  async validateUser(userId: string, sessionId: string): Promise<any> {
-      const user = await this.userService.findOne(userId)
-      const session = await this.clerkService.clerk.sessions.getSession(sessionId)
+  async googleSignIn(data: any) {
+    if (!data) {
+      throw new BadRequestException('Unauthenticated')
+    }
 
-      if (!user) throw new UnauthorizedException('invalid user')
+    const userExists = await this.prisma.user.findUnique({ where: { email: data.email } })
 
-      if (!session) throw new UnauthorizedException('invalid session')
+    if (!userExists) {
+      return this.registerUser(data)
+    }
 
-      if (user.id!=session.userId){
-        return null
+    const tokens = await this.getToken(userExists.id, userExists.email)
+
+    return tokens
+  }
+
+  async localSignIn(data: any) {
+    try {
+      if (!data) {
+        throw new BadRequestException('Unauthenticated')
       }
 
-      return session
-    }*/
+      const userExists = await this.prisma.user.findUnique({
+        where: { email: data.email },
+      })
 
-  async signin(dto: AuthDto) {
-    const client = await this.clerkService.verifyClient(dto.clientToken)
+      if (!userExists) {
+        throw new BadRequestException('Wrong credentials!')
+      }
 
-    if (!client) throw new ForbiddenException('invalid user')
+      const isMatchPassword = await this.comparePassword(
+        data.password,
+        userExists.password,
+      )
 
-    let session = client.sessions.find(({ id }) => {
-      return id === dto.sessionId
-    })
-    if (this.config.get('mode') == 'prod') throw new ForbiddenException('invalid session')
+      if (!isMatchPassword) {
+        throw new BadRequestException('Wrong credentials!')
+      }
 
-    if (!session) {
-      throw new ForbiddenException('invalid session')
+      const tokens = await this.getToken(userExists.id, userExists.email)
+
+      return tokens
+    } catch (error: any) {
+      throw new Error(error.message)
     }
-    return this.signToken(session.userId, session.id, client.id)
   }
 
-  private async signToken(userId, sessionId, clientId: string) {
-    const payload: CookieJWT = {
-      sub: userId,
-      sessionId,
-      clientId,
+  async comparePassword(password: string, hashedPassword: string) {
+    try {
+      return await bcrypt.compare(password, hashedPassword)
+    } catch (error: any) {
+      throw new BadRequestException('Wrong credentials!')
     }
-    const secret = this.config.get('JWT_SECRET')
+  }
 
-    return {
-      access_token: await this.jwt.signAsync(payload, {
-        expiresIn: this.config.get('JWT_MAX_AGE'),
-        secret: secret,
-      }),
+  async localRegisterUser(data: Prisma.UserCreateInput) {
+    try {
+      const userExists = await this.prisma.user.findUnique({
+        where: { email: data.email },
+      })
+
+      if (userExists) {
+        throw new Error('This email has been use!')
+      }
+
+      const saltRounds = 10
+      const hashedPassword = await bcrypt.hash(data.password, saltRounds)
+
+      const newUser = await this.prisma.user.create({
+        data: { ...data, password: hashedPassword },
+      })
+
+      const tokens = await this.getToken(newUser.id, newUser.email)
+
+      return tokens
+    } catch (error: any) {
+      throw new Error(error.message)
     }
+  }
+
+  async registerUser(data: Prisma.UserCreateInput) {
+    try {
+      const newUser = await this.userService.create(data)
+
+      const tokens = await this.getToken(newUser.id, newUser.email)
+
+      return tokens
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async verifyGoogleToken(data: AuthDto): Promise<any> {
+    try {
+      const ticket = await this.client.verifyIdToken({
+        idToken: data.tokenId,
+        audience: this.configService.get('GOOGLE_CLIENT_ID'),
+      })
+
+      const payload = ticket.getPayload()
+
+      if (!payload) {
+        throw new Error('Invalid Google token')
+      }
+
+      const { email } = payload
+      const userExists = await this.prisma.user.findUnique({
+        where: { email: email },
+      })
+
+      if (!userExists) {
+        return this.registerUser({
+          email: email,
+          firstName: payload?.given_name,
+          lastName: payload?.family_name,
+          avatar: payload?.picture,
+        })
+      }
+
+      const tokens = await this.getToken(userExists.id, userExists.email)
+
+      return tokens
+    } catch (error) {
+      throw new Error('Invalid Google token')
+    }
+  }
+
+  async getToken(userId: string, email: string) {
+    try {
+      const accessToken = await this.jwtService.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          expiresIn: this.configService.get('JWT_MAX_AGE'),
+          secret: this.configService.get('JWT_SECRET'),
+        },
+      )
+
+      const refreshToken = await this.jwtService.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          expiresIn: this.configService.get('JWT_REFRESH_MAX_AGE'),
+          secret: this.configService.get('JWT_REFRESH_SECRET'),
+        },
+      )
+
+      const saltRounds = 10
+      const hash = await bcrypt.hash(refreshToken, saltRounds)
+
+      await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          refreshToken: hash,
+        },
+      })
+
+      return {
+        accessToken,
+        refreshToken,
+      }
+    } catch (error: any) {
+      console.error(error)
+      throw new Error(error.message)
+    }
+  }
+
+  async refreshTokens(userId: string, refreshToken: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    })
+
+    if (!user || !user.refreshToken) throw new ForbiddenException('Access Denied')
+
+    const refreshTokenMatches = await bcrypt.compare(refreshToken, user.refreshToken)
+    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied')
+
+    const tokens = await this.getToken(user.id, user.email)
+
+    return tokens
+  }
+
+  async logout(userId: string) {
+    const user = await this.prisma.user.updateMany({
+      where: {
+        id: userId,
+        refreshToken: { not: null },
+      },
+      data: {
+        refreshToken: null,
+      },
+    })
+
+    return user
+  }
+
+  async validateUser(email: string, password: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    })
+
+    if (!user) throw new NotAcceptableException('could not find the user')
+
+    const passwordValid = await bcrypt.compare(password, user.password)
+
+    if (user && passwordValid) return user
+
+    return null
   }
 }
-
-/*//expiresIn: "20d" // it will be expired after 20 days
-        //expiresIn: 120 // it will be expired after 120ms
-        //expiresIn: "120s" // it will be expired after 120*/

@@ -8,8 +8,11 @@ import {
 } from '@nestjs/common/interfaces/external/cors-options.interface'
 import { PrismaClientExceptionFilter } from './app/exceptions/prisma-client-exception.filter'
 import session from 'express-session'
+import passport from 'passport'
 import requestIp from 'request-ip'
 import compression from 'compression'
+import * as Sentry from '@sentry/node'
+import { SentryInterceptor } from './interceptors/sentry.interceptor'
 
 export async function initApp(app: INestApplication) {
   app.useGlobalPipes(new ValidationPipe({ whitelist: false })) //whitelist: true FAILS cuz graphql generated classes has no class validator decorators hence returns a empty {}
@@ -65,15 +68,18 @@ export async function initApp(app: INestApplication) {
   // app.use(cors())
   app.enableCors({
     origin: [
-      'https://studio.apollographql.com',
-      'http://localhost:3000',
-      'https://vercel.app',
-      /\.vercel\.app$/,
+      // 'https://studio.apollographql.com',
+      // 'http://localhost:3000',
+      // 'https://vercel.app',
+      // 'https://learnery-material.orasci.site/',
+      // /\.vercel\.app$/,
+      '*',
     ],
     credentials: true,
     // optionsSuccessStatus: 200,
     // preflightContinue: true,
   })
+
   app.useGlobalFilters(new PrismaClientExceptionFilter())
   app.enableVersioning({
     type: VersioningType.HEADER,
@@ -84,19 +90,23 @@ export async function initApp(app: INestApplication) {
       // genid: function(req) { //TODO:
       //   return genuuid()  // use UUIDs for session IDs
       // },
-      cookie: {
-        path: '/apiLearnery',
-        httpOnly: true,
-        secure: true,
-        maxAge: null,
-        sameSite: 'none',
-      },
+      // cookie: {
+      //   path: '/apiLearnery',
+      //   httpOnly: true,
+      //   secure: true,
+      //   maxAge: null,
+      //   sameSite: 'none',
+      // },
       secret: config.get('JWT_SECRET'),
-      resave: true, //TODO:
+      resave: false, //TODO:
       rolling: true, //TODO
-      saveUninitialized: true,
+      saveUninitialized: false,
     }),
   )
+
+  app.use(passport.initialize())
+  app.use(passport.session())
+
   app.use(requestIp.mw())
 
   app.use(
@@ -104,4 +114,10 @@ export async function initApp(app: INestApplication) {
       threshold: 512, // only responses exceeding 512 bytes will be compressed
     }),
   )
+
+  Sentry.init({
+    dsn: config.get('SENTRY_DNS'),
+  })
+
+  app.useGlobalInterceptors(new SentryInterceptor())
 }

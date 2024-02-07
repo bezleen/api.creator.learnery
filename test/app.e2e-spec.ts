@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '@src/prisma/prisma.service'
 import { ClerkService } from '@src/clerk/clerk.service'
 import { ClerkClient } from '@clerk/clerk-sdk-node/dist/types/types'
-import { AuthDto } from '@src/auth/dto'
+import { AuthDto } from '@/oldAuth/dto'
 
 import { initApp } from '@src/initApp'
 import { EditUserDto } from '@src/user/dto'

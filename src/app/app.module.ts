@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common'
 import { AppService } from './app.service'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { AuthModule } from '../auth/auth.module'
+// import { AuthModule } from '../oldAuth/auth.module'
 import Joi from 'joi'
 import { CacheModule } from '@nestjs/cache-manager'
 import { GraphQLModule } from '@nestjs/graphql'
@@ -18,23 +18,15 @@ import { AppController } from './app.controller'
 import { GraphqlContext } from './dto/request.dto'
 import { UserModule } from '../user/user.module'
 import { PrismaModule } from '../prisma/prisma.module'
-import { CategoryController } from '../category/category.controller'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { CategoryModule } from '../category/category.module'
-import { UserController } from '../user/user.controller'
-import { AuthController } from '../auth/auth.controller'
-import { CategoryService } from '../category/category.service'
 import { UserService } from '../user/user.service'
-import { AuthService } from '../auth/auth.service'
 import { JwtService } from '@nestjs/jwt'
-import { ClerkModule } from '../clerk/clerk.module'
-import { ClerkService } from '../clerk/clerk.service'
-import { CourseModule } from '../course/course.module'
 import { HttpLoggerMiddleware } from './middlewares/http-logger.middleware'
-import { AiModule } from '../ai/ai.module'
-import { AiService } from '../ai/ai.service'
-import { PineconeService } from '@src/ai/pinecone/pinecone.service'
-import { OpenAIService } from '@src/ai/openai/openAIService'
+import { join } from 'path'
+import { MaterialModule } from '@/material/material.module'
+import { AuthService } from '@/auth/auth.service'
+import { AuthModule } from '@/auth/auth.module'
+import { SentryInterceptor } from '@/interceptors/sentry.interceptor'
 
 let mode = process.env.MODE
 let envFile: string
@@ -74,11 +66,11 @@ console.debug({ mode, envFile })
           .default(Number.MAX_SAFE_INTEGER >> 1) //2 * 60 * 60 * 1000)
           .max(Number.MAX_SAFE_INTEGER - 1) //to round to 0
           .min(60 * 1000),
-        CLERK_SECRET_KEY: Joi.string().required().min(10),
+        // CLERK_SECRET_KEY: Joi.string().required().min(10),
         DOMAIN: Joi.string().optional().default(''),
         COOKIE_PATH: Joi.string().optional().default('/').min(1),
         COOKIE_NAME: Joi.string().optional().default('token').min(2),
-        OPENAI_API_KEY: Joi.string().required().min(20), //FIXME: change length
+        // OPENAI_API_KEY: Joi.string().required().min(20), //FIXME: change length
         OPENAI_CHAT_MODEL: Joi.string()
           .optional()
           .default('gpt-3.5-turbo-16k')
@@ -91,9 +83,9 @@ console.debug({ mode, envFile })
             'gpt-4-32k',
             'gpt-3.5-turbo-16k-0613',
           ),
-        PINECONE_API_KEY: Joi.string().required().min(30),
-        PINECONE_API_ENV: Joi.string().required().min(7),
-        PINECONE_INDEX: Joi.string().optional().default('learnery'),
+        // PINECONE_API_KEY: Joi.string().required().min(30),
+        // PINECONE_API_ENV: Joi.string().required().min(7),
+        // PINECONE_INDEX: Joi.string().optional().default('learnery'),
       }),
     }),
     CacheModule.register({ isGlobal: true }),
@@ -117,6 +109,10 @@ console.debug({ mode, envFile })
       driver: ApolloDriver,
       plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
       typePaths: ['./**/*.graphql'],
+      definitions: {
+        path: join(process.cwd(), 'src/graphql.ts'),
+        outputAs: 'class',
+      },
       resolvers: { DateTime: GraphQLDateTime },
       subscriptions: {
         'graphql-ws': {
@@ -140,28 +136,22 @@ console.debug({ mode, envFile })
       },
     }),
     PrismaModule,
+    MaterialModule,
     AuthModule,
     UserModule,
-    CategoryModule,
-    ClerkModule,
-    CourseModule,
-    AiModule,
   ],
-  controllers: [AppController, CategoryController, UserController, AuthController],
+  // controllers: [AppController, CategoryController, UserController, AuthController],
+  controllers: [AppController],
   providers: [
     /*  {
       provide: APP_FILTER, //FIXME; not working try with invalid pinecone cred
       useClass: GlobalExceptionFilter,
     },*/
     AppService,
-    CategoryService,
     UserService,
     AuthService,
     JwtService,
-    ClerkService,
-    OpenAIService,
-    PineconeService,
-    AiService,
+    SentryInterceptor,
   ],
 })
 export class AppModule implements OnModuleInit, NestModule {
@@ -184,8 +174,29 @@ export class AppModule implements OnModuleInit, NestModule {
       .setDescription('apis to crud courses')
       .setVersion('1.0')
       .addTag('learnery-creator')
-      .addBearerAuth()
-      .addCookieAuth(cookieName)
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'Bearer',
+          bearerFormat: 'Bearer',
+          name: 'Authorization',
+          description: 'Enter JWT token',
+          in: 'Header',
+        },
+        'JWT-auth',
+      )
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'Bearer',
+          bearerFormat: 'Bearer',
+          name: 'Authorization',
+          description: 'Enter JWT Refresh token',
+          in: 'Header',
+        },
+        'JWT-Refresh-auth',
+      )
+      // .addCookieAuth(cookieName)
       .build()
     return SwaggerModule.createDocument(app, options)
   }

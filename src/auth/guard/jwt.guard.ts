@@ -1,17 +1,20 @@
-import { AuthGuard } from '@nestjs/passport'
-import { ExecutionContext, Injectable } from '@nestjs/common'
+import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
+import { Reflector } from '@nestjs/core'
 import { GqlExecutionContext } from '@nestjs/graphql'
+import { AuthGuard } from '@nestjs/passport'
+import { Observable } from 'rxjs'
 
-export class JwtGuard extends AuthGuard('jwt') {
-  constructor() {
-    super()
-  }
-}
 @Injectable()
-export class GqlAuthGuard extends JwtGuard {
+export class GqlAuthGuard extends AuthGuard('jwt') {
   getRequest(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context)
     return ctx.getContext().req
   }
 }
-//https://docs.nestjs.com/recipes/passport#graphql
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  constructor() {
+    super()
+  }
+}
