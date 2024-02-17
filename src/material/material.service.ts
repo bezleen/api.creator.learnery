@@ -8,15 +8,14 @@ import {
   CreateQuizInputDTO,
   CreateWorksheetInputDTO,
 } from './dto/create-material.input'
-import { marked } from 'marked'
 import * as path from 'path'
 import * as fs from 'fs'
-import scopackager from 'simple-scorm-packager'
 import PizZip from 'pizzip'
 import Docxtemplater from 'docxtemplater'
 import { Response } from 'express'
 import * as libre from 'libreoffice-convert'
 import { ConfigService } from '@nestjs/config'
+import { StorageService } from './storage.service'
 
 // import { execSync } from 'child_process'
 
@@ -25,6 +24,7 @@ export class MaterialService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
+    private readonly storageService: StorageService,
   ) {}
 
   async createQuiz(data: CreateQuizInputDTO, userId: string) {
@@ -331,18 +331,22 @@ export class MaterialService {
       compression: 'DEFLATE',
     })
 
-    fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.docx`), buf)
+    this.storageService.uploadFile(buf, `${id}.docx`)
 
-    const file = fs.readFileSync(
-      path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
-    )
+    // fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.docx`), buf)
 
-    await libre.convert(file, '.pdf', undefined, (err: any, done) => {
+    // const file = fs.readFileSync(
+    //   path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
+    // )
+
+    await libre.convert(buf, '.pdf', undefined, (err: any, done) => {
       if (err) {
         throw new Error(`Error converting file: ${err}`)
       }
 
-      fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+      this.storageService.uploadFile(done, `${id}.pdf`)
+
+      // fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
     })
 
     await this.prisma.material.update({
