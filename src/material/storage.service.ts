@@ -28,6 +28,7 @@ export class StorageService {
   }
 
   private async uploadFileToAzure(fileBuffer: Buffer, fileName: string): Promise<string> {
+    console.log('Connection String: ', this.azureConfig.connectionString)
     // Upload file to Azure storage
     const blobServiceClient = BlobServiceClient.fromConnectionString(
       this.azureConfig.connectionString,

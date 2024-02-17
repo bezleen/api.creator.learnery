@@ -341,8 +341,6 @@ export class MaterialService {
       this.storageService.uploadFile(done, `${id}.pdf`)
     })
 
-    console.log('oke')
-
     await this.prisma.material.update({
       where: {
         id,
@@ -645,14 +643,10 @@ export class MaterialService {
     const materialResult: any = material.result
     const materialRequest: any = material.request
 
-    console.log('Testttt')
-
     const content = fs.readFileSync(
       path.resolve(__dirname, '../../static/templatePDF/quiz_template.docx'),
       'binary',
     )
-
-    console.log('Testttt111')
 
     const zip = new PizZip(content)
 
@@ -820,7 +814,6 @@ export class MaterialService {
     })
 
     this.storageService.uploadFile(buf, `${id}.docx`)
-
 
     await libre.convert(buf, '.pdf', undefined, (err: any, done) => {
       if (err) {
