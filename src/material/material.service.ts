@@ -333,21 +333,15 @@ export class MaterialService {
 
     this.storageService.uploadFile(buf, `${id}.docx`)
 
-    // fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.docx`), buf)
-
-    // const file = fs.readFileSync(
-    //   path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
-    // )
-
     await libre.convert(buf, '.pdf', undefined, (err: any, done) => {
       if (err) {
         throw new Error(`Error converting file: ${err}`)
       }
 
       this.storageService.uploadFile(done, `${id}.pdf`)
-
-      // fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
     })
+
+    console.log('oke')
 
     await this.prisma.material.update({
       where: {
@@ -607,18 +601,14 @@ export class MaterialService {
       compression: 'DEFLATE',
     })
 
-    fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.docx`), buf)
+    this.storageService.uploadFile(buf, `${id}.docx`)
 
-    const file = fs.readFileSync(
-      path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
-    )
-
-    await libre.convert(file, '.pdf', undefined, (err: any, done) => {
+    await libre.convert(buf, '.pdf', undefined, (err: any, done) => {
       if (err) {
         throw new Error(`Error converting file: ${err}`)
       }
 
-      fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+      this.storageService.uploadFile(done, `${id}.pdf`)
     })
 
     await this.prisma.material.update({
@@ -655,10 +645,14 @@ export class MaterialService {
     const materialResult: any = material.result
     const materialRequest: any = material.request
 
+    console.log('Testttt')
+
     const content = fs.readFileSync(
       path.resolve(__dirname, '../../static/templatePDF/quiz_template.docx'),
       'binary',
     )
+
+    console.log('Testttt111')
 
     const zip = new PizZip(content)
 
@@ -825,18 +819,15 @@ export class MaterialService {
       compression: 'DEFLATE',
     })
 
-    fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.docx`), buf)
+    this.storageService.uploadFile(buf, `${id}.docx`)
 
-    const file = fs.readFileSync(
-      path.resolve(__dirname, `../../static/outputPDF/${id}.docx`),
-    )
 
-    await libre.convert(file, '.pdf', undefined, (err: any, done) => {
+    await libre.convert(buf, '.pdf', undefined, (err: any, done) => {
       if (err) {
         throw new Error(`Error converting file: ${err}`)
       }
 
-      fs.writeFileSync(path.resolve(__dirname, `../../static/outputPDF/${id}.pdf`), done)
+      this.storageService.uploadFile(done, `${id}.pdf`)
     })
 
     await this.prisma.material.update({
