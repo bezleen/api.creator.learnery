@@ -28,16 +28,13 @@ export class MaterialService {
   ) {}
 
   Extension = {
-    MATERIAL_QUIZ_SHORT: 'MATERIAL_QUIZ_SHORT',
-    MATERIAL_QUIZ_MEDIUM: 'MATERIAL_QUIZ_MEDIUM',
-    MATERIAL_QUIZ_LONG: 'MATERIAL_QUIZ_LONG',
-    MATERIAL_PT_SHORT: 'MATERIAL_PT_SHORT',
-    MATERIAL_PT_MEDIUM: 'MATERIAL_PT_MEDIUM',
-    MATERIAL_PT_LONG: 'MATERIAL_PT_LONG',
-    MATERIAL_WORKSHEET_SHORT: 'MATERIAL_WORKSHEET_SHORT',
-    MATERIAL_WORKSHEET_MEDIUM: 'MATERIAL_WORKSHEET_MEDIUM',
-    MATERIAL_WORKSHEET_LONG: 'MATERIAL_WORKSHEET_LONG',
-    SLIDE: 'SLIDE',
+    MATERIAL_QUIZ: 'MATERIAL_QUIZ',
+    MATERIAL_PT: 'MATERIAL_PT',
+    MATERIAL_WORKSHEET: 'MATERIAL_WORKSHEET',
+    LESSON_SLIDES_OUTLINE: 'LESSON_SLIDES_OUTLINE',
+    LESSON_SLIDES: 'LESSON_SLIDES',
+    COURSE_PLANNING_STEPS: 'COURSE_PLANNING_STEPS',
+    COURSE_DETAILED_OUTLINE: 'COURSE_DETAILED_OUTLINE',
   }
 
   async createQuiz(data: CreateQuizInputDTO, userId: string) {
@@ -49,14 +46,17 @@ export class MaterialService {
       throw new Error('ageStart cannot be greater or equal than ageEnd')
     }
 
+    let totalQuestions = 0
+    data.questionTypes.map((el) => (totalQuestions += el.totalQuestions))
+
     let ticket_id = ''
     try {
       const ticketResponse = await axios.post(
         `${this.configService.get(
           'PAYMENT_SERVICE_URL',
         )}/v1/api/internal/usage/issue-ticket/${userId}?extensionName=${
-          this.Extension.MATERIAL_QUIZ_MEDIUM
-        }`,
+          this.Extension.MATERIAL_QUIZ
+        }&questionCount=${totalQuestions}`,
       )
       if (!ticketResponse.data.canUse || !ticketResponse) {
         throw new UnauthorizedException()
@@ -116,7 +116,7 @@ export class MaterialService {
         `${this.configService.get(
           'PAYMENT_SERVICE_URL',
         )}/v1/api/internal/usage/issue-ticket/${userId}?extensionName=${
-          this.Extension.MATERIAL_PT_MEDIUM
+          this.Extension.MATERIAL_PT
         }`,
       )
       if (!ticketResponse.data.canUse || !ticketResponse) {
@@ -170,14 +170,17 @@ export class MaterialService {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
+    let totalQuestions = 0
+    data.questionTypes.map((el) => (totalQuestions += el.totalQuestions))
+
     let ticket_id = ''
     try {
       const ticketResponse = await axios.post(
         `${this.configService.get(
           'PAYMENT_SERVICE_URL',
         )}/v1/api/internal/usage/issue-ticket/${userId}?extensionName=${
-          this.Extension.MATERIAL_WORKSHEET_MEDIUM
-        }`,
+          this.Extension.MATERIAL_WORKSHEET
+        }&questionCount=${totalQuestions}`,
       )
       if (!ticketResponse.data.canUse || !ticketResponse) {
         throw new UnauthorizedException()
