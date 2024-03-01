@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
 import { Prisma } from '@prisma/client'
 import { MaterialType } from '@prisma/client'
@@ -27,6 +27,16 @@ export class MaterialService {
     private readonly storageService: StorageService,
   ) {}
 
+  Extension = {
+    MATERIAL_QUIZ: 'MATERIAL_QUIZ',
+    MATERIAL_PT: 'MATERIAL_PT',
+    MATERIAL_WORKSHEET: 'MATERIAL_WORKSHEET',
+    LESSON_SLIDES_OUTLINE: 'LESSON_SLIDES_OUTLINE',
+    LESSON_SLIDES: 'LESSON_SLIDES',
+    COURSE_PLANNING_STEPS: 'COURSE_PLANNING_STEPS',
+    COURSE_DETAILED_OUTLINE: 'COURSE_DETAILED_OUTLINE',
+  }
+
   async createQuiz(data: CreateQuizInputDTO, userId: string) {
     if (Object.keys(data.questionTypes).length > 3) {
       throw new BadRequestException('you can only choose 3 type of question ')
@@ -34,6 +44,26 @@ export class MaterialService {
 
     if (data.audience.ageStart >= data.audience.ageEnd) {
       throw new Error('ageStart cannot be greater or equal than ageEnd')
+    }
+
+    let totalQuestions = 0
+    data.questionTypes.map((el) => (totalQuestions += el.totalQuestions))
+
+    let ticket_id = ''
+    try {
+      const ticketResponse = await axios.post(
+        `${this.configService.get(
+          'PAYMENT_SERVICE_URL',
+        )}/v1/api/internal/usage/issue-ticket/${userId}?extensionName=${
+          this.Extension.MATERIAL_QUIZ
+        }&questionCount=${totalQuestions}`,
+      )
+      if (!ticketResponse.data.canUse || !ticketResponse) {
+        throw new UnauthorizedException()
+      }
+      ticket_id = ticketResponse.data.ticketId
+    } catch (error) {
+      throw new UnauthorizedException()
     }
 
     const createdQuiz = await this.prisma.material.create({
@@ -50,6 +80,7 @@ export class MaterialService {
     const payload_ai = {
       offer_id: createdQuiz.id,
       user_id: createdQuiz.userId,
+      ticket_id: ticket_id,
     }
 
     try {
@@ -79,6 +110,23 @@ export class MaterialService {
       throw new Error('ageStart cannot be greater or equal than ageEnd')
     }
 
+    let ticket_id = ''
+    try {
+      const ticketResponse = await axios.post(
+        `${this.configService.get(
+          'PAYMENT_SERVICE_URL',
+        )}/v1/api/internal/usage/issue-ticket/${userId}?extensionName=${
+          this.Extension.MATERIAL_PT
+        }`,
+      )
+      if (!ticketResponse.data.canUse || !ticketResponse) {
+        throw new UnauthorizedException()
+      }
+      ticket_id = ticketResponse.data.ticketId
+    } catch (error) {
+      throw new UnauthorizedException()
+    }
+
     const createdPerformanceTask = await this.prisma.material.create({
       data: {
         userId: userId,
@@ -93,6 +141,7 @@ export class MaterialService {
     const payload_ai = {
       offer_id: createdPerformanceTask.id,
       user_id: createdPerformanceTask.userId,
+      ticket_id: ticket_id,
     }
 
     try {
@@ -121,6 +170,26 @@ export class MaterialService {
       throw new BadRequestException('you can only choose 3 type of question ')
     }
 
+    let totalQuestions = 0
+    data.questionTypes.map((el) => (totalQuestions += el.totalQuestions))
+
+    let ticket_id = ''
+    try {
+      const ticketResponse = await axios.post(
+        `${this.configService.get(
+          'PAYMENT_SERVICE_URL',
+        )}/v1/api/internal/usage/issue-ticket/${userId}?extensionName=${
+          this.Extension.MATERIAL_WORKSHEET
+        }&questionCount=${totalQuestions}`,
+      )
+      if (!ticketResponse.data.canUse || !ticketResponse) {
+        throw new UnauthorizedException()
+      }
+      ticket_id = ticketResponse.data.ticketId
+    } catch (error) {
+      throw new UnauthorizedException()
+    }
+
     const createdWorksheet = await this.prisma.material.create({
       data: {
         userId: userId,
@@ -135,6 +204,7 @@ export class MaterialService {
     const payload_ai = {
       offer_id: createdWorksheet.id,
       user_id: createdWorksheet.userId,
+      ticket_id: ticket_id,
     }
 
     try {
@@ -428,7 +498,6 @@ export class MaterialService {
         let learningObjectivesContent =
           materialResult.worksheet.result.chapter_1.content.replace(/[-#@!_\d]+$/g, '')
         learningObjectivesContent = learningObjectivesContent.split('\n')
-        console.log(learningObjectivesContent)
         return learningObjectivesContent
       },
       questionTypes: materialResult.worksheet.result.chapter_2.content,
@@ -458,8 +527,6 @@ export class MaterialService {
             ? scope.question.question_index
             : scope.question_index
         } catch (error: any) {
-          console.log('oke')
-
           throw new Error(error.message)
         }
       },
@@ -470,7 +537,6 @@ export class MaterialService {
           if (scope?.question_bloom_taxonomy) return scope.question_bloom_taxonomy
           return ''
         } catch (error: any) {
-          console.log('oke')
           throw new Error(error.message)
         }
       },
@@ -482,8 +548,6 @@ export class MaterialService {
             return scope.question_content.replace(/[:=*.#]/gi, '').trim()
           return ''
         } catch (error: any) {
-          console.log('oke')
-
           throw new Error(error.message)
         }
       },
@@ -511,8 +575,6 @@ export class MaterialService {
           }
           return resultOptionContent
         } catch (error: any) {
-          console.log('oke')
-
           throw new Error(error.message)
         }
       },
