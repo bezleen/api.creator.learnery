@@ -382,7 +382,7 @@ export class MaterialService {
       // subject: materialRequest.performanceTask.objectives,
       subject: materialRequest.performanceTask?.title,
       level: materialRequest.performanceTask.audience.level,
-      knowledgeKnot: 'Knowledge Knot',
+      knowledgeKnot: '',
       activityTitle: materialResult.performanceTask.result[0]?.content,
       goal: materialResult.performanceTask.result[1]?.content,
       role: materialResult.performanceTask.result[2]?.content,
