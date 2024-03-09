@@ -27,6 +27,8 @@ import { MaterialModule } from '@/material/material.module'
 import { AuthService } from '@/auth/auth.service'
 import { AuthModule } from '@/auth/auth.module'
 import { SentryInterceptor } from '@/interceptors/sentry.interceptor'
+import { TransactionModule } from '@/transaction/transaction.module'
+import { TransactionService } from '@/transaction/transaction.service'
 
 let mode = process.env.MODE
 let envFile: string
@@ -139,6 +141,7 @@ console.debug({ mode, envFile })
     MaterialModule,
     AuthModule,
     UserModule,
+    TransactionModule,
   ],
   // controllers: [AppController, CategoryController, UserController, AuthController],
   controllers: [AppController],
@@ -152,6 +155,7 @@ console.debug({ mode, envFile })
     AuthService,
     JwtService,
     SentryInterceptor,
+    TransactionService,
   ],
 })
 export class AppModule implements OnModuleInit, NestModule {
